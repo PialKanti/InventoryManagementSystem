@@ -1,6 +1,7 @@
 package com.codecrafters.hub.inventorymanagementsystem.entities.request;
 
 import com.codecrafters.hub.inventorymanagementsystem.entities.Role;
+import com.codecrafters.hub.inventorymanagementsystem.enums.UserRole;
 
 import java.util.List;
 
@@ -10,7 +11,7 @@ public class RegistrationRequest {
     private String username;
     private String email;
     private String password;
-    private List<Role> roles;
+    private List<UserRole> roles;
 
     public String getFirstName() {
         return firstName;
@@ -52,11 +53,11 @@ public class RegistrationRequest {
         this.password = password;
     }
 
-    public List<Role> getRoles() {
+    public List<UserRole> getRoles() {
         return roles;
     }
 
-    public void setRoles(List<Role> roles) {
+    public void setRoles(List<UserRole> roles) {
         this.roles = roles;
     }
 }
