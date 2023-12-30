@@ -11,6 +11,7 @@ import com.codecrafters.hub.inventorymanagementsystem.repositories.UserRepositor
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -24,16 +25,18 @@ public class AuthService {
     private final RoleRepository roleRepository;
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
+    private final PasswordEncoder passwordEncoder;
 
-    public AuthService(@Autowired UserRepository userRepository, @Autowired RoleRepository roleRepository, @Autowired AuthenticationManager authenticationManager, @Autowired JwtService jwtService) {
+    public AuthService(@Autowired UserRepository userRepository, @Autowired RoleRepository roleRepository, @Autowired AuthenticationManager authenticationManager, @Autowired JwtService jwtService, @Autowired PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.authenticationManager = authenticationManager;
         this.jwtService = jwtService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public User register(RegistrationRequest request) {
-        User userToBeCreated = new User(request.getFirstName(), request.getLastName(), request.getUsername(), request.getEmail(), request.getPassword());
+        User userToBeCreated = new User(request.getFirstName(), request.getLastName(), request.getUsername(), request.getEmail(), passwordEncoder.encode(request.getPassword()));
         userToBeCreated.setRoles(extractRoleEntities(request.getRoles()));
 
         return userRepository.save(userToBeCreated);
