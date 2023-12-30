@@ -1,6 +1,7 @@
 package com.codecrafters.hub.inventorymanagementsystem.entities;
 
 import jakarta.persistence.*;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -10,6 +11,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Entity
+@NamedEntityGraph(name = "User.roles", attributeNodes = @NamedAttributeNode("roles"))
 @Table(name = "application_user")
 public class User implements UserDetails {
     @Id
