@@ -2,7 +2,9 @@ package com.codecrafters.hub.inventorymanagementsystem.services;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.security.HashAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -11,12 +13,30 @@ import org.springframework.stereotype.Service;
 import javax.crypto.SecretKey;
 import java.security.Key;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Function;
 
 @Service
 public class JwtService {
     @Value("${jwt.encryption.key}")
     private String encryptionKey;
+    @Value("${jwt.access-token.expiration}")
+    private long accessTokenExpiration;
+
+    public String generateToken(UserDetails userDetails) {
+        return generateToken(userDetails, new HashMap<>());
+    }
+
+    public String generateToken(UserDetails userDetails, Map<String, Object> claims) {
+        return Jwts.builder()
+                .claims(claims)
+                .subject(userDetails.getUsername())
+                .issuedAt(new Date(System.currentTimeMillis()))
+                .expiration(new Date(System.currentTimeMillis() + accessTokenExpiration))
+                .signWith(getSigningKey(), Jwts.SIG.HS256)
+                .compact();
+    }
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
