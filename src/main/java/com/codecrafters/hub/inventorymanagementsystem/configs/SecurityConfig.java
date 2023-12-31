@@ -17,6 +17,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
     private static final String[] WHITELIST_URLS = {
             "/api/v1/auth/**",
+            "/error",
             "/swagger-resources",
             "/swagger-resources/**",
             "/configuration/ui",
