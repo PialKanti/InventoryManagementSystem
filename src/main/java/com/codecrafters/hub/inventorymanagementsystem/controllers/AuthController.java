@@ -5,6 +5,7 @@ import com.codecrafters.hub.inventorymanagementsystem.entities.request.LoginRequ
 import com.codecrafters.hub.inventorymanagementsystem.entities.request.RegistrationRequest;
 import com.codecrafters.hub.inventorymanagementsystem.entities.response.LoginResponse;
 import com.codecrafters.hub.inventorymanagementsystem.services.AuthService;
+import com.codecrafters.hub.inventorymanagementsystem.utils.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,5 +27,11 @@ public class AuthController {
     @PostMapping(value = "/login")
     public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request) {
         return ResponseEntity.ok(service.login(request));
+    }
+
+    @GetMapping(value = "/logout")
+    public ResponseEntity<Void> logout(@RequestHeader("Authorization") String authorizationHeader) {
+        service.logout(authorizationHeader);
+        return ResponseEntity.noContent().build();
     }
 }

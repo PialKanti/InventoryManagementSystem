@@ -2,6 +2,7 @@ package com.codecrafters.hub.inventorymanagementsystem.filters;
 
 import com.codecrafters.hub.inventorymanagementsystem.services.JwtService;
 import com.codecrafters.hub.inventorymanagementsystem.services.UserDetailsService;
+import com.codecrafters.hub.inventorymanagementsystem.utils.JwtUtils;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -36,7 +37,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
-        String jwtToken = authHeader.substring(authHeaderPrefix.length());
+        String jwtToken = JwtUtils.extractTokenFromAuthorizationHeader(authHeader);
         String username = jwtService.extractUsername(jwtToken);
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = userDetailsService.loadUserByUsername(username);
