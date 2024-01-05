@@ -1,11 +1,13 @@
 package com.codecrafters.hub.inventorymanagementsystem.services;
 
+import com.codecrafters.hub.inventorymanagementsystem.repositories.BlackListedTokenRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.HashAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -23,6 +25,12 @@ public class JwtService {
     private String encryptionKey;
     @Value("${jwt.access-token.expiration}")
     private long accessTokenExpiration;
+    private final BlackListedTokenRepository repository;
+
+    @Autowired
+    public JwtService(BlackListedTokenRepository repository) {
+        this.repository = repository;
+    }
 
     public String generateToken(UserDetails userDetails) {
         return generateToken(userDetails, new HashMap<>());
@@ -44,12 +52,17 @@ public class JwtService {
 
     public boolean isTokenValid(String token, UserDetails userDetails) {
         String username = extractUsername(token);
-        return username != null && username.equals(userDetails.getUsername()) && !isTokenExpired(token);
+        return username != null && username.equals(userDetails.getUsername()) && !isTokenExpired(token) && !isTokenRevoked(token);
     }
 
     private boolean isTokenExpired(String token) {
         Date expirationDate = extractExpiration(token);
         return expirationDate != null && expirationDate.before(new Date());
+    }
+
+    private boolean isTokenRevoked(String token) {
+        var optional = repository.findByToken(token);
+        return optional.isPresent();
     }
 
     private Date extractExpiration(String token) {
