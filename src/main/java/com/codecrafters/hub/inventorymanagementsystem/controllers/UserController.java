@@ -75,7 +75,7 @@ public class UserController {
         }
 
         User user = userOptional.get();
-        if (!passwordEncoder.matches(user.getPassword(), request.getOldPassword())) {
+        if (!passwordEncoder.matches(request.getOldPassword(), user.getPassword())) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body(Collections.singletonMap("message", "Invalid old password"));
         }
