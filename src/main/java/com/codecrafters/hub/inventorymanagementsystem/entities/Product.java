@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 
 @Entity
 @Table(name = "products")
-public class Product {
+public class Product extends AuditorEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;

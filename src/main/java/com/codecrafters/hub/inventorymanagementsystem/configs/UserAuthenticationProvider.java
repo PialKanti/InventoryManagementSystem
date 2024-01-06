@@ -14,7 +14,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +31,6 @@ public class UserAuthenticationProvider implements AuthenticationProvider {
     }
 
     @Override
-    @Transactional
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
 
         var userOptional = userRepository.findByUsername(authentication.getName());

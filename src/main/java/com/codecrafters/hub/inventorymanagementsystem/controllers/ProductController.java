@@ -1,6 +1,7 @@
 package com.codecrafters.hub.inventorymanagementsystem.controllers;
 
 import com.codecrafters.hub.inventorymanagementsystem.entities.Product;
+import com.codecrafters.hub.inventorymanagementsystem.entities.request.ProductCreateRequest;
 import com.codecrafters.hub.inventorymanagementsystem.repositories.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -32,14 +33,14 @@ public class ProductController {
     }
 
     @PostMapping
-    public ResponseEntity<Product> create(@RequestBody Product product) {
-        Product createdEntity = repository.save(product);
+    public ResponseEntity<Product> create(@RequestBody ProductCreateRequest request) {
+        Product createdEntity = repository.save(new Product(request.getTitle(), request.getDescription(), request.getPrice(), request.getQuality()));
         String uriString = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
                 .buildAndExpand(createdEntity.getId())
                 .toUriString();
 
-        return ResponseEntity.created(URI.create(uriString)).body(product);
+        return ResponseEntity.created(URI.create(uriString)).body(createdEntity);
     }
 
     @PutMapping(value = "/{id}")
