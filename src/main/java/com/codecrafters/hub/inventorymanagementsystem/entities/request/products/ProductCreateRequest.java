@@ -1,4 +1,4 @@
-package com.codecrafters.hub.inventorymanagementsystem.entities.request;
+package com.codecrafters.hub.inventorymanagementsystem.entities.request.products;
 
 public class ProductCreateRequest {
     private String title;

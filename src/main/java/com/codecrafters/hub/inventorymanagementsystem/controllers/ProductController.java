@@ -1,7 +1,7 @@
 package com.codecrafters.hub.inventorymanagementsystem.controllers;
 
 import com.codecrafters.hub.inventorymanagementsystem.entities.Product;
-import com.codecrafters.hub.inventorymanagementsystem.entities.request.ProductCreateRequest;
+import com.codecrafters.hub.inventorymanagementsystem.entities.request.products.ProductCreateRequest;
 import com.codecrafters.hub.inventorymanagementsystem.repositories.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

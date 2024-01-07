@@ -1,11 +1,10 @@
 package com.codecrafters.hub.inventorymanagementsystem.controllers;
 
 import com.codecrafters.hub.inventorymanagementsystem.entities.User;
-import com.codecrafters.hub.inventorymanagementsystem.entities.request.LoginRequest;
-import com.codecrafters.hub.inventorymanagementsystem.entities.request.RegistrationRequest;
-import com.codecrafters.hub.inventorymanagementsystem.entities.response.LoginResponse;
+import com.codecrafters.hub.inventorymanagementsystem.entities.request.auth.LoginRequest;
+import com.codecrafters.hub.inventorymanagementsystem.entities.request.auth.RegistrationRequest;
+import com.codecrafters.hub.inventorymanagementsystem.entities.response.auth.LoginResponse;
 import com.codecrafters.hub.inventorymanagementsystem.services.AuthService;
-import com.codecrafters.hub.inventorymanagementsystem.utils.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

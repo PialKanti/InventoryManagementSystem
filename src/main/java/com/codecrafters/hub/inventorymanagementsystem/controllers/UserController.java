@@ -1,8 +1,8 @@
 package com.codecrafters.hub.inventorymanagementsystem.controllers;
 
 import com.codecrafters.hub.inventorymanagementsystem.entities.User;
-import com.codecrafters.hub.inventorymanagementsystem.entities.request.ChangePasswordRequest;
-import com.codecrafters.hub.inventorymanagementsystem.entities.request.UserUpdateRequest;
+import com.codecrafters.hub.inventorymanagementsystem.entities.request.auth.ChangePasswordRequest;
+import com.codecrafters.hub.inventorymanagementsystem.entities.request.users.UserUpdateRequest;
 import com.codecrafters.hub.inventorymanagementsystem.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

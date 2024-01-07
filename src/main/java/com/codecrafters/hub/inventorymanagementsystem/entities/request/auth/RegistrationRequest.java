@@ -1,4 +1,4 @@
-package com.codecrafters.hub.inventorymanagementsystem.entities.request;
+package com.codecrafters.hub.inventorymanagementsystem.entities.request.auth;
 
 import com.codecrafters.hub.inventorymanagementsystem.entities.Role;
 import com.codecrafters.hub.inventorymanagementsystem.enums.UserRole;

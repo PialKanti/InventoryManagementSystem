@@ -1,4 +1,4 @@
-package com.codecrafters.hub.inventorymanagementsystem.entities.request;
+package com.codecrafters.hub.inventorymanagementsystem.entities.request.users;
 
 public class UserUpdateRequest {
     private Long id;

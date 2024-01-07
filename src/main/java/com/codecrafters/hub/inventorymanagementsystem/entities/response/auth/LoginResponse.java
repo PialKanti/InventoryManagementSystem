@@ -1,4 +1,4 @@
-package com.codecrafters.hub.inventorymanagementsystem.entities.response;
+package com.codecrafters.hub.inventorymanagementsystem.entities.response.auth;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
