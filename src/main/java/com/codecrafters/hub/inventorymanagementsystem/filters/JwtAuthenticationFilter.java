@@ -1,7 +1,7 @@
 package com.codecrafters.hub.inventorymanagementsystem.filters;
 
 import com.codecrafters.hub.inventorymanagementsystem.services.JwtService;
-import com.codecrafters.hub.inventorymanagementsystem.services.UserDetailsService;
+import com.codecrafters.hub.inventorymanagementsystem.services.UserService;
 import com.codecrafters.hub.inventorymanagementsystem.utils.JwtUtils;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -20,11 +20,12 @@ import java.io.IOException;
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final JwtService jwtService;
-    private final UserDetailsService userDetailsService;
+    private final UserService userService;
 
-    public JwtAuthenticationFilter(@Autowired JwtService jwtService, @Autowired UserDetailsService userDetailsService) {
+    @Autowired
+    public JwtAuthenticationFilter(JwtService jwtService, UserService userService) {
         this.jwtService = jwtService;
-        this.userDetailsService = userDetailsService;
+        this.userService = userService;
     }
 
     @Override
@@ -40,7 +41,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String jwtToken = JwtUtils.extractTokenFromAuthorizationHeader(authHeader);
         String username = jwtService.extractUsername(jwtToken);
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+            UserDetails userDetails = userService.loadUserByUsername(username);
             if (userDetails == null) {
                 filterChain.doFilter(request, response);
                 return;
