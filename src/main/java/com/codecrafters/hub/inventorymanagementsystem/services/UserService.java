@@ -2,9 +2,11 @@ package com.codecrafters.hub.inventorymanagementsystem.services;
 
 import com.codecrafters.hub.inventorymanagementsystem.entities.Role;
 import com.codecrafters.hub.inventorymanagementsystem.entities.User;
+import com.codecrafters.hub.inventorymanagementsystem.entities.request.auth.ChangePasswordRequest;
 import com.codecrafters.hub.inventorymanagementsystem.entities.request.auth.RegistrationRequest;
 import com.codecrafters.hub.inventorymanagementsystem.entities.request.users.UserUpdateRequest;
 import com.codecrafters.hub.inventorymanagementsystem.enums.UserRole;
+import com.codecrafters.hub.inventorymanagementsystem.exceptions.PasswordMismatchException;
 import com.codecrafters.hub.inventorymanagementsystem.repositories.RoleRepository;
 import com.codecrafters.hub.inventorymanagementsystem.repositories.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -78,5 +80,16 @@ public class UserService extends BaseService<User, Long, RegistrationRequest, Us
         user.setLastName(request.getLastName());
 
         return null;
+    }
+
+    public void updatePassword(Long userId, ChangePasswordRequest request) throws PasswordMismatchException {
+        User user = repository.findById(userId)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        if (!passwordEncoder.matches(request.getOldPassword(), user.getPassword())) {
+            throw new PasswordMismatchException("Invalid old password");
+        }
+
+        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+        repository.save(user);
     }
 }

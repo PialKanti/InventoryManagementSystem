@@ -3,11 +3,13 @@ package com.codecrafters.hub.inventorymanagementsystem.controllers;
 import com.codecrafters.hub.inventorymanagementsystem.entities.User;
 import com.codecrafters.hub.inventorymanagementsystem.entities.request.auth.ChangePasswordRequest;
 import com.codecrafters.hub.inventorymanagementsystem.entities.request.users.UserUpdateRequest;
-import com.codecrafters.hub.inventorymanagementsystem.repositories.UserRepository;
+import com.codecrafters.hub.inventorymanagementsystem.exceptions.PasswordMismatchException;
+import com.codecrafters.hub.inventorymanagementsystem.services.UserService;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
@@ -17,71 +19,61 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/v1/users")
 public class UserController {
-    private final UserRepository repository;
-    private final PasswordEncoder passwordEncoder;
+    private final UserService userService;
+
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
     @Autowired
-    public UserController(UserRepository repository, PasswordEncoder passwordEncoder) {
-        this.repository = repository;
-        this.passwordEncoder = passwordEncoder;
-    }
+
 
     @GetMapping
     public ResponseEntity<List<User>> findAll() {
-        return ResponseEntity.ok(repository.findAll());
+        return ResponseEntity.ok(userService.findAll());
     }
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<User> findById(@PathVariable Long id) {
-        var user = repository.findById(id);
-        return user.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+        var userOptional = userService.findById(id);
+        return userOptional.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PutMapping(value = "/{id}")
     public ResponseEntity<User> update(@PathVariable Long id, @RequestBody UserUpdateRequest request) {
-        if (!id.equals(request.getId())) {
-            return ResponseEntity.badRequest().build();
-        }
-
-        var userOptional = repository.findById(id);
-        if (userOptional.isEmpty()) {
+        try {
+            User user = userService.update(id, request);
+            return ResponseEntity.ok(user);
+        } catch (EntityNotFoundException exception) {
             return ResponseEntity.notFound().build();
+        } catch (Exception exception) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
-
-        User user = userOptional.get();
-        user.setFirstName(request.getFirstName());
-        user.setLastName(request.getLastName());
-
-        User updatedUser = repository.save(user);
-        return ResponseEntity.ok(updatedUser);
     }
 
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Void> deleteById(@PathVariable Long id) {
-        var userOptional = repository.findById(id);
-        if (userOptional.isEmpty()) {
+        try {
+            userService.deleteById(id);
+            return ResponseEntity.noContent().build();
+        } catch (EntityNotFoundException exception) {
             return ResponseEntity.notFound().build();
+        } catch (Exception exception) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
-
-        repository.deleteById(id);
-        return ResponseEntity.noContent().build();
     }
 
     @PutMapping(value = "/{id}/password")
     public ResponseEntity<Map<String, String>> updatePassword(@PathVariable Long id, @RequestBody ChangePasswordRequest request) {
-        var userOptional = repository.findById(id);
-        if (userOptional.isEmpty()) {
+        try {
+            userService.updatePassword(id, request);
+            return ResponseEntity.noContent().build();
+        } catch (PasswordMismatchException exception) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Collections.singletonMap("message", exception.getMessage()));
+        } catch (UsernameNotFoundException exception) {
             return ResponseEntity.notFound().build();
+        } catch (Exception exception) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
-
-        User user = userOptional.get();
-        if (!passwordEncoder.matches(request.getOldPassword(), user.getPassword())) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(Collections.singletonMap("message", "Invalid old password"));
-        }
-
-        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
-        repository.save(user);
-        return ResponseEntity.noContent().build();
     }
 }
