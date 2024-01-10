@@ -1,6 +1,6 @@
 package com.codecrafters.hub.inventorymanagementsystem.filters;
 
-import com.codecrafters.hub.inventorymanagementsystem.entities.response.auth.ErrorResponse;
+import com.codecrafters.hub.inventorymanagementsystem.entities.response.ErrorResponse;
 import com.codecrafters.hub.inventorymanagementsystem.services.JwtService;
 import com.codecrafters.hub.inventorymanagementsystem.services.UserService;
 import com.codecrafters.hub.inventorymanagementsystem.utils.JwtUtils;
