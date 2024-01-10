@@ -14,21 +14,21 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class GlobalExceptionHandler {
     @ExceptionHandler(value = {BadCredentialsException.class})
     public ResponseEntity<ErrorResponse> handleBadCredentialsException(BadCredentialsException exception) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ErrorResponse(HttpStatus.UNAUTHORIZED.value(), "Username or password is incorrect"));
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ErrorResponse.build(HttpStatus.UNAUTHORIZED, "Username or password is incorrect"));
     }
 
     @ExceptionHandler(value = {EntityNotFoundException.class})
     public ResponseEntity<ErrorResponse> handleEntityNotFoundException(EntityNotFoundException exception) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse(HttpStatus.NOT_FOUND.value(), "Entity not found"));
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ErrorResponse.build(HttpStatus.NOT_FOUND, "Entity not found"));
     }
 
     @ExceptionHandler(value = {UsernameNotFoundException.class})
     public ResponseEntity<ErrorResponse> handleUsernameNotFoundException(UsernameNotFoundException exception) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse(HttpStatus.NOT_FOUND.value(), exception.getMessage()));
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ErrorResponse.build(HttpStatus.NOT_FOUND, exception.getMessage()));
     }
 
     @ExceptionHandler(value = {PasswordMismatchException.class})
     public ResponseEntity<ErrorResponse> handlePasswordMismatchException(PasswordMismatchException exception) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ErrorResponse(HttpStatus.UNAUTHORIZED.value(), exception.getMessage()));
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ErrorResponse.build(HttpStatus.UNAUTHORIZED, exception.getMessage()));
     }
 }
