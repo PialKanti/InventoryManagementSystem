@@ -49,25 +49,13 @@ public class ProductController {
 
     @PutMapping(value = "/{id}")
     public ResponseEntity<Product> update(@PathVariable Long id, @RequestBody ProductUpdateRequest request) {
-        try {
-            Product updatedEntity = service.update(id, request);
-            return ResponseEntity.ok(updatedEntity);
-        } catch (EntityNotFoundException exception) {
-            return ResponseEntity.notFound().build();
-        } catch (Exception exception) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+        Product updatedEntity = service.update(id, request);
+        return ResponseEntity.ok(updatedEntity);
     }
 
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-        try {
-            service.deleteById(id);
-            return ResponseEntity.noContent().build();
-        } catch (EntityNotFoundException exception) {
-            return ResponseEntity.notFound().build();
-        } catch (Exception exception) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+        service.deleteById(id);
+        return ResponseEntity.noContent().build();
     }
 }

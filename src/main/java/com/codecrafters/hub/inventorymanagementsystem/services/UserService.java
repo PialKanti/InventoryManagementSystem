@@ -23,7 +23,6 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
-
 public class UserService extends BaseService<User, Long, RegistrationRequest, UserUpdateRequest> implements UserDetailsService {
     private final UserRepository repository;
     private final RoleRepository roleRepository;
