@@ -1,7 +1,7 @@
 package com.codecrafters.hub.inventorymanagementsystem.entities;
 
+import com.codecrafters.hub.inventorymanagementsystem.entities.common.NonAuditableEntity;
 import jakarta.persistence.*;
-import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -13,10 +13,7 @@ import java.util.stream.Collectors;
 @Entity
 @NamedEntityGraph(name = "User.roles", attributeNodes = @NamedAttributeNode("roles"))
 @Table(name = "application_user")
-public class User implements UserDetails {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+public class User extends NonAuditableEntity implements UserDetails {
     @Column(nullable = false)
     private String firstName;
     @Column(nullable = true)
@@ -30,14 +27,6 @@ public class User implements UserDetails {
     @ManyToMany
     @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
     private List<Role> roles;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public String getFirstName() {
         return firstName;

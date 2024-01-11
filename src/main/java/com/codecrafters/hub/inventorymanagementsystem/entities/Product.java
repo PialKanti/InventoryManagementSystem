@@ -1,13 +1,11 @@
 package com.codecrafters.hub.inventorymanagementsystem.entities;
 
+import com.codecrafters.hub.inventorymanagementsystem.entities.common.AuditableEntity;
 import jakarta.persistence.*;
 
 @Entity
 @Table(name = "products")
-public class Product extends AuditorEntity{
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+public class Product extends AuditableEntity {
     @Column(nullable = false, length = 200)
     private String title;
     @Column(nullable = true, length = 1000)
@@ -16,14 +14,6 @@ public class Product extends AuditorEntity{
     private float price;
     @Column(nullable = false)
     private int quality;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public String getTitle() {
         return title;

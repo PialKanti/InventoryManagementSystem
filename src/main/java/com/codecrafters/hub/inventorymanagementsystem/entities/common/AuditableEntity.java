@@ -1,4 +1,4 @@
-package com.codecrafters.hub.inventorymanagementsystem.entities;
+package com.codecrafters.hub.inventorymanagementsystem.entities.common;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
-public abstract class AuditorEntity {
+public abstract class AuditableEntity extends BaseEntity {
     @CreatedBy
     @Column(name = "created_by")
     private String createdBy;

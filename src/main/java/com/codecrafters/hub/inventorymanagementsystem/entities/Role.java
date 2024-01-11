@@ -1,5 +1,6 @@
 package com.codecrafters.hub.inventorymanagementsystem.entities;
 
+import com.codecrafters.hub.inventorymanagementsystem.entities.common.NonAuditableEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
@@ -7,10 +8,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "roles")
-public class Role {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+public class Role extends NonAuditableEntity {
     @Column(name = "role_key",nullable = false, length = 100)
     private String key;
     @Column(nullable = false, length = 100)
@@ -21,15 +19,6 @@ public class Role {
     @ManyToMany
     @JoinTable(name = "role_permissions", joinColumns = @JoinColumn(name = "role_id"), inverseJoinColumns = @JoinColumn(name = "permission_id"))
     private List<Permission> permissions;
-
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public String getKey() {
         return key;
