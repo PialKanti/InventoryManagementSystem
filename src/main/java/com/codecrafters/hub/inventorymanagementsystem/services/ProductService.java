@@ -1,8 +1,8 @@
 package com.codecrafters.hub.inventorymanagementsystem.services;
 
 import com.codecrafters.hub.inventorymanagementsystem.entities.Product;
-import com.codecrafters.hub.inventorymanagementsystem.entities.request.products.ProductCreateRequest;
-import com.codecrafters.hub.inventorymanagementsystem.entities.request.products.ProductUpdateRequest;
+import com.codecrafters.hub.inventorymanagementsystem.dtos.request.products.ProductCreateRequest;
+import com.codecrafters.hub.inventorymanagementsystem.dtos.request.products.ProductUpdateRequest;
 import com.codecrafters.hub.inventorymanagementsystem.repositories.ProductRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;

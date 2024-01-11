@@ -1,4 +1,4 @@
-package com.codecrafters.hub.inventorymanagementsystem.entities.request.auth;
+package com.codecrafters.hub.inventorymanagementsystem.dtos.request.auth;
 
 public class LoginRequest {
     private String username;

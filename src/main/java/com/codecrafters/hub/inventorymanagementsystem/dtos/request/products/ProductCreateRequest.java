@@ -1,21 +1,12 @@
-package com.codecrafters.hub.inventorymanagementsystem.entities.request.products;
+package com.codecrafters.hub.inventorymanagementsystem.dtos.request.products;
 
-import com.codecrafters.hub.inventorymanagementsystem.entities.request.UpdateRequest;
+import com.codecrafters.hub.inventorymanagementsystem.dtos.request.CreateRequest;
 
-public class ProductUpdateRequest implements UpdateRequest {
-    private Long id;
+public class ProductCreateRequest implements CreateRequest {
     private String title;
     private String description;
     private float price;
     private int quality;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public String getTitle() {
         return title;

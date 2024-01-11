@@ -1,8 +1,8 @@
 package com.codecrafters.hub.inventorymanagementsystem.controllers;
 
 import com.codecrafters.hub.inventorymanagementsystem.entities.User;
-import com.codecrafters.hub.inventorymanagementsystem.entities.request.auth.ChangePasswordRequest;
-import com.codecrafters.hub.inventorymanagementsystem.entities.request.users.UserUpdateRequest;
+import com.codecrafters.hub.inventorymanagementsystem.dtos.request.auth.ChangePasswordRequest;
+import com.codecrafters.hub.inventorymanagementsystem.dtos.request.users.UserUpdateRequest;
 import com.codecrafters.hub.inventorymanagementsystem.exceptions.PasswordMismatchException;
 import com.codecrafters.hub.inventorymanagementsystem.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;

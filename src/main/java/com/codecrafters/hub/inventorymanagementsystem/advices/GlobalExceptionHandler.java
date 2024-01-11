@@ -1,6 +1,6 @@
 package com.codecrafters.hub.inventorymanagementsystem.advices;
 
-import com.codecrafters.hub.inventorymanagementsystem.entities.response.ErrorResponse;
+import com.codecrafters.hub.inventorymanagementsystem.dtos.response.ErrorResponse;
 import com.codecrafters.hub.inventorymanagementsystem.exceptions.PasswordMismatchException;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;

@@ -2,9 +2,9 @@ package com.codecrafters.hub.inventorymanagementsystem.services;
 
 import com.codecrafters.hub.inventorymanagementsystem.entities.BlackListedToken;
 import com.codecrafters.hub.inventorymanagementsystem.entities.User;
-import com.codecrafters.hub.inventorymanagementsystem.entities.request.auth.LoginRequest;
-import com.codecrafters.hub.inventorymanagementsystem.entities.request.auth.RegistrationRequest;
-import com.codecrafters.hub.inventorymanagementsystem.entities.response.auth.LoginResponse;
+import com.codecrafters.hub.inventorymanagementsystem.dtos.request.auth.LoginRequest;
+import com.codecrafters.hub.inventorymanagementsystem.dtos.request.auth.RegistrationRequest;
+import com.codecrafters.hub.inventorymanagementsystem.dtos.response.auth.LoginResponse;
 import com.codecrafters.hub.inventorymanagementsystem.repositories.BlackListedTokenRepository;
 import com.codecrafters.hub.inventorymanagementsystem.utils.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
