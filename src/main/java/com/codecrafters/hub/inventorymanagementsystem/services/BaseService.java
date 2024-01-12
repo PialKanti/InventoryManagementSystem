@@ -1,6 +1,10 @@
 package com.codecrafters.hub.inventorymanagementsystem.services;
 
+import com.codecrafters.hub.inventorymanagementsystem.dtos.response.BasePaginatedResponse;
+import com.codecrafters.hub.inventorymanagementsystem.entities.User;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -15,6 +19,11 @@ public abstract class BaseService<T, Id, CreateRequest, UpdateRequest> {
 
     public List<T> findAll() {
         return repository.findAll();
+    }
+
+    public BasePaginatedResponse<T> findAll(Pageable pageable) {
+        var page = repository.findAll(pageable);
+        return new BasePaginatedResponse<>(page.getNumber(), page.getSize(), page.getNumberOfElements(), page.getTotalPages(), page.getContent());
     }
 
     public Optional<T> findById(Id id) {
