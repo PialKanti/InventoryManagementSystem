@@ -1,9 +1,9 @@
 package com.codecrafters.hub.inventorymanagementsystem.controllers;
 
-import com.codecrafters.hub.inventorymanagementsystem.dtos.response.BasePaginatedResponse;
-import com.codecrafters.hub.inventorymanagementsystem.entities.User;
 import com.codecrafters.hub.inventorymanagementsystem.dtos.request.auth.ChangePasswordRequest;
 import com.codecrafters.hub.inventorymanagementsystem.dtos.request.users.UserUpdateRequest;
+import com.codecrafters.hub.inventorymanagementsystem.dtos.response.BasePaginatedResponse;
+import com.codecrafters.hub.inventorymanagementsystem.entities.User;
 import com.codecrafters.hub.inventorymanagementsystem.exceptions.PasswordMismatchException;
 import com.codecrafters.hub.inventorymanagementsystem.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +12,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Map;
 
 @RestController

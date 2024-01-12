@@ -1,9 +1,9 @@
 package com.codecrafters.hub.inventorymanagementsystem.controllers;
 
-import com.codecrafters.hub.inventorymanagementsystem.dtos.response.BasePaginatedResponse;
-import com.codecrafters.hub.inventorymanagementsystem.entities.Product;
 import com.codecrafters.hub.inventorymanagementsystem.dtos.request.products.ProductCreateRequest;
 import com.codecrafters.hub.inventorymanagementsystem.dtos.request.products.ProductUpdateRequest;
+import com.codecrafters.hub.inventorymanagementsystem.dtos.response.BasePaginatedResponse;
+import com.codecrafters.hub.inventorymanagementsystem.entities.Product;
 import com.codecrafters.hub.inventorymanagementsystem.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
-import java.util.List;
 import java.util.Optional;
 
 @RestController
