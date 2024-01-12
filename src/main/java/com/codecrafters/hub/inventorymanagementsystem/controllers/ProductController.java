@@ -1,10 +1,13 @@
 package com.codecrafters.hub.inventorymanagementsystem.controllers;
 
+import com.codecrafters.hub.inventorymanagementsystem.dtos.response.BasePaginatedResponse;
 import com.codecrafters.hub.inventorymanagementsystem.entities.Product;
 import com.codecrafters.hub.inventorymanagementsystem.dtos.request.products.ProductCreateRequest;
 import com.codecrafters.hub.inventorymanagementsystem.dtos.request.products.ProductUpdateRequest;
 import com.codecrafters.hub.inventorymanagementsystem.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -24,12 +27,14 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Product>> getAll() {
-        return ResponseEntity.ok(service.findAll());
+    public ResponseEntity<BasePaginatedResponse<Product>> findAll(@RequestParam(name = "page", defaultValue = "0", required = false) int page,
+                                                                  @RequestParam(name = "pageSize", defaultValue = "5", required = false) int pageSize) {
+        Pageable pageable = PageRequest.of(page, pageSize);
+        return ResponseEntity.ok(service.findAll(pageable));
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<Product> get(@PathVariable Long id) {
+    public ResponseEntity<Product> findById(@PathVariable Long id) {
         Optional<Product> product = service.findById(id);
         return product.map(ResponseEntity::ok).orElse(ResponseEntity.badRequest().build());
     }
