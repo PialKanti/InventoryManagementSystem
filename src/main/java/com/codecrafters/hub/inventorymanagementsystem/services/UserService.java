@@ -47,9 +47,15 @@ public class UserService extends BaseService<User, Long, RegistrationRequest, Us
 
     @Override
     protected User convertToCreateEntity(RegistrationRequest request) {
-        User user = new User(request.getFirstName(), request.getLastName(), request.getUsername(), request.getEmail(), passwordEncoder.encode(request.getPassword()));
-        user.setRoles(extractRoleEntities(request.getRoles()));
-        return user;
+        return User
+                .builder()
+                .firstName(request.getFirstName())
+                .lastName(request.getLastName())
+                .username(request.getUsername())
+                .email(request.getEmail())
+                .password(passwordEncoder.encode(request.getPassword()))
+                .roles(extractRoleEntities(request.getRoles()))
+                .build();
     }
 
     private List<Role> extractRoleEntities(List<UserRole> enumRoles) {

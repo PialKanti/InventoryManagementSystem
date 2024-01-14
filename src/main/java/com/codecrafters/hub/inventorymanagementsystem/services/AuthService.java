@@ -48,6 +48,10 @@ public class AuthService {
 
     public void logout(String authorizationHeader) {
         String jwtToken = JwtUtils.extractTokenFromAuthorizationHeader(authorizationHeader);
-        tokenRepository.save(new BlackListedToken(jwtToken, LocalDateTime.now()));
+        tokenRepository.save(BlackListedToken
+                .builder()
+                .token(jwtToken)
+                .expiryDateTime(LocalDateTime.now())
+                .build());
     }
 }

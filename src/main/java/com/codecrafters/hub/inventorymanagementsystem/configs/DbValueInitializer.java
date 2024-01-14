@@ -17,14 +17,17 @@ public class DbValueInitializer implements ApplicationRunner {
     }
 
     @Override
-    public void run(ApplicationArguments args) throws Exception {
+    public void run(ApplicationArguments args) {
         insertUserRolesToDB();
     }
 
     private void insertUserRolesToDB() {
         for (UserRole userRole : UserRole.values()) {
-            Role role = new Role(userRole.toString(), userRole.getDisplayValue());
-            repository.save(role);
+            repository.save(Role
+                    .builder()
+                    .key(userRole.toString())
+                    .name(userRole.getDisplayValue())
+                    .build());
         }
     }
 }

@@ -2,11 +2,17 @@ package com.codecrafters.hub.inventorymanagementsystem.entities;
 
 import com.codecrafters.hub.inventorymanagementsystem.entities.common.NonAuditableEntity;
 import jakarta.persistence.*;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "blacklist_tokens")
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class BlackListedToken extends NonAuditableEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -15,36 +21,4 @@ public class BlackListedToken extends NonAuditableEntity {
     private String token;
     @Column(name = "expired_at")
     private LocalDateTime expiryDateTime;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
-    }
-
-    public LocalDateTime getExpiryDateTime() {
-        return expiryDateTime;
-    }
-
-    public void setExpiryDateTime(LocalDateTime expiryDateTime) {
-        this.expiryDateTime = expiryDateTime;
-    }
-
-    public BlackListedToken(String token, LocalDateTime expiryDateTime) {
-        this.token = token;
-        this.expiryDateTime = expiryDateTime;
-    }
-
-    public BlackListedToken() {
-    }
 }

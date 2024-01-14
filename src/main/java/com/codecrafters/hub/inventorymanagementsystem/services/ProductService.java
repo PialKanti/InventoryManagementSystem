@@ -21,7 +21,13 @@ public class ProductService extends BaseService<Product, Long, ProductCreateRequ
 
     @Override
     protected Product convertToCreateEntity(ProductCreateRequest request) {
-        return new Product(request.getTitle(), request.getDescription(), request.getPrice(), request.getQuality());
+        return Product
+                .builder()
+                .title(request.getTitle())
+                .description(request.getDescription())
+                .price(request.getPrice())
+                .quality(request.getQuality())
+                .build();
     }
 
     @Override
