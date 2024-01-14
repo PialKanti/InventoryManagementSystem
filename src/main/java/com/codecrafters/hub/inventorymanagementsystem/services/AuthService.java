@@ -40,7 +40,10 @@ public class AuthService {
         User user = userService.findByUsername(request.getUsername())
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
         String accessToken = jwtService.generateToken(user);
-        return new LoginResponse(accessToken);
+        return LoginResponse
+                .builder()
+                .accessToken(accessToken)
+                .build();
     }
 
     public void logout(String authorizationHeader) {
