@@ -16,6 +16,9 @@ public class Product extends AuditableEntity {
     private String title;
     @Column(length = 1000)
     private String description;
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    private Category category;
     @Column(nullable = false)
     private float price;
     @Column(nullable = false)
