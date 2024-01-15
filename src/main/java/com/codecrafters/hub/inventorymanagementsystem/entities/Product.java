@@ -19,5 +19,5 @@ public class Product extends AuditableEntity {
     @Column(nullable = false)
     private float price;
     @Column(nullable = false)
-    private int quality;
+    private int quantity;
 }

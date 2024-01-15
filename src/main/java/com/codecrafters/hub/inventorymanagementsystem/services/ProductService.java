@@ -26,7 +26,7 @@ public class ProductService extends BaseService<Product, Long, ProductCreateRequ
                 .title(request.getTitle())
                 .description(request.getDescription())
                 .price(request.getPrice())
-                .quality(request.getQuality())
+                .quantity(request.getQuantity())
                 .build();
     }
 
@@ -36,7 +36,7 @@ public class ProductService extends BaseService<Product, Long, ProductCreateRequ
         product.setTitle(request.getTitle());
         product.setDescription(request.getDescription());
         product.setPrice(request.getPrice());
-        product.setQuality(request.getQuality());
+        product.setQuantity(request.getQuality());
 
         return product;
     }
