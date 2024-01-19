@@ -2,15 +2,13 @@ package com.codecrafters.hub.inventorymanagementsystem.entities;
 
 import com.codecrafters.hub.inventorymanagementsystem.entities.common.AuditableEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.List;
 
 @Entity
+@NamedEntityGraph(name = "Category.products", attributeNodes = @NamedAttributeNode("products"))
 @Table(name = "categories")
 @Getter
 @Setter

@@ -1,6 +1,7 @@
 package com.codecrafters.hub.inventorymanagementsystem.repositories;
 
 import com.codecrafters.hub.inventorymanagementsystem.entities.Category;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -12,5 +13,6 @@ public interface CategoryRepository extends BaseRepository<Category, Long> {
 
     <T> Optional<T> findById(Long id, Class<T> type);
 
+    @EntityGraph(value = "Category.products", type = EntityGraph.EntityGraphType.LOAD)
     <T> T findProductsById(Long id, Class<T> type);
 }
