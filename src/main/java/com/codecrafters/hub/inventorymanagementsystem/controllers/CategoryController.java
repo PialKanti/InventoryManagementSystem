@@ -1,6 +1,7 @@
 package com.codecrafters.hub.inventorymanagementsystem.controllers;
 
 import com.codecrafters.hub.inventorymanagementsystem.dtos.request.categories.CategoryCreateRequest;
+import com.codecrafters.hub.inventorymanagementsystem.dtos.request.categories.CategoryUpdateRequest;
 import com.codecrafters.hub.inventorymanagementsystem.dtos.response.BasePaginatedResponse;
 import com.codecrafters.hub.inventorymanagementsystem.dtos.response.EntityResponse;
 import com.codecrafters.hub.inventorymanagementsystem.entities.projections.CategoryProjection;
@@ -47,5 +48,10 @@ public class CategoryController {
                 .toUriString();
 
         return ResponseEntity.created(URI.create(uriString)).body(entityResponse);
+    }
+
+    @PutMapping(value = "/{id}")
+    public ResponseEntity<EntityResponse> update(@PathVariable(name = "id") Long id, @RequestBody CategoryUpdateRequest request) {
+        return ResponseEntity.ok(service.update(id, request));
     }
 }

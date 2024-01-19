@@ -3,7 +3,7 @@ package com.codecrafters.hub.inventorymanagementsystem.controllers;
 import com.codecrafters.hub.inventorymanagementsystem.dtos.request.auth.ChangePasswordRequest;
 import com.codecrafters.hub.inventorymanagementsystem.dtos.request.users.UserUpdateRequest;
 import com.codecrafters.hub.inventorymanagementsystem.dtos.response.BasePaginatedResponse;
-import com.codecrafters.hub.inventorymanagementsystem.entities.User;
+import com.codecrafters.hub.inventorymanagementsystem.dtos.response.EntityResponse;
 import com.codecrafters.hub.inventorymanagementsystem.entities.projections.UserProjection;
 import com.codecrafters.hub.inventorymanagementsystem.exceptions.PasswordMismatchException;
 import com.codecrafters.hub.inventorymanagementsystem.services.UserService;
@@ -39,9 +39,8 @@ public class UserController {
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<User> update(@PathVariable Long id, @RequestBody UserUpdateRequest request) {
-        User user = userService.update(id, request);
-        return ResponseEntity.ok(user);
+    public ResponseEntity<EntityResponse> update(@PathVariable Long id, @RequestBody UserUpdateRequest request) {
+        return ResponseEntity.ok(userService.update(id, request));
     }
 
     @DeleteMapping(value = "/{id}")

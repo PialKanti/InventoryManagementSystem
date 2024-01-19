@@ -40,13 +40,13 @@ public abstract class BaseService<T, Id, CreateRequest, UpdateRequest, EntityRes
         return convertToEntityResponse(repository.save(entity));
     }
 
-    public T update(Id id, UpdateRequest request) throws EntityNotFoundException {
+    public EntityResponse update(Id id, UpdateRequest request) throws EntityNotFoundException {
         if (!repository.existsById(id)) {
             throw new EntityNotFoundException();
         }
 
         T entity = convertToUpdateEntity(request);
-        return repository.save(entity);
+        return convertToEntityResponse(repository.save(entity));
     }
 
     public void deleteById(Id id) throws EntityNotFoundException {

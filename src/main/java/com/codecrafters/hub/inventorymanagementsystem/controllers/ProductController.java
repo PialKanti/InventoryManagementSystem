@@ -4,7 +4,6 @@ import com.codecrafters.hub.inventorymanagementsystem.dtos.request.products.Prod
 import com.codecrafters.hub.inventorymanagementsystem.dtos.request.products.ProductUpdateRequest;
 import com.codecrafters.hub.inventorymanagementsystem.dtos.response.BasePaginatedResponse;
 import com.codecrafters.hub.inventorymanagementsystem.dtos.response.EntityResponse;
-import com.codecrafters.hub.inventorymanagementsystem.entities.Product;
 import com.codecrafters.hub.inventorymanagementsystem.entities.projections.ProductProjection;
 import com.codecrafters.hub.inventorymanagementsystem.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,9 +51,8 @@ public class ProductController {
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<Product> update(@PathVariable Long id, @RequestBody ProductUpdateRequest request) {
-        Product updatedEntity = service.update(id, request);
-        return ResponseEntity.ok(updatedEntity);
+    public ResponseEntity<EntityResponse> update(@PathVariable Long id, @RequestBody ProductUpdateRequest request) {
+        return ResponseEntity.ok(service.update(id, request));
     }
 
     @DeleteMapping(value = "/{id}")
