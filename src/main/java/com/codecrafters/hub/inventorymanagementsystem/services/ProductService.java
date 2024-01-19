@@ -27,7 +27,7 @@ public class ProductService extends BaseService<Product, Long, ProductCreateRequ
                 .description(request.getDescription())
                 .price(request.getPrice())
                 .quantity(request.getQuantity())
-                .category(categoryService.findById(request.getCategoryId(), Category.class).orElse(null))
+                .category(categoryService.findById(request.getCategoryId(), Category.class))
                 .build();
     }
 

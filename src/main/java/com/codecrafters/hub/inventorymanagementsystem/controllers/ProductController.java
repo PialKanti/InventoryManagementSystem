@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/products")
@@ -35,8 +34,7 @@ public class ProductController {
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<ProductProjection> findById(@PathVariable Long id) {
-        Optional<ProductProjection> optional = service.findById(id, ProductProjection.class);
-        return optional.map(ResponseEntity::ok).orElse(ResponseEntity.badRequest().build());
+        return ResponseEntity.ok(service.findById(id, ProductProjection.class));
     }
 
     @PostMapping

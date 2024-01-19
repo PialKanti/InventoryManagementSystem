@@ -34,8 +34,7 @@ public class UserController {
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<UserProjection> findById(@PathVariable Long id) {
-        var userOptional = userService.findById(id, UserProjection.class);
-        return userOptional.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+        return ResponseEntity.ok(userService.findById(id, UserProjection.class));
     }
 
     @PutMapping(value = "/{id}")

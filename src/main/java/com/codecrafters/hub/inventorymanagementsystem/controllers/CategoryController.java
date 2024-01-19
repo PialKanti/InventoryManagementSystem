@@ -7,7 +7,6 @@ import com.codecrafters.hub.inventorymanagementsystem.dtos.response.EntityRespon
 import com.codecrafters.hub.inventorymanagementsystem.entities.projections.CategoryProjection;
 import com.codecrafters.hub.inventorymanagementsystem.entities.projections.ProductProjection;
 import com.codecrafters.hub.inventorymanagementsystem.services.CategoryService;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -37,8 +36,7 @@ public class CategoryController {
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<CategoryProjection> findById(@PathVariable(name = "id") Long id) {
-        var categoryOptional = service.findById(id, CategoryProjection.class);
-        return categoryOptional.map(ResponseEntity::ok).orElseThrow(() -> new EntityNotFoundException("Category not found"));
+        return ResponseEntity.ok(service.findById(id, CategoryProjection.class));
     }
 
     @PostMapping
@@ -58,7 +56,7 @@ public class CategoryController {
     }
 
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<Void> deleteById(@PathVariable(name = "id") Long id){
+    public ResponseEntity<Void> deleteById(@PathVariable(name = "id") Long id) {
         service.deleteById(id);
         return ResponseEntity.noContent().build();
     }

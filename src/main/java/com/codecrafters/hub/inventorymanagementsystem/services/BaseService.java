@@ -6,7 +6,6 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
-import java.util.Optional;
 
 public abstract class BaseService<T, Id, CreateRequest, UpdateRequest, EntityResponse> {
     private final BaseRepository<T, Id> repository;
@@ -31,8 +30,8 @@ public abstract class BaseService<T, Id, CreateRequest, UpdateRequest, EntityRes
                 .build();
     }
 
-    public <R> Optional<R> findById(Id id, Class<R> type) {
-        return repository.findById(id, type);
+    public <R> R findById(Id id, Class<R> type) {
+        return repository.findById(id, type).orElseThrow(EntityNotFoundException::new);
     }
 
     public EntityResponse create(CreateRequest request) {
