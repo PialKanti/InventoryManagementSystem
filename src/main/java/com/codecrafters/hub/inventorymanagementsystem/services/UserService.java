@@ -1,5 +1,6 @@
 package com.codecrafters.hub.inventorymanagementsystem.services;
 
+import com.codecrafters.hub.inventorymanagementsystem.dtos.response.users.UserResponse;
 import com.codecrafters.hub.inventorymanagementsystem.entities.Role;
 import com.codecrafters.hub.inventorymanagementsystem.entities.User;
 import com.codecrafters.hub.inventorymanagementsystem.dtos.request.auth.ChangePasswordRequest;
@@ -23,7 +24,7 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
-public class UserService extends BaseService<User, Long, RegistrationRequest, UserUpdateRequest> implements UserDetailsService {
+public class UserService extends BaseService<User, Long, RegistrationRequest, UserUpdateRequest, UserResponse> implements UserDetailsService {
     private final UserRepository repository;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
@@ -85,6 +86,17 @@ public class UserService extends BaseService<User, Long, RegistrationRequest, Us
         user.setLastName(request.getLastName());
 
         return null;
+    }
+
+    @Override
+    protected UserResponse convertToEntityResponse(User entity) {
+        return UserResponse
+                .builder()
+                .firstName(entity.getFirstName())
+                .lastName(entity.getLastName())
+                .username(entity.getUsername())
+                .email(entity.getEmail())
+                .build();
     }
 
     public void updatePassword(Long userId, ChangePasswordRequest request) throws PasswordMismatchException {

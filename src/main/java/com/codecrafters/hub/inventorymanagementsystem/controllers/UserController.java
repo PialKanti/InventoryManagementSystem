@@ -4,6 +4,7 @@ import com.codecrafters.hub.inventorymanagementsystem.dtos.request.auth.ChangePa
 import com.codecrafters.hub.inventorymanagementsystem.dtos.request.users.UserUpdateRequest;
 import com.codecrafters.hub.inventorymanagementsystem.dtos.response.BasePaginatedResponse;
 import com.codecrafters.hub.inventorymanagementsystem.entities.User;
+import com.codecrafters.hub.inventorymanagementsystem.entities.projections.UserProjection;
 import com.codecrafters.hub.inventorymanagementsystem.exceptions.PasswordMismatchException;
 import com.codecrafters.hub.inventorymanagementsystem.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,15 +26,15 @@ public class UserController {
     }
 
     @GetMapping
-    public ResponseEntity<BasePaginatedResponse<User>> findAll(@RequestParam(name = "page", defaultValue = "0", required = false) int page,
-                                                               @RequestParam(name = "pageSize", defaultValue = "5", required = false) int pageSize) {
+    public ResponseEntity<BasePaginatedResponse<UserProjection>> findAll(@RequestParam(name = "page", defaultValue = "0", required = false) int page,
+                                                                         @RequestParam(name = "pageSize", defaultValue = "5", required = false) int pageSize) {
         Pageable pageable = PageRequest.of(page, pageSize);
-        return ResponseEntity.ok(userService.findAll(pageable));
+        return ResponseEntity.ok(userService.findAll(pageable, UserProjection.class));
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<User> findById(@PathVariable Long id) {
-        var userOptional = userService.findById(id);
+    public ResponseEntity<UserProjection> findById(@PathVariable Long id) {
+        var userOptional = userService.findById(id, UserProjection.class);
         return userOptional.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 

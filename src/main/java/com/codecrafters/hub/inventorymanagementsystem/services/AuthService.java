@@ -1,5 +1,6 @@
 package com.codecrafters.hub.inventorymanagementsystem.services;
 
+import com.codecrafters.hub.inventorymanagementsystem.dtos.response.users.UserResponse;
 import com.codecrafters.hub.inventorymanagementsystem.entities.BlackListedToken;
 import com.codecrafters.hub.inventorymanagementsystem.entities.User;
 import com.codecrafters.hub.inventorymanagementsystem.dtos.request.auth.LoginRequest;
@@ -30,7 +31,7 @@ public class AuthService {
         this.jwtService = jwtService;
     }
 
-    public User register(RegistrationRequest request) {
+    public UserResponse register(RegistrationRequest request) {
         return userService.create(request);
     }
 

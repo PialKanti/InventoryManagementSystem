@@ -1,28 +1,28 @@
 package com.codecrafters.hub.inventorymanagementsystem.services;
 
 import com.codecrafters.hub.inventorymanagementsystem.dtos.response.BasePaginatedResponse;
+import com.codecrafters.hub.inventorymanagementsystem.repositories.BaseRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 import java.util.Optional;
 
-public abstract class BaseService<T, Id, CreateRequest, UpdateRequest> {
-    private final JpaRepository<T, Id> repository;
+public abstract class BaseService<T, Id, CreateRequest, UpdateRequest, EntityResponse> {
+    private final BaseRepository<T, Id> repository;
 
-    public BaseService(JpaRepository<T, Id> repository) {
+    public BaseService(BaseRepository<T, Id> repository) {
         this.repository = repository;
     }
 
-    public List<T> findAll() {
-        return repository.findAll();
+    public <R> List<R> findAll(Class<R> type) {
+        return repository.findAllBy(type);
     }
 
-    public BasePaginatedResponse<T> findAll(Pageable pageable) {
-        var page = repository.findAll(pageable);
+    public <R> BasePaginatedResponse<R> findAll(Pageable pageable, Class<R> type) {
+        var page = repository.findAllBy(pageable, type);
         return BasePaginatedResponse
-                .<T>builder()
+                .<R>builder()
                 .page(page.getNumber())
                 .pageSize(page.getSize())
                 .totalItems(page.getNumberOfElements())
@@ -31,13 +31,13 @@ public abstract class BaseService<T, Id, CreateRequest, UpdateRequest> {
                 .build();
     }
 
-    public Optional<T> findById(Id id) {
-        return repository.findById(id);
+    public <R> Optional<R> findById(Id id, Class<R> type) {
+        return repository.findById(id, type);
     }
 
-    public T create(CreateRequest request) {
+    public EntityResponse create(CreateRequest request) {
         T entity = convertToCreateEntity(request);
-        return repository.save(entity);
+        return convertToEntityResponse(repository.save(entity));
     }
 
     public T update(Id id, UpdateRequest request) throws EntityNotFoundException {
@@ -60,4 +60,6 @@ public abstract class BaseService<T, Id, CreateRequest, UpdateRequest> {
     protected abstract T convertToCreateEntity(CreateRequest request);
 
     protected abstract T convertToUpdateEntity(UpdateRequest request);
+
+    protected abstract EntityResponse convertToEntityResponse(T entity);
 }
