@@ -40,7 +40,7 @@ public class UserService extends BaseService<User, Long, RegistrationRequest, Us
     }
 
     @Override
-    @Cacheable(key = "#username")
+    @Cacheable(key = "#username") //Todo: need to implement @CacheEvict
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return repository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
