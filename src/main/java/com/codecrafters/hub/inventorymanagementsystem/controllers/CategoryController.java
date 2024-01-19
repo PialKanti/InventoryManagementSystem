@@ -25,12 +25,12 @@ public class CategoryController {
 
     @GetMapping
     public ResponseEntity<List<CategoryProjection>> findAll() {
-        return ResponseEntity.ok(service.findAll());
+        return ResponseEntity.ok(service.findAll(CategoryProjection.class));
     }
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<CategoryProjection> findById(@PathVariable(name = "id") Long id) {
-        var categoryOptional = service.findById(id);
+        var categoryOptional = service.findById(id, CategoryProjection.class);
         return categoryOptional.map(ResponseEntity::ok).orElseThrow(() -> new EntityNotFoundException("Category not found"));
     }
 
