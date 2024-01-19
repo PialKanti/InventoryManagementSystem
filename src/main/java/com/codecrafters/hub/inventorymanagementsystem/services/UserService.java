@@ -11,6 +11,8 @@ import com.codecrafters.hub.inventorymanagementsystem.exceptions.PasswordMismatc
 import com.codecrafters.hub.inventorymanagementsystem.repositories.RoleRepository;
 import com.codecrafters.hub.inventorymanagementsystem.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -23,6 +25,7 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
+@CacheConfig(cacheNames = "users")
 public class UserService extends BaseService<User, Long, RegistrationRequest, UserUpdateRequest, UserResponse> implements UserDetailsService {
     private final UserRepository repository;
     private final RoleRepository roleRepository;
@@ -37,6 +40,7 @@ public class UserService extends BaseService<User, Long, RegistrationRequest, Us
     }
 
     @Override
+    @Cacheable(key = "#username")
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return repository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
