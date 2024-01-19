@@ -8,4 +8,5 @@ public class ProductCreateRequest {
     private String description;
     private float price;
     private int quantity;
+    private Long categoryId;
 }

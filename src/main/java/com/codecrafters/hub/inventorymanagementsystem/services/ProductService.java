@@ -3,6 +3,7 @@ package com.codecrafters.hub.inventorymanagementsystem.services;
 import com.codecrafters.hub.inventorymanagementsystem.dtos.request.products.ProductCreateRequest;
 import com.codecrafters.hub.inventorymanagementsystem.dtos.request.products.ProductUpdateRequest;
 import com.codecrafters.hub.inventorymanagementsystem.dtos.response.products.ProductResponse;
+import com.codecrafters.hub.inventorymanagementsystem.entities.Category;
 import com.codecrafters.hub.inventorymanagementsystem.entities.Product;
 import com.codecrafters.hub.inventorymanagementsystem.repositories.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,10 +11,12 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class ProductService extends BaseService<Product, Long, ProductCreateRequest, ProductUpdateRequest, ProductResponse> {
+    private final CategoryService categoryService;
 
     @Autowired
-    public ProductService(ProductRepository repository) {
+    public ProductService(ProductRepository repository, CategoryService categoryService) {
         super(repository);
+        this.categoryService = categoryService;
     }
 
     @Override
@@ -24,6 +27,7 @@ public class ProductService extends BaseService<Product, Long, ProductCreateRequ
                 .description(request.getDescription())
                 .price(request.getPrice())
                 .quantity(request.getQuantity())
+                .category(categoryService.findById(request.getCategoryId(), Category.class).orElse(null))
                 .build();
     }
 
