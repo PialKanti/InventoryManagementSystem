@@ -1,7 +1,6 @@
 package com.codecrafters.hub.inventorymanagementsystem.entities;
 
 import com.codecrafters.hub.inventorymanagementsystem.entities.common.AuditableEntity;
-import com.codecrafters.hub.inventorymanagementsystem.entities.projections.CategoryProjection;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -18,7 +17,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Category extends AuditableEntity implements CategoryProjection {
+public class Category extends AuditableEntity {
     @Column(nullable = false)
     private String name;
     @OneToMany(mappedBy = "category")
