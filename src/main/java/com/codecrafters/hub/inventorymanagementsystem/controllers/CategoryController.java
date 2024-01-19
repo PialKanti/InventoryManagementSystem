@@ -5,6 +5,7 @@ import com.codecrafters.hub.inventorymanagementsystem.dtos.request.categories.Ca
 import com.codecrafters.hub.inventorymanagementsystem.dtos.response.BasePaginatedResponse;
 import com.codecrafters.hub.inventorymanagementsystem.dtos.response.EntityResponse;
 import com.codecrafters.hub.inventorymanagementsystem.entities.projections.CategoryProjection;
+import com.codecrafters.hub.inventorymanagementsystem.entities.projections.ProductProjection;
 import com.codecrafters.hub.inventorymanagementsystem.services.CategoryService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "api/v1/categories")
@@ -53,5 +55,10 @@ public class CategoryController {
     @PutMapping(value = "/{id}")
     public ResponseEntity<EntityResponse> update(@PathVariable(name = "id") Long id, @RequestBody CategoryUpdateRequest request) {
         return ResponseEntity.ok(service.update(id, request));
+    }
+
+    @GetMapping(value = "/{id}/products")
+    public ResponseEntity<List<ProductProjection>> getProducts(@PathVariable(name = "id") Long categoryId) {
+        return ResponseEntity.ok(service.getProductsByCategoryId(categoryId).getProducts());
     }
 }

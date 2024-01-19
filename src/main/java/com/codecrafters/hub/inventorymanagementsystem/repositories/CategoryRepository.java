@@ -11,4 +11,6 @@ public interface CategoryRepository extends BaseRepository<Category, Long> {
     <T> List<T> findAllBy(Class<T> type);
 
     <T> Optional<T> findById(Long id, Class<T> type);
+
+    <T> T findProductsById(Long id, Class<T> type);
 }
