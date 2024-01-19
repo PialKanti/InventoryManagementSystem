@@ -41,12 +41,10 @@ public abstract class BaseService<T, Id, CreateRequest, UpdateRequest, EntityRes
     }
 
     public EntityResponse update(Id id, UpdateRequest request) throws EntityNotFoundException {
-        if (!repository.existsById(id)) {
-            throw new EntityNotFoundException();
-        }
+        T entity = repository.findById(id).orElseThrow(EntityNotFoundException::new);
+        T updatedEntity = convertToUpdateEntity(entity, request);
 
-        T entity = convertToUpdateEntity(request);
-        return convertToEntityResponse(repository.save(entity));
+        return convertToEntityResponse(repository.save(updatedEntity));
     }
 
     public void deleteById(Id id) throws EntityNotFoundException {
@@ -59,7 +57,7 @@ public abstract class BaseService<T, Id, CreateRequest, UpdateRequest, EntityRes
 
     protected abstract T convertToCreateEntity(CreateRequest request);
 
-    protected abstract T convertToUpdateEntity(UpdateRequest request);
+    protected abstract T convertToUpdateEntity(T entity, UpdateRequest request);
 
     protected abstract EntityResponse convertToEntityResponse(T entity);
 }

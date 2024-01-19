@@ -1,16 +1,15 @@
 package com.codecrafters.hub.inventorymanagementsystem.services;
 
-import com.codecrafters.hub.inventorymanagementsystem.dtos.response.users.UserResponse;
-import com.codecrafters.hub.inventorymanagementsystem.entities.Role;
-import com.codecrafters.hub.inventorymanagementsystem.entities.User;
 import com.codecrafters.hub.inventorymanagementsystem.dtos.request.auth.ChangePasswordRequest;
 import com.codecrafters.hub.inventorymanagementsystem.dtos.request.auth.RegistrationRequest;
 import com.codecrafters.hub.inventorymanagementsystem.dtos.request.users.UserUpdateRequest;
+import com.codecrafters.hub.inventorymanagementsystem.dtos.response.users.UserResponse;
+import com.codecrafters.hub.inventorymanagementsystem.entities.Role;
+import com.codecrafters.hub.inventorymanagementsystem.entities.User;
 import com.codecrafters.hub.inventorymanagementsystem.enums.UserRole;
 import com.codecrafters.hub.inventorymanagementsystem.exceptions.PasswordMismatchException;
 import com.codecrafters.hub.inventorymanagementsystem.repositories.RoleRepository;
 import com.codecrafters.hub.inventorymanagementsystem.repositories.UserRepository;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -80,12 +79,11 @@ public class UserService extends BaseService<User, Long, RegistrationRequest, Us
     }
 
     @Override
-    protected User convertToUpdateEntity(UserUpdateRequest request) {
-        User user = repository.findById(request.getId()).orElseThrow(EntityNotFoundException::new);
-        user.setFirstName(request.getFirstName());
-        user.setLastName(request.getLastName());
+    protected User convertToUpdateEntity(User entity, UserUpdateRequest request) {
+        entity.setFirstName(request.getFirstName());
+        entity.setLastName(request.getLastName());
 
-        return null;
+        return entity;
     }
 
     @Override

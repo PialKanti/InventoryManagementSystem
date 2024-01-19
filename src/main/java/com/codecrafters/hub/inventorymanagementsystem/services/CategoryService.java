@@ -25,11 +25,9 @@ public class CategoryService extends BaseService<Category, Long, CategoryCreateR
     }
 
     @Override
-    protected Category convertToUpdateEntity(CategoryUpdateRequest request) {
-        return Category
-                .builder()
-                .name(request.getName())
-                .build();
+    protected Category convertToUpdateEntity(Category entity, CategoryUpdateRequest request) {
+        entity.setName(request.getName());
+        return entity;
     }
 
     @Override

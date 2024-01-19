@@ -5,19 +5,15 @@ import com.codecrafters.hub.inventorymanagementsystem.dtos.request.products.Prod
 import com.codecrafters.hub.inventorymanagementsystem.dtos.response.products.ProductResponse;
 import com.codecrafters.hub.inventorymanagementsystem.entities.Product;
 import com.codecrafters.hub.inventorymanagementsystem.repositories.ProductRepository;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ProductService extends BaseService<Product, Long, ProductCreateRequest, ProductUpdateRequest, ProductResponse> {
 
-    private final ProductRepository repository;
-
     @Autowired
     public ProductService(ProductRepository repository) {
         super(repository);
-        this.repository = repository;
     }
 
     @Override
@@ -32,14 +28,13 @@ public class ProductService extends BaseService<Product, Long, ProductCreateRequ
     }
 
     @Override
-    protected Product convertToUpdateEntity(ProductUpdateRequest request) {
-        Product product = repository.findById(request.getId()).orElseThrow(EntityNotFoundException::new);
-        product.setTitle(request.getTitle());
-        product.setDescription(request.getDescription());
-        product.setPrice(request.getPrice());
-        product.setQuantity(request.getQuality());
+    protected Product convertToUpdateEntity(Product entity, ProductUpdateRequest request) {
+        entity.setTitle(request.getTitle());
+        entity.setDescription(request.getDescription());
+        entity.setPrice(request.getPrice());
+        entity.setQuantity(request.getQuality());
 
-        return product;
+        return entity;
     }
 
     @Override
