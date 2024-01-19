@@ -57,6 +57,12 @@ public class CategoryController {
         return ResponseEntity.ok(service.update(id, request));
     }
 
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<Void> deleteById(@PathVariable(name = "id") Long id){
+        service.deleteById(id);
+        return ResponseEntity.noContent().build();
+    }
+
     @GetMapping(value = "/{id}/products")
     public ResponseEntity<List<ProductProjection>> getProducts(@PathVariable(name = "id") Long categoryId) {
         return ResponseEntity.ok(service.getProductsByCategoryId(categoryId).getProducts());
