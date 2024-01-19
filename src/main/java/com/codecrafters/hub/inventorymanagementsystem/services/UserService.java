@@ -90,6 +90,7 @@ public class UserService extends BaseService<User, Long, RegistrationRequest, Us
     protected UserResponse convertToEntityResponse(User entity) {
         return UserResponse
                 .builder()
+                .id(entity.getId())
                 .firstName(entity.getFirstName())
                 .lastName(entity.getLastName())
                 .username(entity.getUsername())

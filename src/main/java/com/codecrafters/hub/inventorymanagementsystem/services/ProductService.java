@@ -45,6 +45,7 @@ public class ProductService extends BaseService<Product, Long, ProductCreateRequ
     protected ProductResponse convertToEntityResponse(Product entity) {
         return ProductResponse
                 .builder()
+                .id(entity.getId())
                 .title(entity.getTitle())
                 .description(entity.getDescription())
                 .price(entity.getPrice())
