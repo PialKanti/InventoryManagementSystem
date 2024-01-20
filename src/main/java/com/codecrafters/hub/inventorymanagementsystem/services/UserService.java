@@ -10,8 +10,10 @@ import com.codecrafters.hub.inventorymanagementsystem.enums.UserRole;
 import com.codecrafters.hub.inventorymanagementsystem.exceptions.PasswordMismatchException;
 import com.codecrafters.hub.inventorymanagementsystem.repositories.RoleRepository;
 import com.codecrafters.hub.inventorymanagementsystem.repositories.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -40,13 +42,19 @@ public class UserService extends BaseService<User, Long, RegistrationRequest, Us
     }
 
     @Override
-    @Cacheable(key = "#username") //Todo: need to implement @CacheEvict
+    @Cacheable(key = "#username")
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return repository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 
     public Optional<User> findByUsername(String username) {
         return repository.findByUsername(username);
+    }
+
+    @Override
+    @CacheEvict(key = "#result.username")
+    public UserResponse update(Long id, UserUpdateRequest request) throws EntityNotFoundException {
+        return super.update(id, request);
     }
 
     @Override
