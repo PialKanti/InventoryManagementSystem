@@ -86,6 +86,7 @@ public class UserService extends BaseService<User, Long, RegistrationRequest, Us
     protected User convertToUpdateEntity(User entity, UserUpdateRequest request) {
         entity.setFirstName(request.getFirstName());
         entity.setLastName(request.getLastName());
+        entity.setRoles(extractRoleEntities(request.getRoles()));
 
         return entity;
     }
