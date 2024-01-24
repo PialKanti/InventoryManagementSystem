@@ -62,7 +62,10 @@ public class CategoryController {
     }
 
     @GetMapping(value = "/{id}/products")
-    public ResponseEntity<List<ProductProjection>> getProducts(@PathVariable(name = "id") Long categoryId) {
-        return ResponseEntity.ok(service.getProductsByCategoryId(categoryId).getProducts());
+    public ResponseEntity<BasePaginatedResponse<ProductProjection>> getProducts(@PathVariable(name = "id") Long categoryId,
+                                                                                @RequestParam(name = "page", defaultValue = "0", required = false) int page,
+                                                                                @RequestParam(name = "pageSize", defaultValue = "5", required = false) int pageSize) {
+        Pageable pageable = PageRequest.of(page, pageSize);
+        return ResponseEntity.ok(service.getProductsByCategoryId(categoryId, pageable));
     }
 }

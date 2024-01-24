@@ -1,11 +1,13 @@
 package com.codecrafters.hub.inventorymanagementsystem.entities.projections;
 
+import java.math.BigDecimal;
+
 public interface ProductProjection extends BaseProjection {
     String getTitle();
 
     String getDescription();
 
-    float getPrice();
+    BigDecimal getPrice();
 
-    int getQuantity();
+    Integer getQuantity();
 }

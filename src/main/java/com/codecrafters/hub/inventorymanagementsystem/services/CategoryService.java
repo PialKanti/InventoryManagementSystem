@@ -2,12 +2,15 @@ package com.codecrafters.hub.inventorymanagementsystem.services;
 
 import com.codecrafters.hub.inventorymanagementsystem.dtos.request.categories.CategoryCreateRequest;
 import com.codecrafters.hub.inventorymanagementsystem.dtos.request.categories.CategoryUpdateRequest;
+import com.codecrafters.hub.inventorymanagementsystem.dtos.response.BasePaginatedResponse;
 import com.codecrafters.hub.inventorymanagementsystem.dtos.response.categories.CategoryResponse;
 import com.codecrafters.hub.inventorymanagementsystem.entities.Category;
 import com.codecrafters.hub.inventorymanagementsystem.entities.projections.CategoryProductProjection;
+import com.codecrafters.hub.inventorymanagementsystem.entities.projections.ProductProjection;
 import com.codecrafters.hub.inventorymanagementsystem.repositories.CategoryRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -20,12 +23,21 @@ public class CategoryService extends BaseService<Category, Long, CategoryCreateR
         this.repository = repository;
     }
 
-    public CategoryProductProjection getProductsByCategoryId(Long id) {
+    public BasePaginatedResponse<ProductProjection> getProductsByCategoryId(Long id, Pageable pageable) {
         if (!repository.existsById(id)) {
             throw new EntityNotFoundException("Category not found");
         }
 
-        return repository.findProductsById(id, CategoryProductProjection.class);
+        var page = repository.findProductsByCategoryId(id, pageable);
+
+        return BasePaginatedResponse
+                .<ProductProjection>builder()
+                .page(page.getNumber())
+                .pageSize(page.getSize())
+                .totalItems(page.getNumberOfElements())
+                .totalPages(page.getTotalPages())
+                .data(page.getContent())
+                .build();
     }
 
     @Override
