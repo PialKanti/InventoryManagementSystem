@@ -9,6 +9,7 @@ import com.codecrafters.hub.inventorymanagementsystem.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -27,8 +28,11 @@ public class ProductController {
 
     @GetMapping
     public ResponseEntity<BasePaginatedResponse<ProductProjection>> findAll(@RequestParam(name = "page", defaultValue = "0", required = false) int page,
-                                                                            @RequestParam(name = "pageSize", defaultValue = "5", required = false) int pageSize) {
-        Pageable pageable = PageRequest.of(page, pageSize);
+                                                                            @RequestParam(name = "pageSize", defaultValue = "5", required = false) int pageSize,
+                                                                            @RequestParam(name = "sort_by", defaultValue = "id", required = false) String sortBy,
+                                                                            @RequestParam(name = "order_by", defaultValue = "asc", required = false) String orderBy) {
+        Sort sortable = ("asc".equals(orderBy)) ? Sort.by(sortBy) : Sort.by(sortBy).descending();
+        Pageable pageable = PageRequest.of(page, pageSize, sortable);
         return ResponseEntity.ok(service.findAll(pageable, ProductProjection.class));
     }
 
