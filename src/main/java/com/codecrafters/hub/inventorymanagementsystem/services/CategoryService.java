@@ -5,9 +5,9 @@ import com.codecrafters.hub.inventorymanagementsystem.dtos.request.categories.Ca
 import com.codecrafters.hub.inventorymanagementsystem.dtos.response.BasePaginatedResponse;
 import com.codecrafters.hub.inventorymanagementsystem.dtos.response.categories.CategoryResponse;
 import com.codecrafters.hub.inventorymanagementsystem.entities.Category;
-import com.codecrafters.hub.inventorymanagementsystem.entities.projections.CategoryProductProjection;
 import com.codecrafters.hub.inventorymanagementsystem.entities.projections.ProductProjection;
 import com.codecrafters.hub.inventorymanagementsystem.repositories.CategoryRepository;
+import com.codecrafters.hub.inventorymanagementsystem.repositories.ProductRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -15,20 +15,22 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class CategoryService extends BaseService<Category, Long, CategoryCreateRequest, CategoryUpdateRequest, CategoryResponse> {
-    private final CategoryRepository repository;
+    private final CategoryRepository categoryRepository;
+    private final ProductRepository productRepository;
 
     @Autowired
-    public CategoryService(CategoryRepository repository) {
-        super(repository);
-        this.repository = repository;
+    public CategoryService(CategoryRepository categoryRepository, ProductRepository productRepository) {
+        super(categoryRepository);
+        this.categoryRepository = categoryRepository;
+        this.productRepository = productRepository;
     }
 
     public BasePaginatedResponse<ProductProjection> getProductsByCategoryId(Long id, Pageable pageable) {
-        if (!repository.existsById(id)) {
+        if (!categoryRepository.existsById(id)) {
             throw new EntityNotFoundException("Category not found");
         }
 
-        var page = repository.findProductsByCategoryId(id, pageable);
+        var page = productRepository.findByCategoryId(id, pageable, ProductProjection.class);
 
         return BasePaginatedResponse
                 .<ProductProjection>builder()

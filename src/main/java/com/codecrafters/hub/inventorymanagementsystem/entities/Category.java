@@ -8,7 +8,6 @@ import lombok.*;
 import java.util.List;
 
 @Entity
-@NamedEntityGraph(name = "Category.products", attributeNodes = @NamedAttributeNode("products"))
 @Table(name = "categories")
 @Getter
 @Setter
