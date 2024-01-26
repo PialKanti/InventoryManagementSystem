@@ -1,12 +1,12 @@
 package com.codecrafters.hub.inventorymanagementsystem.services;
 
+import com.codecrafters.hub.inventorymanagementsystem.properties.JwtProperties;
 import com.codecrafters.hub.inventorymanagementsystem.repositories.BlackListedTokenRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -18,14 +18,12 @@ import java.util.function.Function;
 
 @Service
 public class JwtService {
-    @Value("${jwt.encryption.key}")
-    private String encryptionKey;
-    @Value("${jwt.access-token.expiration}")
-    private long accessTokenExpiration;
+    private final JwtProperties jwtProperties;
     private final BlackListedTokenRepository repository;
 
     @Autowired
-    public JwtService(BlackListedTokenRepository repository) {
+    public JwtService(JwtProperties jwtProperties, BlackListedTokenRepository repository) {
+        this.jwtProperties = jwtProperties;
         this.repository = repository;
     }
 
@@ -38,7 +36,7 @@ public class JwtService {
                 .claims(claims)
                 .subject(userDetails.getUsername())
                 .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + accessTokenExpiration))
+                .expiration(new Date(System.currentTimeMillis() + jwtProperties.getAccessTokenExpiration()))
                 .signWith(getSigningKey(), Jwts.SIG.HS256)
                 .compact();
     }
@@ -80,7 +78,7 @@ public class JwtService {
     }
 
     private SecretKey getSigningKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(encryptionKey);
+        byte[] keyBytes = Decoders.BASE64.decode(jwtProperties.getEncryptionKey());
         return Keys.hmacShaKeyFor(keyBytes);
     }
 }
