@@ -75,4 +75,17 @@ class JwtServiceTest {
         //then
         assertThat(expected).isFalse();
     }
+
+    @Test
+    void checkIfTokenNotExpired() {
+        // Given
+        User user = User.builder().username("Robert").build();
+        String expiredToken = testService.generateToken(user);
+
+        // When
+        boolean expected = testService.isTokenExpired(expiredToken);
+
+        // Then
+        assertThat(expected).isFalse();
+    }
 }
