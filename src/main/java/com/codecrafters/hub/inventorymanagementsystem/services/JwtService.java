@@ -50,12 +50,12 @@ public class JwtService {
         return username != null && username.equals(userDetails.getUsername()) && !isTokenExpired(token) && !isTokenRevoked(token);
     }
 
-    private boolean isTokenExpired(String token) {
+    public boolean isTokenExpired(String token) {
         Date expirationDate = extractExpiration(token);
         return expirationDate != null && expirationDate.before(new Date());
     }
 
-    private boolean isTokenRevoked(String token) {
+    public boolean isTokenRevoked(String token) {
         var optional = repository.findByToken(token);
         return optional.isPresent();
     }

@@ -1,5 +1,6 @@
 package com.codecrafters.hub.inventorymanagementsystem.services.tokens;
 
+import com.codecrafters.hub.inventorymanagementsystem.entities.BlackListedToken;
 import com.codecrafters.hub.inventorymanagementsystem.entities.User;
 import com.codecrafters.hub.inventorymanagementsystem.properties.JwtProperties;
 import com.codecrafters.hub.inventorymanagementsystem.repositories.BlackListedTokenRepository;
@@ -12,7 +13,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.Optional;
+
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.BDDMockito.given;
 
 @SpringBootTest(classes = JwtProperties.class)
 @ExtendWith(MockitoExtension.class)
@@ -43,7 +48,31 @@ class JwtServiceTest {
         //when
         String expected = testService.extractUsername(token);
 
-        //test
+        //then
         assertThat(expected).isEqualTo(actual);
+    }
+
+    @Test
+    void checkIfTokenRevoked() {
+        //given
+        given(repository.findByToken(anyString()))
+                .willReturn(Optional.of(BlackListedToken.builder().build()));
+        //when
+        boolean expected = testService.isTokenRevoked(anyString());
+
+        //then
+        assertThat(expected).isTrue();
+    }
+
+    @Test
+    void checkIfTokenNotRevoked() {
+        //given
+        given(repository.findByToken(anyString()))
+                .willReturn(Optional.empty());
+        //when
+        boolean expected = testService.isTokenRevoked(anyString());
+
+        //then
+        assertThat(expected).isFalse();
     }
 }
