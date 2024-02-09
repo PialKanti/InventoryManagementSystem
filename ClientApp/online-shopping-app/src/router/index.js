@@ -5,10 +5,19 @@
  */
 
 // Composables
+import { useAuthStore } from '@/stores/authStore'
 import { createRouter, createWebHistory } from 'vue-router/auto'
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
 })
 
-export default router
+router.beforeEach((to, from) => {
+  const authStore = useAuthStore();
+
+  if (!authStore.isLoggedIn && to.path !== '/login') {
+    return { path: '/login' };
+  }
+})
+
+export default router;
