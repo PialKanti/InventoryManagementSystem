@@ -9,20 +9,22 @@
 </template>
 
 <script setup>
+import axios from 'axios';
 import { ref } from 'vue';
-import { inject } from 'vue';
+//import { inject } from 'vue';
 
 const username = ref('');
 const password = ref('');
 
-const $axios = inject('$axios');
+//const $axios = inject('$axios');
 
 const login = async () => {
     const data = {
         username: username.value,
         password: password.value
     };
-    await $axios.post('auth/login', data);
+    await axios.post('/api/auth/login', data);
+    //await fetch("http://localhost:8080/api/v1/users");
 };
 </script>
 
