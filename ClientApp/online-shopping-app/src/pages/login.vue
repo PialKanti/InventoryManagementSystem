@@ -18,7 +18,7 @@
 }
 
 .loginForm {
-    width: 30vw;
+    width: 25vw;
 }
 
 /* Hide scrollbar for Chrome, Safari, and Opera */
