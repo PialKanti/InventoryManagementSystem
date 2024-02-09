@@ -73,4 +73,9 @@ const showErrorAlert = (message) => {
     padding-right: 20px;
     padding-bottom: 20px;
 }
+
+.submit-button {
+    background-color: #3ab8db;
+    color: white;
+}
 </style>

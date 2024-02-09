@@ -20,18 +20,5 @@
 .loginForm {
     width: 25vw;
 }
-
-/* Hide scrollbar for Chrome, Safari, and Opera */
-#login-page-container::-webkit-scrollbar {
-    display: none;
-}
-
-/* Hide scrollbar for IE, Edge, and Firefox */
-#login-page-container {
-    -ms-overflow-style: none;
-    /* IE and Edge */
-    scrollbar-width: none;
-    /* Firefox */
-}
 </style>
   
