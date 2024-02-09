@@ -1,7 +1,7 @@
 <template>
     <v-card title="Login">
-        <v-form @submit.prevent class="login-form">
-            <v-text-field v-model="email" label="Email" variant="solo"></v-text-field>
+        <v-form @submit.prevent="login" class="login-form">
+            <v-text-field v-model="username" label="Username" variant="solo"></v-text-field>
             <v-text-field v-model="password" label="Password" type="password" variant="solo"></v-text-field>
             <v-btn type="submit" class="mt-2 submit-button">Submit</v-btn>
         </v-form>
@@ -9,6 +9,21 @@
 </template>
 
 <script setup>
+import { ref } from 'vue';
+import { inject } from 'vue';
+
+const username = ref('');
+const password = ref('');
+
+const $axios = inject('$axios');
+
+const login = async () => {
+    const data = {
+        username: username.value,
+        password: password.value
+    };
+    await $axios.post('auth/login', data);
+};
 </script>
 
 <style scoped>
