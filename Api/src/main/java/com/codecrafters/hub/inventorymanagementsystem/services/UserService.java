@@ -72,22 +72,23 @@ public class UserService extends BaseService<User, Long, RegistrationRequest, Us
 
     private List<Role> extractRoleEntities(List<UserRole> enumRoles) {
         List<Role> roles = new ArrayList<>();
+
+        if (enumRoles == null || enumRoles.isEmpty()) {
+            roles.add(getDefaultRole());
+            return roles;
+        }
+
         for (UserRole enumRole : enumRoles) {
             Optional<Role> role = roleRepository.findByKey(enumRole.toString());
             role.ifPresent(roles::add);
         }
 
-        if (roles.isEmpty()) {
-            insertDefaultRole(roles);
-        }
-
         return roles;
     }
 
-    private void insertDefaultRole(List<Role> roles) {
-        Role defaultRole = roleRepository.findByKey(UserRole.USER.toString())
+    private Role getDefaultRole() {
+        return roleRepository.findByKey(UserRole.USER.toString())
                 .orElseThrow(() -> new NoSuchElementException("User role does exist"));
-        roles.add(defaultRole);
     }
 
     @Override
