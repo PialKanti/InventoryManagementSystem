@@ -1,8 +1,7 @@
 package com.codecrafters.hub.inventorymanagementsystem.configs;
 
-import com.codecrafters.hub.inventorymanagementsystem.enums.UserPermission;
-import com.codecrafters.hub.inventorymanagementsystem.enums.UserRole;
 import com.codecrafters.hub.inventorymanagementsystem.filters.JwtAuthenticationFilter;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,10 +14,16 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfigurationSource;
 
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
+    private final CorsConfigurationSource corsConfigurationSource;
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final AuthenticationProvider authenticationProvider;
+
     private static final String[] WHITELIST_URLS = {
             "/api/v1/auth/register",
             "/api/v1/auth/login",
@@ -32,17 +37,12 @@ public class SecurityConfig {
             "/v3/api-docs/**",
             "swagger-ui.html"
     };
-    private final JwtAuthenticationFilter jwtAuthenticationFilter;
-    private final AuthenticationProvider authenticationProvider;
-
-    public SecurityConfig(@Autowired JwtAuthenticationFilter jwtAuthenticationFilter, @Autowired AuthenticationProvider authenticationProvider) {
-        this.jwtAuthenticationFilter = jwtAuthenticationFilter;
-        this.authenticationProvider = authenticationProvider;
-    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity.csrf(AbstractHttpConfigurer::disable)
+        httpSecurity
+                .cors(cors -> cors.configurationSource(corsConfigurationSource))
+                .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(request -> request.requestMatchers(WHITELIST_URLS)
                         .permitAll()
                         //.requestMatchers(HttpMethod.GET, "/api/v1/products").hasRole(UserRole.USER.toString())
