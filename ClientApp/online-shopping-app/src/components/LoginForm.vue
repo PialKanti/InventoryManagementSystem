@@ -10,8 +10,10 @@
 </template>
 
 <script setup>
+import { useAuthStore } from '@/stores/authStore';
 import axios, { HttpStatusCode } from 'axios';
 import { ref } from 'vue';
+import { useRouter } from 'vue-router';
 
 const username = ref('');
 const password = ref('');
@@ -19,6 +21,9 @@ const password = ref('');
 const isAlertShown = ref(false);
 const alertMessage = ref('');
 const alertType = ref('');
+
+const router = useRouter();
+const authStore = useAuthStore();
 
 const login = async () => {
     const data = {
@@ -29,6 +34,12 @@ const login = async () => {
     await axios.post('/api/auth/login', data)
         .then(response => {
             console.log(response);
+            if (response.status === HttpStatusCode.Ok) {
+                authStore.isLoggedIn = true;
+                authStore.token = response.data.access_token;
+
+                router.push({ path: '/' });
+            }
         })
         .catch(error => {
             const data = error.response.data;
