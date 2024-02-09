@@ -6,4 +6,4 @@ export const useAuthStore = defineStore('auth', () => {
     const token = ref('');
 
     return { isLoggedIn, token };
-})
+}, { persist: true })
