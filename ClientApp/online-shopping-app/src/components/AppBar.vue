@@ -7,9 +7,6 @@
         <v-app-bar-title>Online Shopping</v-app-bar-title>
         <v-menu open-on-hover>
             <template v-slot:activator="{ props }">
-                <!-- <v-btn color="primary">
-                    Dropdown
-                </v-btn> -->
                 <v-avatar class="avatar-icon bg-primary" v-bind="props">
                     <span class="text-h5">{{ initials }}</span>
                 </v-avatar>
@@ -17,14 +14,14 @@
 
             <v-card>
                 <v-list class="avatar-menu">
-                    <v-list-item-content class="text-center">
+                    <v-list-item class="text-center">
                         <v-list-item-title>Hello,</v-list-item-title>
-                        <v-list-item-subtitle>{{ name }}</v-list-item-subtitle>
-                    </v-list-item-content>
+                        <v-list-item-subtitle class="userinfo-subtitle">{{ name }}</v-list-item-subtitle>
+                    </v-list-item>
                 </v-list>
                 <v-divider></v-divider>
-                <v-list class="avatar-menu">
-                    <v-list-item link>
+                <v-list>
+                    <v-list-item link class="text-center">
                         <v-list-item-title>
                             <a>Logout</a>
                         </v-list-item-title>
@@ -68,5 +65,9 @@ const getFirstLetterUpperCase = (word) => {
 .avatar-menu {
     padding-left: 20px;
     padding-right: 20px;
+}
+
+.userinfo-subtitle {
+    margin-top: 5px;
 }
 </style>
