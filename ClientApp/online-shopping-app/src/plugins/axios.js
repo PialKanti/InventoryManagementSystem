@@ -7,7 +7,7 @@ const axiosInstance = axios.create({
 
 axios.interceptors.request.use((config) => {
     const authStore = useAuthStore();
-    if (!config.url.includes('/login') && config.url.includes('/register')) {
+    if (!config.url.includes('/login') && !config.url.includes('/register')) {
         config.headers = {
             Authorization: 'Bearer ' + authStore.token
         };
