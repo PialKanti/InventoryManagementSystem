@@ -38,7 +38,7 @@ public class AuthService {
     public LoginResponse login(LoginRequest request) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
 
-        User user = userService.findByUsername(request.getUsername())
+        User user = userService.findByUsername(request.getUsername(), User.class)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
         String accessToken = jwtService.generateToken(user);
         return LoginResponse

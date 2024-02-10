@@ -47,8 +47,8 @@ public class UserService extends BaseService<User, Long, RegistrationRequest, Us
         return repository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 
-    public Optional<User> findByUsername(String username) {
-        return repository.findByUsername(username);
+    public <T> Optional<T> findByUsername(String username, Class<T> type) {
+        return repository.findByUsername(username, type);
     }
 
     @Override
