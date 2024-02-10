@@ -46,4 +46,17 @@ public class UserRepositoryTest {
         assertThat(optional).isPresent();
         assertThat(optional.get().getUsername()).isEqualTo(user.getUsername());
     }
+
+    @Test
+    void testDeleteByUsername(){
+        // given
+        testRepository.save(user);
+
+        // when
+        testRepository.deleteByUsername(user.getUsername());
+        var optional = testRepository.findByUsername(user.getUsername());
+
+        // test
+        assertThat(optional).isEmpty();
+    }
 }
