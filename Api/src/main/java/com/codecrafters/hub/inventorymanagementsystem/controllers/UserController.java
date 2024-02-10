@@ -32,9 +32,9 @@ public class UserController {
         return ResponseEntity.ok(userService.findAll(pageable, UserProjection.class));
     }
 
-    @GetMapping(value = "/{id}")
-    public ResponseEntity<UserProjection> findById(@PathVariable Long id) {
-        return ResponseEntity.ok(userService.findById(id, UserProjection.class));
+    @GetMapping(value = "/{username}")
+    public ResponseEntity<UserProjection> findByUsername(@PathVariable String username) {
+        return ResponseEntity.ok(userService.findByUsername(username, UserProjection.class));
     }
 
     @PutMapping(value = "/{id}")
