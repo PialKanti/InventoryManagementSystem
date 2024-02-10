@@ -11,7 +11,7 @@
                     Dropdown
                 </v-btn> -->
                 <v-avatar class="avatar-icon bg-primary" v-bind="props">
-                    <span class="text-h5">CJ</span>
+                    <span class="text-h5">{{ initials }}</span>
                 </v-avatar>
             </template>
 
@@ -19,7 +19,7 @@
                 <v-list class="avatar-menu">
                     <v-list-item-content class="text-center">
                         <v-list-item-title>Hello,</v-list-item-title>
-                        <v-list-item-subtitle>Founder of Vuetify</v-list-item-subtitle>
+                        <v-list-item-subtitle>{{ name }}</v-list-item-subtitle>
                     </v-list-item-content>
                 </v-list>
                 <v-divider></v-divider>
@@ -36,6 +36,28 @@
 
     </v-app-bar>
 </template>
+
+<script setup>
+import { useAuthStore } from '@/stores/authStore';
+import { computed } from 'vue';
+import { ref } from 'vue';
+
+const name = ref('');
+const initials = computed(() => {
+    return getFirstLetterUpperCase(authStore.firstname) + getFirstLetterUpperCase(authStore.lastname);
+});
+
+const authStore = useAuthStore();
+name.value = authStore.firstname + ' ' + authStore.lastname;
+
+const getFirstLetterUpperCase = (word) => {
+    if (!word) {
+        return '';
+    }
+
+    return word.charAt(0).toUpperCase();
+};
+</script>
 
 <style scoped>
 .avatar-icon {

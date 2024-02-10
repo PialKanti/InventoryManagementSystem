@@ -32,11 +32,18 @@ const login = async () => {
     };
 
     await axios.post('/api/auth/login', data)
-        .then(response => {
+        .then(async response => {
             console.log(response);
             if (response.status === HttpStatusCode.Ok) {
                 authStore.isLoggedIn = true;
                 authStore.token = response.data.access_token;
+
+                const user = await fetchUserInfo();
+                if (user) {
+                    authStore.firstname = user.firstName;
+                    authStore.lastname = user.lastName;
+                }
+
 
                 router.push({ path: '/' });
             }
@@ -44,12 +51,17 @@ const login = async () => {
         .catch(error => {
             const data = error.response.data;
             if (data.status === HttpStatusCode.NotFound || data.status === HttpStatusCode.Unauthorized) {
-                showErrorAlert('Username or password is not correct.');
+                showErrorAlert('Username or password is incorrect.');
             } else {
                 showErrorAlert('Something went wrong. Please try again.');
             }
         });
 };
+
+const fetchUserInfo = async () => {
+    return await axios.get(`api/users/${username.value}`)
+        .then(response => response.data);
+}
 
 const showErrorAlert = (message) => {
     isAlertShown.value = true;
