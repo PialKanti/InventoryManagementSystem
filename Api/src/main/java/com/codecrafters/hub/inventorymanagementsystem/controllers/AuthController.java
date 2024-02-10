@@ -2,8 +2,8 @@ package com.codecrafters.hub.inventorymanagementsystem.controllers;
 
 import com.codecrafters.hub.inventorymanagementsystem.dtos.request.auth.LoginRequest;
 import com.codecrafters.hub.inventorymanagementsystem.dtos.request.auth.RegistrationRequest;
-import com.codecrafters.hub.inventorymanagementsystem.dtos.response.EntityResponse;
 import com.codecrafters.hub.inventorymanagementsystem.dtos.response.auth.LoginResponse;
+import com.codecrafters.hub.inventorymanagementsystem.dtos.response.users.UserResponse;
 import com.codecrafters.hub.inventorymanagementsystem.services.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +19,7 @@ public class AuthController {
     }
 
     @PostMapping(value = "/register")
-    public ResponseEntity<EntityResponse> register(@RequestBody RegistrationRequest request) {
+    public ResponseEntity<UserResponse> register(@RequestBody RegistrationRequest request) {
         return ResponseEntity.ok(service.register(request));
     }
 

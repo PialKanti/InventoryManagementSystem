@@ -1,6 +1,6 @@
 package com.codecrafters.hub.inventorymanagementsystem.entities.projections;
 
-public interface UserProjection extends BaseProjection {
+public interface UserProjection {
     String getFirstName();
 
     String getLastName();
