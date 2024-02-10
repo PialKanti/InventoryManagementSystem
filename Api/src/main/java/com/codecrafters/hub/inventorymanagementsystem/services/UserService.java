@@ -114,8 +114,8 @@ public class UserService extends BaseService<User, Long, RegistrationRequest, Us
                 .build();
     }
 
-    public void updatePassword(Long userId, ChangePasswordRequest request) throws PasswordMismatchException {
-        User user = repository.findById(userId)
+    public void updatePassword(String username, ChangePasswordRequest request) throws PasswordMismatchException {
+        User user = repository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
         if (!passwordEncoder.matches(request.getOldPassword(), user.getPassword())) {
             throw new PasswordMismatchException("Invalid old password");

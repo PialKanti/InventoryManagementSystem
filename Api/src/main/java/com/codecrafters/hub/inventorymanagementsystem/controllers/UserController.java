@@ -48,9 +48,9 @@ public class UserController {
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping(value = "/{id}/password")
-    public ResponseEntity<Map<String, String>> updatePassword(@PathVariable Long id, @RequestBody ChangePasswordRequest request) throws PasswordMismatchException {
-        userService.updatePassword(id, request);
+    @PutMapping(value = "/{username}/password")
+    public ResponseEntity<Map<String, String>> updatePassword(@PathVariable String username, @RequestBody ChangePasswordRequest request) throws PasswordMismatchException {
+        userService.updatePassword(username, request);
         return ResponseEntity.noContent().build();
     }
 }
