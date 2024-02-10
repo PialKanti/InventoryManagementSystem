@@ -51,10 +51,12 @@ public class UserService extends BaseService<User, Long, RegistrationRequest, Us
         return repository.findByUsername(username, type).orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 
-    @Override
-    @CacheEvict(key = "#result.username")
-    public UserResponse update(Long id, UserUpdateRequest request) throws EntityNotFoundException {
-        return super.update(id, request);
+    @CacheEvict(key = "#username")
+    public UserResponse update(String username, UserUpdateRequest request) throws EntityNotFoundException {
+        User entity = repository.findByUsername(username).orElseThrow(EntityNotFoundException::new);
+        User updatedEntity = convertToUpdateEntity(entity, request);
+
+        return convertToEntityResponse(repository.save(updatedEntity));
     }
 
     @Override

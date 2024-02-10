@@ -37,9 +37,9 @@ public class UserController {
         return ResponseEntity.ok(userService.findByUsername(username, UserProjection.class));
     }
 
-    @PutMapping(value = "/{id}")
-    public ResponseEntity<EntityResponse> update(@PathVariable Long id, @RequestBody UserUpdateRequest request) {
-        return ResponseEntity.ok(userService.update(id, request));
+    @PutMapping(value = "/{username}")
+    public ResponseEntity<EntityResponse> update(@PathVariable String username, @RequestBody UserUpdateRequest request) {
+        return ResponseEntity.ok(userService.update(username, request));
     }
 
     @DeleteMapping(value = "/{id}")
