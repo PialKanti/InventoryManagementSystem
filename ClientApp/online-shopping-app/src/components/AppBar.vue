@@ -23,7 +23,7 @@
                 <v-list>
                     <v-list-item link class="text-center">
                         <v-list-item-title>
-                            <a>Logout</a>
+                            Logout
                         </v-list-item-title>
                     </v-list-item>
                 </v-list>
