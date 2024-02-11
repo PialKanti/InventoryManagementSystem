@@ -11,7 +11,6 @@ import java.util.Optional;
 @Repository
 public interface UserRepository extends BaseRepository<User, Long> {
     @EntityGraph(value = "User.roles", type = EntityGraph.EntityGraphType.FETCH)
-    Optional<User> findByUsername(String username);
     <T> Optional<T> findByUsername(String username, Class<T> type);
     boolean existsByUsername(String username);
 

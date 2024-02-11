@@ -33,7 +33,7 @@ public class UserAuthenticationProvider implements AuthenticationProvider {
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
 
-        var userOptional = userRepository.findByUsername(authentication.getName());
+        var userOptional = userRepository.findByUsername(authentication.getName(), User.class);
 
         if (userOptional.isEmpty()) {
             throw new UsernameNotFoundException("User not found");

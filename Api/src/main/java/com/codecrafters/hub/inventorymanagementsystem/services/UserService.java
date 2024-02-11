@@ -45,7 +45,7 @@ public class UserService extends BaseService<User, Long, RegistrationRequest, Us
     @Override
     @Cacheable(key = "#username")
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return repository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        return repository.findByUsername(username, UserDetails.class).orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 
     public <T> T findByUsername(String username, Class<T> type) {
@@ -54,7 +54,7 @@ public class UserService extends BaseService<User, Long, RegistrationRequest, Us
 
     @CacheEvict(key = "#username")
     public UserResponse update(String username, UserUpdateRequest request) throws EntityNotFoundException {
-        User entity = repository.findByUsername(username).orElseThrow(EntityNotFoundException::new);
+        User entity = repository.findByUsername(username, User.class).orElseThrow(EntityNotFoundException::new);
         User updatedEntity = convertToUpdateEntity(entity, request);
 
         return convertToEntityResponse(repository.save(updatedEntity));
@@ -115,7 +115,7 @@ public class UserService extends BaseService<User, Long, RegistrationRequest, Us
     }
 
     public void updatePassword(String username, ChangePasswordRequest request) throws PasswordMismatchException {
-        User user = repository.findByUsername(username)
+        User user = repository.findByUsername(username, User.class)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
         if (!passwordEncoder.matches(request.getOldPassword(), user.getPassword())) {
             throw new PasswordMismatchException("Invalid old password");
