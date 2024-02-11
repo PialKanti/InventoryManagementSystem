@@ -15,6 +15,8 @@
             <v-text-field v-model="password" label="Password" type="password" variant="solo"></v-text-field>
             <v-text-field v-model="confirmPassword" label="Confirm Password" type="password" variant="solo"></v-text-field>
             <v-btn type="submit" class="mt-2 submit-button">Submit</v-btn>
+            <p class="login-text text-center">Already have an account? <router-link to="/login"
+                    class="login-link">Login</router-link></p>
         </v-form>
     </v-card>
 </template>
@@ -77,5 +79,15 @@ const showErrorAlert = (message) => {
 .submit-button {
     background-color: #3ab8db;
     color: white;
+}
+
+.login-text {
+    margin-top: 25px;
+    font-size: 14px;
+}
+
+.login-link {
+    text-decoration: underline;
+    color: #15a8d1;
 }
 </style>
