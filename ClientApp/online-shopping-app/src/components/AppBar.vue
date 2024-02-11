@@ -21,7 +21,7 @@
                 </v-list>
                 <v-divider></v-divider>
                 <v-list>
-                    <v-list-item link class="text-center">
+                    <v-list-item link class="text-center" @click="logout">
                         <v-list-item-title>
                             Logout
                         </v-list-item-title>
@@ -36,14 +36,17 @@
 
 <script setup>
 import { useAuthStore } from '@/stores/authStore';
+import axios, { HttpStatusCode } from 'axios';
 import { computed } from 'vue';
 import { ref } from 'vue';
+import { useRouter } from 'vue-router';
 
 const name = ref('');
 const initials = computed(() => {
     return getFirstLetterUpperCase(authStore.firstname) + getFirstLetterUpperCase(authStore.lastname);
 });
 
+const router = useRouter();
 const authStore = useAuthStore();
 name.value = authStore.firstname + ' ' + authStore.lastname;
 
@@ -53,6 +56,20 @@ const getFirstLetterUpperCase = (word) => {
     }
 
     return word.charAt(0).toUpperCase();
+};
+
+const logout = async () => {
+    await axios.get('/api/auth/logout')
+        .then(response => {
+            if (response.status === HttpStatusCode.NoContent) {
+                localStorage.clear();
+                router.push({ path: '/login' });
+            }
+        })
+        .catch(error => {
+            console.error('Error occured during logout.');
+            console.error(error);
+        });
 };
 </script>
 
