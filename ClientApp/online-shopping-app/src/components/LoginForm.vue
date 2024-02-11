@@ -5,6 +5,8 @@
             <v-text-field v-model="username" label="Username" variant="solo"></v-text-field>
             <v-text-field v-model="password" label="Password" type="password" variant="solo"></v-text-field>
             <v-btn type="submit" class="mt-2 submit-button">Submit</v-btn>
+            <p class="register-text text-center">Don't have an account? <router-link to="/register"
+                    class="register-link">Register</router-link></p>
         </v-form>
     </v-card>
 </template>
@@ -85,5 +87,15 @@ const showErrorAlert = (message) => {
 .submit-button {
     background-color: #3ab8db;
     color: white;
+}
+
+.register-text {
+    margin-top: 25px;
+    font-size: 14px;
+}
+
+.register-link {
+    text-decoration: underline;
+    color: #15a8d1;
 }
 </style>
