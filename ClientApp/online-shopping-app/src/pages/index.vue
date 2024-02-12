@@ -1,5 +1,4 @@
 <template>
-  <AppBar />
   <HelloWorld />
 </template>
 
