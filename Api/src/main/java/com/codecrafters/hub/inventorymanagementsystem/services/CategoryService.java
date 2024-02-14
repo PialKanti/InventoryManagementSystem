@@ -36,7 +36,7 @@ public class CategoryService extends BaseService<Category, Long, CategoryCreateR
                 .<ProductProjection>builder()
                 .page(page.getNumber())
                 .pageSize(page.getSize())
-                .totalItems(page.getNumberOfElements())
+                .totalItems(page.getTotalElements())
                 .totalPages(page.getTotalPages())
                 .data(page.getContent())
                 .build();

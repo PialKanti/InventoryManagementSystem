@@ -24,7 +24,7 @@ public abstract class BaseService<T, Id, CreateRequest, UpdateRequest, EntityRes
                 .<R>builder()
                 .page(page.getNumber())
                 .pageSize(page.getSize())
-                .totalItems(page.getNumberOfElements())
+                .totalItems(page.getTotalElements())
                 .totalPages(page.getTotalPages())
                 .data(page.getContent())
                 .build();

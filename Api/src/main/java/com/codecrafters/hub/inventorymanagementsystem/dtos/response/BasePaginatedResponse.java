@@ -10,7 +10,7 @@ import java.util.List;
 public class BasePaginatedResponse<T> {
     private int page;
     private int pageSize;
-    private int totalItems;
+    private long totalItems;
     private int totalPages;
     private List<T> data;
 }
