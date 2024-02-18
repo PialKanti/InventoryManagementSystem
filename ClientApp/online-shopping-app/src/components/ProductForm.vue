@@ -22,4 +22,17 @@
     </v-container>
 </template>
 
-<script setup></script>
+<script setup>
+import { getAllCategories } from '@/services/category';
+import { onMounted, ref } from 'vue';
+
+const categories = ref([]);
+
+onMounted(async () => {
+    await getAllCategories()
+        .then(data => {
+            console.log('categories = ', data);
+            categories.value = data;
+        });
+})
+</script>
