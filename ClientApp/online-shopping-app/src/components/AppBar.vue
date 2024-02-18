@@ -40,6 +40,7 @@ import axios, { HttpStatusCode } from 'axios';
 import { computed } from 'vue';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
+import { deleteLocalStore } from '@/utils/localStore';
 
 const name = ref('');
 const initials = computed(() => {
@@ -62,7 +63,7 @@ const logout = async () => {
     await axios.get('/api/auth/logout')
         .then(response => {
             if (response.status === HttpStatusCode.NoContent) {
-                localStorage.clear();
+                deleteLocalStore();
                 router.push({ path: '/login' });
             }
         })

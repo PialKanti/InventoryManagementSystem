@@ -16,6 +16,7 @@ import { useAuthStore } from '@/stores/authStore';
 import axios, { HttpStatusCode } from 'axios';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
+import { deleteLocalStore } from '@/utils/localStore';
 
 const username = ref('');
 const password = ref('');
@@ -32,6 +33,8 @@ const login = async () => {
         username: username.value,
         password: password.value
     };
+
+    deleteLocalStore();
 
     await axios.post('/api/auth/login', data)
         .then(async response => {
