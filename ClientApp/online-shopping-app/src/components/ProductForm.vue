@@ -6,6 +6,8 @@
                 <v-form>
                     <v-text-field clearable label="Title" variant="outlined" density="comfortable"></v-text-field>
                     <v-textarea label="Description" variant="outlined" density="comfortable"></v-textarea>
+                    <v-select label="Category" :items="categories" item-title="name" item-value="id" variant="outlined"
+                        density="comfortable"></v-select>
                     <v-row>
                         <v-col>
                             <v-text-field label="Price" prefix="৳" variant="outlined" density="comfortable"></v-text-field>
@@ -30,9 +32,9 @@ const categories = ref([]);
 
 onMounted(async () => {
     await getAllCategories()
-        .then(data => {
-            console.log('categories = ', data);
-            categories.value = data;
+        .then(response => {
+            console.log('categories = ', response);
+            categories.value = response.data;
         });
 })
 </script>
