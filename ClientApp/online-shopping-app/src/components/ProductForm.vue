@@ -1,6 +1,6 @@
 <template>
     <v-container>
-        <h3>Add Product</h3>
+        <h3>{{ isUpdate ? 'Update' : 'Add' }} Product</h3>
         <v-row class="mt-4">
             <v-col cols="6">
                 <v-form @submit.prevent="submitForm">
@@ -19,7 +19,8 @@
                                 density="comfortable"></v-text-field>
                         </v-col>
                     </v-row>
-                    <v-btn type="submit" class="mt-2 submit-button" color="primary">Create</v-btn>
+                    <v-btn type="submit" class="mt-2 submit-button" color="primary">{{ isUpdate ? 'Update' : 'Create'
+                    }}</v-btn>
                 </v-form>
             </v-col>
         </v-row>
@@ -29,9 +30,19 @@
 <script setup>
 import { getAllCategories } from '@/services/category';
 import { onMounted, ref } from 'vue';
-import { createProduct } from '@/services/product';
+import { createProduct, getProduct } from '@/services/product';
 import { HttpStatusCode } from 'axios';
 import { useRouter } from 'vue-router';
+
+const props = defineProps({
+    isUpdate: {
+        type: Boolean,
+        default: false
+    },
+    itemId: {
+        type: Number
+    }
+});
 
 const router = useRouter();
 const categories = ref([]);
@@ -70,5 +81,19 @@ onMounted(async () => {
             console.log('categories = ', response);
             categories.value = response.data;
         });
+
+    if (props.isUpdate) {
+        await getProduct(props.itemId)
+            .then(response => {
+                const product = response.data;
+                console.log('Product = ', product);
+
+                title.value = product.title;
+                description.value = product.description;
+                category.value = product.categoryId;
+                price.value = product.price;
+                quantity.value = product.quantity;
+            })
+    }
 })
 </script>

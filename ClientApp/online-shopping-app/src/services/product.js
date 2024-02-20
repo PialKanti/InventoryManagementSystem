@@ -9,6 +9,15 @@ const getAllProducts = async (currentPage, itemsPerPage) => {
     }
 }
 
+const getProduct = async (id) => {
+    try {
+        return await axios.get(`/api/products/${id}`);
+    } catch (error) {
+        console.log('Error occurred during fetching product: ', error);
+        throw error;
+    }
+}
+
 const createProduct = async (formData) => {
     try {
         return await axios.post('/api/products', formData);
@@ -27,4 +36,4 @@ const deleteProduct = async (id) => {
     }
 }
 
-export { getAllProducts, createProduct, deleteProduct };
+export { getAllProducts, getProduct, createProduct, deleteProduct };
