@@ -4,9 +4,22 @@
         <v-data-table-server v-model:items-per-page="itemsPerPage" :headers="headers" :items-length="totalItems"
             :items="serverItems" :loading="loading" item-value="name" @update:options="loadItems"
             @update:page="pageChanged">
+            <template v-slot:top>
+                <v-dialog v-model="isDeleteDialogShowing" max-width="550px">
+                    <v-card class="text-center pa-2">
+                        <v-card-title class="text-h5">Are you sure you want to delete this product?</v-card-title>
+                        <v-card-actions>
+                            <v-spacer></v-spacer>
+                            <v-btn color="blue-darken-1" variant="text" @click="closeDeleteDialog">Cancel</v-btn>
+                            <v-btn color="blue-darken-1" variant="text">OK</v-btn>
+                            <v-spacer></v-spacer>
+                        </v-card-actions>
+                    </v-card>
+                </v-dialog>
+            </template>
             <template v-slot:item.action="{ item }">
                 <v-btn icon="mdi-pencil-box" variant="plain" title="Edit" color="primary"></v-btn>
-                <v-btn icon="mdi-delete" variant="plain" title="Delete" color="error"></v-btn>
+                <v-btn icon="mdi-delete" variant="plain" title="Delete" color="error" @click="deleteItem(item)"></v-btn>
             </template>
         </v-data-table-server>
     </v-container>
@@ -52,6 +65,8 @@ const headers = ref([{
     key: 'action'
 }]);
 
+const isDeleteDialogShowing = ref(false);
+
 const loadItems = async () => {
     loading.value = true;
     await axios.get(`/api/products?page=${currentPage.value}&pageSize=${itemsPerPage.value}`)
@@ -76,5 +91,16 @@ const loadItems = async () => {
 const pageChanged = (page) => {
     console.log('Page = ', page);
     currentPage.value = page - 1;
+};
+
+const deleteItem = (item) => {
+    console.log('Item to be deleted = ', item);
+    const id = serverItems.value.indexOf(item);
+    console.log('Id = ', item.id);
+    isDeleteDialogShowing.value = true;
+};
+
+const closeDeleteDialog = () => {
+    isDeleteDialogShowing.value = false;
 };
 </script>
