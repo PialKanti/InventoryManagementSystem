@@ -39,15 +39,13 @@ import { useAuthStore } from '@/stores/authStore';
 import axios, { HttpStatusCode } from 'axios';
 import { computed } from 'vue';
 import { ref } from 'vue';
-import { useRouter } from 'vue-router';
-import { deleteLocalStore } from '@/utils/localStore';
+import { performLogout } from '@/services/auth';
 
 const name = ref('');
 const initials = computed(() => {
     return getFirstLetterUpperCase(authStore.firstname) + getFirstLetterUpperCase(authStore.lastname);
 });
 
-const router = useRouter();
 const authStore = useAuthStore();
 name.value = authStore.firstname + ' ' + authStore.lastname;
 
@@ -63,8 +61,7 @@ const logout = async () => {
     await axios.get('/api/auth/logout')
         .then(response => {
             if (response.status === HttpStatusCode.NoContent) {
-                deleteLocalStore();
-                router.push({ path: '/login' });
+                performLogout();
             }
         })
         .catch(error => {
