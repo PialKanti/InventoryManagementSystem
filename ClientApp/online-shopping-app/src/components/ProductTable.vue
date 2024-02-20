@@ -3,7 +3,12 @@
         <h1>Products</h1>
         <v-data-table-server v-model:items-per-page="itemsPerPage" :headers="headers" :items-length="totalItems"
             :items="serverItems" :loading="loading" item-value="name" @update:options="loadItems"
-            @update:page="pageChanged"></v-data-table-server>
+            @update:page="pageChanged">
+            <template v-slot:item.action="{ item }">
+                <v-btn icon="mdi-pencil-box" variant="plain" title="Edit" color="primary"></v-btn>
+                <v-btn icon="mdi-delete" variant="plain" title="Delete" color="error"></v-btn>
+            </template>
+        </v-data-table-server>
     </v-container>
 </template>
 
@@ -18,27 +23,33 @@ const totalItems = ref(0);
 const serverItems = ref([]);
 const headers = ref([{
     title: 'Title',
-    align: 'start',
+    align: 'center',
     sortable: false,
     key: 'title',
 },
 {
     title: 'Description',
-    align: 'end',
+    align: 'center',
     sortable: false,
     key: 'description',
 },
 {
     title: 'Price',
-    align: 'end',
+    align: 'center',
     sortable: false,
     key: 'price',
 },
 {
     title: 'Quantity',
-    align: 'end',
+    align: 'center',
     sortable: false,
     key: 'quantity',
+},
+{
+    title: 'Action',
+    align: 'center',
+    sortable: false,
+    key: 'action'
 }]);
 
 const loadItems = async () => {
