@@ -10,4 +10,10 @@ public interface ProductProjection extends BaseProjection {
     BigDecimal getPrice();
 
     Integer getQuantity();
+
+    Category getCategory();
+
+    interface Category{
+        Long getId();
+    }
 }
