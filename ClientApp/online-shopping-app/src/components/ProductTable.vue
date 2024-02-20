@@ -51,7 +51,7 @@ const headers = ref([{
     key: 'description',
 },
 {
-    title: 'Price',
+    title: 'Price (৳)',
     align: 'center',
     sortable: false,
     key: 'price',
