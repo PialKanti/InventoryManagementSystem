@@ -19,7 +19,9 @@
                 </v-dialog>
             </template>
             <template v-slot:item.action="{ item }">
-                <v-btn icon="mdi-pencil-box" variant="plain" title="Edit" color="primary"></v-btn>
+                <router-link :to="`/products/update/${item.id}`">
+                    <v-btn icon="mdi-pencil-box" variant="plain" title="Edit" color="primary"></v-btn>
+                </router-link>
                 <v-btn icon="mdi-delete" variant="plain" title="Delete" color="error" @click="deleteItem(item)"></v-btn>
             </template>
         </v-data-table-server>
