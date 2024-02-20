@@ -90,7 +90,7 @@ onMounted(async () => {
 
                 title.value = product.title;
                 description.value = product.description;
-                category.value = product.categoryId;
+                category.value = product.category.id;
                 price.value = product.price;
                 quantity.value = product.quantity;
             })
