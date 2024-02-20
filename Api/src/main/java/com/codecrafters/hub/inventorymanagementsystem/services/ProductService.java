@@ -36,7 +36,7 @@ public class ProductService extends BaseService<Product, Long, ProductCreateRequ
         entity.setTitle(request.getTitle());
         entity.setDescription(request.getDescription());
         entity.setPrice(request.getPrice());
-        entity.setQuantity(request.getQuality());
+        entity.setQuantity(request.getQuantity());
 
         return entity;
     }

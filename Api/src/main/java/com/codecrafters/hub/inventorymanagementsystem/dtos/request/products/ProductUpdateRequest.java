@@ -8,5 +8,5 @@ public class ProductUpdateRequest {
     private String title;
     private String description;
     private float price;
-    private int quality;
+    private int quantity;
 }
