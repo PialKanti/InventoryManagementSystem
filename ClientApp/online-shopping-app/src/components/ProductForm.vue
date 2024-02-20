@@ -30,7 +30,7 @@
 <script setup>
 import { getAllCategories } from '@/services/category';
 import { onMounted, ref } from 'vue';
-import { createProduct, getProduct } from '@/services/product';
+import { createProduct, getProduct, updateProduct } from '@/services/product';
 import { HttpStatusCode } from 'axios';
 import { useRouter } from 'vue-router';
 
@@ -54,25 +54,41 @@ const price = ref('');
 const quantity = ref('');
 
 const getFormData = () => {
-    return {
+    const data = {
         title: title.value,
         description: description.value,
-        categoryId: category.value,
         price: price.value,
         quantity: quantity.value
     }
+
+    if (props.isUpdate) {
+        data.id = props.itemId;
+    }
+
+    return data;
 }
 
 const submitForm = async () => {
     const data = getFormData();
     console.log('Form Data = ', data);
-    await createProduct(data)
-        .then(response => {
-            console.log(response);
-            if (response.status === HttpStatusCode.Created) {
-                router.push({ path: '/products' });
-            }
-        })
+    if (props.isUpdate) {
+        await updateProduct(props.itemId, data)
+            .then(response => {
+                console.log('Update product response = ', response);
+                if (response.status === HttpStatusCode.Ok) {
+                    router.push({ path: '/products' });
+                }
+            });
+
+    } else {
+        await createProduct(data)
+            .then(response => {
+                console.log(response);
+                if (response.status === HttpStatusCode.Created) {
+                    router.push({ path: '/products' });
+                }
+            });
+    }
 }
 
 onMounted(async () => {

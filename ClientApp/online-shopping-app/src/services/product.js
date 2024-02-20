@@ -27,6 +27,15 @@ const createProduct = async (formData) => {
     }
 }
 
+const updateProduct = async (id, formData) => {
+    try {
+        return await axios.put(`/api/products/${id}`, formData);
+    } catch (error) {
+        console.log('Error occurred during updating product: ', error);
+        throw error;
+    }
+}
+
 const deleteProduct = async (id) => {
     try {
         return await axios.delete(`/api/products/${id}`);
@@ -36,4 +45,4 @@ const deleteProduct = async (id) => {
     }
 }
 
-export { getAllProducts, getProduct, createProduct, deleteProduct };
+export { getAllProducts, getProduct, createProduct, updateProduct, deleteProduct };
