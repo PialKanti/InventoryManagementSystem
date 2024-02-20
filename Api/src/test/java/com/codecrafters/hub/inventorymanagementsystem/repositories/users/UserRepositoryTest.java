@@ -54,7 +54,7 @@ public class UserRepositoryTest {
 
         // when
         testRepository.deleteByUsername(user.getUsername());
-        var optional = testRepository.findByUsername(user.getUsername());
+        var optional = testRepository.findByUsername(user.getUsername(), User.class);
 
         // test
         assertThat(optional).isEmpty();
