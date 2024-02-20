@@ -9,4 +9,13 @@ const createProduct = async (formData) => {
     }
 }
 
-export { createProduct };
+const deleteProduct = async (id) => {
+    try {
+        return await axios.delete(`/api/products/${id}`);
+    } catch (error) {
+        console.log('Error occurred during deleting product: ', error);
+        throw error;
+    }
+}
+
+export { createProduct, deleteProduct };

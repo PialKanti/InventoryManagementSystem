@@ -1,6 +1,7 @@
 <template>
     <v-container>
         <h1>Products</h1>
+        <v-alert v-if="isAlertShown" closable :text="alertText" :type="alertType"></v-alert>
         <v-data-table-server v-model:items-per-page="itemsPerPage" :headers="headers" :items-length="totalItems"
             :items="serverItems" :loading="loading" item-value="name" @update:options="loadItems"
             @update:page="pageChanged">
@@ -11,7 +12,7 @@
                         <v-card-actions>
                             <v-spacer></v-spacer>
                             <v-btn color="blue-darken-1" variant="text" @click="closeDeleteDialog">Cancel</v-btn>
-                            <v-btn color="blue-darken-1" variant="text">OK</v-btn>
+                            <v-btn color="blue-darken-1" variant="text" @click="confirmDelete">OK</v-btn>
                             <v-spacer></v-spacer>
                         </v-card-actions>
                     </v-card>
@@ -28,6 +29,7 @@
 <script setup>
 import axios, { HttpStatusCode } from 'axios';
 import { ref } from 'vue';
+import { deleteProduct } from '@/services/product';
 
 const currentPage = ref(0);
 const loading = ref(false);
@@ -66,6 +68,11 @@ const headers = ref([{
 }]);
 
 const isDeleteDialogShowing = ref(false);
+const indexOfDeletedItem = ref('');
+
+const isAlertShown = ref(false);
+const alertText = ref('');
+const alertType = ref('');
 
 const loadItems = async () => {
     loading.value = true;
@@ -95,12 +102,46 @@ const pageChanged = (page) => {
 
 const deleteItem = (item) => {
     console.log('Item to be deleted = ', item);
-    const id = serverItems.value.indexOf(item);
-    console.log('Id = ', item.id);
+    indexOfDeletedItem.value = item.id;
     isDeleteDialogShowing.value = true;
 };
+
+const confirmDelete = async () => {
+    console.log('Index of deleted item = ', indexOfDeletedItem.value);
+    await deleteProduct(indexOfDeletedItem.value)
+        .then(response => {
+            console.log(response);
+            if (response.status === HttpStatusCode.NoContent) {
+                hideItemFromView(indexOfDeletedItem.value);
+                showSuccessAlert('Product deleted successfully.');
+            } else {
+                showErrorAlert('Product deletion has been failed.');
+            }
+        })
+        .finally(() => {
+            closeDeleteDialog();
+        });
+};
+
+const hideItemFromView = (id) => {
+    serverItems.value = serverItems.value.filter((item) => item.id !== id);
+}
 
 const closeDeleteDialog = () => {
     isDeleteDialogShowing.value = false;
 };
+
+const showSuccessAlert = (text) => {
+    showAlert(text, 'success');
+}
+
+const showErrorAlert = (text) => {
+    showAlert(text, 'error');
+}
+
+const showAlert = (text, type) => {
+    alertText.value = text;
+    alertType.value = type;
+    isAlertShown.value = true;
+}
 </script>
