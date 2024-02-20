@@ -27,9 +27,9 @@
 </template>
 
 <script setup>
-import axios, { HttpStatusCode } from 'axios';
+import { HttpStatusCode } from 'axios';
 import { ref } from 'vue';
-import { deleteProduct } from '@/services/product';
+import { getAllProducts, deleteProduct } from '@/services/product';
 
 const currentPage = ref(0);
 const loading = ref(false);
@@ -76,7 +76,7 @@ const alertType = ref('');
 
 const loadItems = async () => {
     loading.value = true;
-    await axios.get(`/api/products?page=${currentPage.value}&pageSize=${itemsPerPage.value}`)
+    await getAllProducts(currentPage.value, itemsPerPage.value)
         .then(response => {
             if (response.status === HttpStatusCode.Ok) {
                 console.log('Data found');
