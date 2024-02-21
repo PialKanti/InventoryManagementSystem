@@ -1,5 +1,6 @@
 <template>
-    <BaseTable title="Products" :headers="headers" :getAllItems="getAllProducts" :deleteItem="deleteProduct" />
+    <BaseTable title="Products" updateUrlPrefix="/products/update" :headers="headers" :getAllItems="getAllProducts"
+        :deleteItem="deleteProduct" />
 </template>
 
 <script setup>

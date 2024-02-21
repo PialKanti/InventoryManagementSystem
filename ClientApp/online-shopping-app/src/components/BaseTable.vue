@@ -19,7 +19,7 @@
                 </v-dialog>
             </template>
             <template v-slot:item.action="{ item }">
-                <router-link :to="`/products/update/${item.id}`">
+                <router-link :to="`${updateUrlPrefix}/${item.id}`">
                     <v-btn icon="mdi-pencil-box" variant="plain" title="Edit" color="primary"></v-btn>
                 </router-link>
                 <v-btn icon="mdi-delete" variant="plain" title="Delete" color="error"
@@ -34,6 +34,7 @@ import { HttpStatusCode } from 'axios';
 
 const props = defineProps({
     title: String,
+    updateUrlPrefix: String,
     headers: Object,
     getAllItems: Function,
     deleteItem: Function
