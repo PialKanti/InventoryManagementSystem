@@ -58,7 +58,8 @@ const getFormData = () => {
         title: title.value,
         description: description.value,
         price: price.value,
-        quantity: quantity.value
+        quantity: quantity.value,
+        categoryId: category.value
     }
 
     if (props.isUpdate) {
@@ -83,7 +84,7 @@ const submitForm = async () => {
     } else {
         await createProduct(data)
             .then(response => {
-                console.log(response);
+                console.log('Create product response = ', response);
                 if (response.status === HttpStatusCode.Created) {
                     router.push({ path: '/products' });
                 }
