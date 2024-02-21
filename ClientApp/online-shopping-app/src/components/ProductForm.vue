@@ -96,7 +96,7 @@ onMounted(async () => {
     await getAllCategories()
         .then(response => {
             console.log('categories = ', response);
-            categories.value = response.data;
+            categories.value = response.data.data;
         });
 
     if (props.isUpdate) {
