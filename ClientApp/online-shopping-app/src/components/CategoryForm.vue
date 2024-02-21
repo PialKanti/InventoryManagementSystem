@@ -59,10 +59,6 @@ const getFormData = () => {
         name: name.value
     }
 
-    if (props.isUpdate) {
-        data.id = props.itemId;
-    }
-
     return data;
 }
 

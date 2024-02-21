@@ -1,5 +1,5 @@
 <template>
-    <ProductForm is-update="true" :item-id="route.params.id" />
+    <CategoryForm is-update="true" :item-id="route.params.id" />
 </template>
 
 <script setup>
