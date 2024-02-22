@@ -1,6 +1,17 @@
 <template>
     <v-container>
-        <h1>{{ title }}</h1>
+        <v-row class="mb-5">
+            <v-col>
+                <h1>{{ title }}</h1>
+            </v-col>
+            <v-col class="text-right">
+                <router-link :to="createUrl">
+                    <v-btn prepend-icon="mdi-plus" color="teal-darken-1" size="small">
+                        Create
+                    </v-btn>
+                </router-link>
+            </v-col>
+        </v-row>
         <v-alert v-if="isAlertShown" closable :text="alertText" :type="alertType"></v-alert>
         <v-data-table-server v-model:items-per-page="itemsPerPage" :headers="headers" :items-length="totalItems"
             :items="serverItems" :loading="loading" item-value="name" @update:options="loadItems"
@@ -34,6 +45,7 @@ import { HttpStatusCode } from 'axios';
 
 const props = defineProps({
     title: String,
+    createUrl: String,
     updateUrlPrefix: String,
     headers: Object,
     getAllItems: Function,

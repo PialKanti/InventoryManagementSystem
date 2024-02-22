@@ -1,6 +1,6 @@
 <template>
-    <BaseTable title="Categories" updateUrlPrefix="/categories/update" :headers="headers" :getAllItems="getAllCategories"
-        :deleteItem="deleteCategory" />
+    <BaseTable title="Categories" createUrl="/categories/create" updateUrlPrefix="/categories/update" :headers="headers"
+        :getAllItems="getAllCategories" :deleteItem="deleteCategory" />
 </template>
 <script setup>
 import { ref } from 'vue';
