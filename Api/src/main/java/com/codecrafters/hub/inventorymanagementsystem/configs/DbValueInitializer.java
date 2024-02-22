@@ -3,18 +3,15 @@ package com.codecrafters.hub.inventorymanagementsystem.configs;
 import com.codecrafters.hub.inventorymanagementsystem.entities.Role;
 import com.codecrafters.hub.inventorymanagementsystem.enums.UserRole;
 import com.codecrafters.hub.inventorymanagementsystem.repositories.RoleRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
 
 @Component
+@RequiredArgsConstructor
 public class DbValueInitializer implements ApplicationRunner {
     private final RoleRepository repository;
-
-    public DbValueInitializer(@Autowired RoleRepository repository) {
-        this.repository = repository;
-    }
 
     @Override
     public void run(ApplicationArguments args) {

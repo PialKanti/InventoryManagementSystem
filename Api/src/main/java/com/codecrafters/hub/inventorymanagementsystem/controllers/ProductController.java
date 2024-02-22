@@ -6,7 +6,7 @@ import com.codecrafters.hub.inventorymanagementsystem.dtos.response.BasePaginate
 import com.codecrafters.hub.inventorymanagementsystem.dtos.response.EntityResponse;
 import com.codecrafters.hub.inventorymanagementsystem.entities.projections.ProductProjection;
 import com.codecrafters.hub.inventorymanagementsystem.services.ProductService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -17,14 +17,10 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/v1/products")
 public class ProductController {
     private final ProductService service;
-
-    @Autowired
-    public ProductController(ProductService service) {
-        this.service = service;
-    }
 
     @GetMapping
     public ResponseEntity<BasePaginatedResponse<ProductProjection>> findAll(@RequestParam(name = "page", defaultValue = "0", required = false) int page,

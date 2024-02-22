@@ -3,7 +3,7 @@ package com.codecrafters.hub.inventorymanagementsystem.configs;
 import com.codecrafters.hub.inventorymanagementsystem.entities.Role;
 import com.codecrafters.hub.inventorymanagementsystem.entities.User;
 import com.codecrafters.hub.inventorymanagementsystem.repositories.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -19,16 +19,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
+@RequiredArgsConstructor
 public class UserAuthenticationProvider implements AuthenticationProvider {
-
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-
-    @Autowired
-    public UserAuthenticationProvider(UserRepository userRepository, PasswordEncoder passwordEncoder) {
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
-    }
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {

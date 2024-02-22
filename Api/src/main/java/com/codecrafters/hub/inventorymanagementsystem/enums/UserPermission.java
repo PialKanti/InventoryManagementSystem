@@ -1,5 +1,8 @@
 package com.codecrafters.hub.inventorymanagementsystem.enums;
 
+import lombok.Getter;
+
+@Getter
 public enum UserPermission {
     ADMIN_READ("Admin-Read"),
     ADMIN_CREATE("Admin-Create"),
@@ -7,10 +10,6 @@ public enum UserPermission {
     ADMIN_DELETE("Admin-Delete");
 
     private final String displayValue;
-
-    public String getDisplayValue() {
-        return displayValue;
-    }
 
     UserPermission(String displayValue) {
         this.displayValue = displayValue;

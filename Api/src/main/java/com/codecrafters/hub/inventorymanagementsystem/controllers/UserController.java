@@ -7,7 +7,7 @@ import com.codecrafters.hub.inventorymanagementsystem.dtos.response.users.UserRe
 import com.codecrafters.hub.inventorymanagementsystem.entities.projections.UserProjection;
 import com.codecrafters.hub.inventorymanagementsystem.exceptions.PasswordMismatchException;
 import com.codecrafters.hub.inventorymanagementsystem.services.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -16,14 +16,10 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/v1/users")
 public class UserController {
     private final UserService userService;
-
-    @Autowired
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }
 
     @GetMapping
     public ResponseEntity<BasePaginatedResponse<UserProjection>> findAll(@RequestParam(name = "page", defaultValue = "0", required = false) int page,

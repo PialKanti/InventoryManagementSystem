@@ -6,7 +6,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -17,15 +17,10 @@ import java.util.Map;
 import java.util.function.Function;
 
 @Service
+@RequiredArgsConstructor
 public class JwtService {
     private final JwtProperties jwtProperties;
     private final BlackListedTokenRepository repository;
-
-    @Autowired
-    public JwtService(JwtProperties jwtProperties, BlackListedTokenRepository repository) {
-        this.jwtProperties = jwtProperties;
-        this.repository = repository;
-    }
 
     public String generateToken(UserDetails userDetails) {
         return generateToken(userDetails, new HashMap<>());

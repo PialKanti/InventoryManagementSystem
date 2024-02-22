@@ -5,18 +5,15 @@ import com.codecrafters.hub.inventorymanagementsystem.dtos.request.auth.Registra
 import com.codecrafters.hub.inventorymanagementsystem.dtos.response.auth.LoginResponse;
 import com.codecrafters.hub.inventorymanagementsystem.dtos.response.users.UserResponse;
 import com.codecrafters.hub.inventorymanagementsystem.services.AuthService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping(value = "/api/v1/auth")
 public class AuthController {
     private final AuthService service;
-
-    public AuthController(@Autowired AuthService service) {
-        this.service = service;
-    }
 
     @PostMapping(value = "/register")
     public ResponseEntity<UserResponse> register(@RequestBody RegistrationRequest request) {

@@ -8,7 +8,7 @@ import com.codecrafters.hub.inventorymanagementsystem.entities.BlackListedToken;
 import com.codecrafters.hub.inventorymanagementsystem.entities.User;
 import com.codecrafters.hub.inventorymanagementsystem.repositories.BlackListedTokenRepository;
 import com.codecrafters.hub.inventorymanagementsystem.utils.JwtUtils;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
@@ -16,19 +16,12 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 
 @Service
+@RequiredArgsConstructor
 public class AuthService {
     private final UserService userService;
     private final BlackListedTokenRepository tokenRepository;
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
-
-    @Autowired
-    public AuthService(UserService userService, BlackListedTokenRepository tokenRepository, AuthenticationManager authenticationManager, JwtService jwtService) {
-        this.userService = userService;
-        this.tokenRepository = tokenRepository;
-        this.authenticationManager = authenticationManager;
-        this.jwtService = jwtService;
-    }
 
     public UserResponse register(RegistrationRequest request) {
         return userService.create(request);

@@ -7,7 +7,7 @@ import com.codecrafters.hub.inventorymanagementsystem.dtos.response.EntityRespon
 import com.codecrafters.hub.inventorymanagementsystem.entities.projections.CategoryProjection;
 import com.codecrafters.hub.inventorymanagementsystem.entities.projections.ProductProjection;
 import com.codecrafters.hub.inventorymanagementsystem.services.CategoryService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -17,14 +17,10 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping(value = "api/v1/categories")
 public class CategoryController {
     private final CategoryService service;
-
-    @Autowired
-    public CategoryController(CategoryService service) {
-        this.service = service;
-    }
 
     @GetMapping
     public ResponseEntity<BasePaginatedResponse<CategoryProjection>> findAll(@RequestParam(name = "page", defaultValue = "0", required = false) int page,
