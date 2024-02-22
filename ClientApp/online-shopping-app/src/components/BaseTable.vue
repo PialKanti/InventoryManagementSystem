@@ -19,7 +19,7 @@
             <template v-slot:top>
                 <v-dialog v-model="isDeleteDialogShowing" max-width="550px">
                     <v-card class="text-center pa-2">
-                        <v-card-title class="text-h5">Are you sure you want to delete this product?</v-card-title>
+                        <v-card-title class="text-h5">Are you sure you want to delete this item?</v-card-title>
                         <v-card-actions>
                             <v-spacer></v-spacer>
                             <v-btn color="blue-darken-1" variant="text" @click="closeDeleteDialog">Cancel</v-btn>
