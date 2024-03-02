@@ -14,6 +14,7 @@ import lombok.*;
 public class CartItem extends NonAuditableEntity{
     @OneToOne
     private Product product;
+    @Column(name = "quantity")
     private int quantity;
     @ManyToOne
     @JoinColumn(name = "cart_id")
