@@ -1,10 +1,7 @@
 package com.codecrafters.hub.inventorymanagementsystem.entities;
 
 import com.codecrafters.hub.inventorymanagementsystem.entities.common.AuditableEntity;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.List;
@@ -17,6 +14,8 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 public class Cart extends AuditableEntity {
+    @Column(name = "username", unique = true)
+    private String username;
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL)
     private List<CartItem> cartItems;
 }
