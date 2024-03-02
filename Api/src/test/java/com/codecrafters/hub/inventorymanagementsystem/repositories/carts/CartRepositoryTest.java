@@ -52,7 +52,7 @@ public class CartRepositoryTest {
         //when
         var isExists = repository.existsByUsername("bruce");
 
-        //test
+        //then
         assertThat(isExists).isFalse();
     }
 }
