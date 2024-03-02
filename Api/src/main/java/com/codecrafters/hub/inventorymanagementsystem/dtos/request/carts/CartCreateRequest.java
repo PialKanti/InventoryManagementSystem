@@ -9,5 +9,5 @@ import java.util.List;
 @Builder
 public class CartCreateRequest {
     private String username;
-    private List<CartItem> cartItems;
+    private List<CartItemDto> cartItems;
 }
