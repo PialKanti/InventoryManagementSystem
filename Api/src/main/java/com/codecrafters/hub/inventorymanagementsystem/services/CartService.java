@@ -53,8 +53,11 @@ public class CartService extends BaseService<Cart, Long, CartCreateRequest, Cart
     }
 
     @Override
-    protected Cart convertToUpdateEntity(Cart entity, CartUpdateRequest cartUpdateRequest) {
-        return null;
+    protected Cart convertToUpdateEntity(Cart entity, CartUpdateRequest request) {
+        entity.setCartItems(request.getCartItems().stream()
+                .map(this::getCartItemEntity)
+                .collect(Collectors.toList()));
+        return entity;
     }
 
     @Override
