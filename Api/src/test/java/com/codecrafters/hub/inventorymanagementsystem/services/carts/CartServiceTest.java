@@ -1,9 +1,12 @@
 package com.codecrafters.hub.inventorymanagementsystem.services.carts;
 
 import com.codecrafters.hub.inventorymanagementsystem.dtos.request.carts.CartCreateRequest;
+import com.codecrafters.hub.inventorymanagementsystem.dtos.request.carts.CartUpdateRequest;
+import com.codecrafters.hub.inventorymanagementsystem.entities.Cart;
 import com.codecrafters.hub.inventorymanagementsystem.exceptions.DuplicateCartException;
 import com.codecrafters.hub.inventorymanagementsystem.repositories.CartRepository;
 import com.codecrafters.hub.inventorymanagementsystem.services.CartService;
+import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -11,6 +14,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -46,12 +50,15 @@ public class CartServiceTest {
     @Test
     public void testCreate_WhenUserHasNotCreatedCart() {
         //given
+        long id = 1;
+        Cart cart = Cart.builder().id(id).username("robert").cartItems(new ArrayList<>()).build();
         CartCreateRequest createRequest = CartCreateRequest
                 .builder()
                 .username("robert")
                 .cartItems(new ArrayList<>())
                 .build();
         when(repository.existsByUsername(createRequest.getUsername())).thenReturn(false);
+        when(repository.save(any())).thenReturn(cart);
 
         //when
         service.create(createRequest);
@@ -62,6 +69,35 @@ public class CartServiceTest {
 
     @Test
     public void testUpdate_WhenCartIdNotExists(){
+        //given
+        long id = 1;
+        CartUpdateRequest request = CartUpdateRequest.builder().cartItems(new ArrayList<>()).build();
+        when(repository.findById(id)).thenThrow(new EntityNotFoundException());
 
+        //when
+        EntityNotFoundException exception = assertThrows(EntityNotFoundException.class, () -> service.update(id, request));
+
+        //then
+        assertThat(exception).isNotNull().isInstanceOf(EntityNotFoundException.class);
+
+        verify(repository).findById(id);
+        verifyNoMoreInteractions(repository);
+    }
+
+    @Test
+    public void testUpdate_WhenCartIdExists(){
+        //given
+        long id = 1;
+        Cart cart = Cart.builder().id(id).username("robert").cartItems(new ArrayList<>()).build();
+        CartUpdateRequest request = CartUpdateRequest.builder().cartItems(new ArrayList<>()).build();
+        when(repository.findById(id)).thenReturn(Optional.of(cart));
+        when(repository.save(any())).thenReturn(cart);
+
+        //when
+        service.update(id, request);
+
+        //then
+        verify(repository).findById(id);
+        verify(repository).save(any());
     }
 }
