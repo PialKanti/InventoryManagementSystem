@@ -3,6 +3,7 @@ package com.codecrafters.hub.inventorymanagementsystem.entities;
 import com.codecrafters.hub.inventorymanagementsystem.entities.common.NonAuditableEntity;
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
 
@@ -10,9 +11,8 @@ import java.time.LocalDateTime;
 @Table(name = "blacklist_tokens")
 @Getter
 @Setter
-@AllArgsConstructor
+@SuperBuilder
 @NoArgsConstructor
-@Builder
 public class BlackListedToken extends NonAuditableEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

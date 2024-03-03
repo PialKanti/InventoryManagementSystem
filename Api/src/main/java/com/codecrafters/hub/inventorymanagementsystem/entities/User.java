@@ -3,6 +3,7 @@ package com.codecrafters.hub.inventorymanagementsystem.entities;
 import com.codecrafters.hub.inventorymanagementsystem.entities.common.NonAuditableEntity;
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,9 +17,8 @@ import java.util.stream.Collectors;
 @Table(name = "application_user")
 @Getter
 @Setter
-@AllArgsConstructor
+@SuperBuilder
 @NoArgsConstructor
-@Builder
 public class User extends NonAuditableEntity implements UserDetails {
     @Column(nullable = false)
     private String firstName;

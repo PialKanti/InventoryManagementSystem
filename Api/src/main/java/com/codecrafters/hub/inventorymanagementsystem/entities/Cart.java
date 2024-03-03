@@ -3,6 +3,7 @@ package com.codecrafters.hub.inventorymanagementsystem.entities;
 import com.codecrafters.hub.inventorymanagementsystem.entities.common.AuditableEntity;
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import java.util.List;
 
@@ -10,9 +11,8 @@ import java.util.List;
 @Table(name = "carts")
 @Getter
 @Setter
-@AllArgsConstructor
+@SuperBuilder
 @NoArgsConstructor
-@Builder
 public class Cart extends AuditableEntity {
     @Column(name = "username", unique = true)
     private String username;

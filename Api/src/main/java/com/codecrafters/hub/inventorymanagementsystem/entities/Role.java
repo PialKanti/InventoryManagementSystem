@@ -4,6 +4,7 @@ import com.codecrafters.hub.inventorymanagementsystem.entities.common.NonAuditab
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import java.util.List;
 
@@ -11,9 +12,8 @@ import java.util.List;
 @Table(name = "roles")
 @Getter
 @Setter
-@AllArgsConstructor
+@SuperBuilder
 @NoArgsConstructor
-@Builder
 public class Role extends NonAuditableEntity {
     @Column(name = "role_key", nullable = false, length = 100)
     private String key;
