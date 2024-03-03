@@ -59,6 +59,10 @@ public class CartService extends BaseService<Cart, Long, CartCreateRequest, Cart
 
     @Override
     protected CartResponse convertToEntityResponse(Cart entity) {
-        return null;
+        return CartResponse
+                .builder()
+                .username(entity.getUsername())
+                .cartItems(entity.getCartItems())
+                .build();
     }
 }
