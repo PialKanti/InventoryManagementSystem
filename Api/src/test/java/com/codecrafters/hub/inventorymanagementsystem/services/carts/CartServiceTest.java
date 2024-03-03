@@ -3,6 +3,7 @@ package com.codecrafters.hub.inventorymanagementsystem.services.carts;
 import com.codecrafters.hub.inventorymanagementsystem.dtos.request.carts.CartCreateRequest;
 import com.codecrafters.hub.inventorymanagementsystem.dtos.request.carts.CartUpdateRequest;
 import com.codecrafters.hub.inventorymanagementsystem.entities.Cart;
+import com.codecrafters.hub.inventorymanagementsystem.entities.projections.CartProjection;
 import com.codecrafters.hub.inventorymanagementsystem.exceptions.DuplicateCartException;
 import com.codecrafters.hub.inventorymanagementsystem.repositories.CartRepository;
 import com.codecrafters.hub.inventorymanagementsystem.services.CartService;
@@ -68,7 +69,7 @@ public class CartServiceTest {
     }
 
     @Test
-    public void testUpdate_WhenCartIdNotExists(){
+    public void testUpdate_WhenCartIdNotExists() {
         //given
         long id = 1;
         CartUpdateRequest request = CartUpdateRequest.builder().cartItems(new ArrayList<>()).build();
@@ -85,7 +86,7 @@ public class CartServiceTest {
     }
 
     @Test
-    public void testUpdate_WhenCartIdExists(){
+    public void testUpdate_WhenCartIdExists() {
         //given
         long id = 1;
         Cart cart = Cart.builder().id(id).username("robert").cartItems(new ArrayList<>()).build();
@@ -99,5 +100,34 @@ public class CartServiceTest {
         //then
         verify(repository).findById(id);
         verify(repository).save(cart);
+    }
+
+    @Test
+    public void testFindByUsername() {
+        //give
+        String username = "robert";
+        CartProjection cartProjection = mock(CartProjection.class);
+        when(cartProjection.getUsername()).thenReturn(username);
+        when(repository.findByUsername(username, CartProjection.class)).thenReturn(Optional.of(cartProjection));
+
+        //when
+        var result = service.findByUsername(username);
+
+        //then
+        assertThat(result).isNotNull().isEqualTo(cartProjection);
+        assertThat(result.getUsername()).isEqualTo(username);
+    }
+
+    @Test
+    public void testFindByUsername_WhenNoResult() {
+        //give
+        String username = "robert";
+        when(repository.findByUsername(username, CartProjection.class)).thenReturn(Optional.empty());
+
+        //when
+        var exception = assertThrows(EntityNotFoundException.class, () -> service.findByUsername(username));
+
+        //then
+        assertThat(exception).isNotNull().isInstanceOf(EntityNotFoundException.class);
     }
 }

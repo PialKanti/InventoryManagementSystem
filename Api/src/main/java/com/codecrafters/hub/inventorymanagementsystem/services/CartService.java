@@ -7,8 +7,10 @@ import com.codecrafters.hub.inventorymanagementsystem.dtos.response.carts.CartRe
 import com.codecrafters.hub.inventorymanagementsystem.entities.Cart;
 import com.codecrafters.hub.inventorymanagementsystem.entities.CartItem;
 import com.codecrafters.hub.inventorymanagementsystem.entities.Product;
+import com.codecrafters.hub.inventorymanagementsystem.entities.projections.CartProjection;
 import com.codecrafters.hub.inventorymanagementsystem.exceptions.DuplicateCartException;
 import com.codecrafters.hub.inventorymanagementsystem.repositories.CartRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.stream.Collectors;
@@ -30,6 +32,10 @@ public class CartService extends BaseService<Cart, Long, CartCreateRequest, Cart
             throw new DuplicateCartException("User has already created a cart.");
         }
         return super.create(cartCreateRequest);
+    }
+
+    public CartProjection findByUsername(String username) {
+        return repository.findByUsername(username, CartProjection.class).orElseThrow(EntityNotFoundException::new);
     }
 
     @Override
