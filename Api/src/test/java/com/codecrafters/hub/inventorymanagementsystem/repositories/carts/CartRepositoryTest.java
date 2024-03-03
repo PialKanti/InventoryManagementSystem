@@ -20,7 +20,7 @@ public class CartRepositoryTest {
     private Cart cart;
 
     @BeforeEach
-    public void setupTestData(){
+    public void setupTestData() {
         cart = Cart
                 .builder()
                 .username("robert")
@@ -34,7 +34,7 @@ public class CartRepositoryTest {
     }
 
     @Test
-    public void testIfExistsByUsername(){
+    public void testIfExistsByUsername() {
         //given
         repository.save(cart);
 
@@ -46,7 +46,7 @@ public class CartRepositoryTest {
     }
 
     @Test
-    public void testIfNotExistsByUsername(){
+    public void testIfNotExistsByUsername() {
         //given
         repository.save(cart);
 
@@ -58,20 +58,23 @@ public class CartRepositoryTest {
     }
 
     @Test
-    public void testFindByUsername(){
+    public void testFindByUsername() {
         //given
         repository.save(cart);
 
         //when
-        var result = repository.findByUsername(cart.getUsername(), CartProjection.class);
+        var optional = repository.findByUsername(cart.getUsername(), CartProjection.class);
 
         //then
-        assertThat(result).isNotNull().isInstanceOf(CartProjection.class);
-        assertThat(result.getUsername()).isEqualTo(cart.getUsername());
+        assertThat(optional).isNotEmpty();
+        optional.ifPresent(cartProjection -> {
+            assertThat(cartProjection).isInstanceOf(CartProjection.class);
+            assertThat(cartProjection.getUsername()).isEqualTo(cart.getUsername());
+        });
     }
 
     @Test
-    public void testFindByUsername_WhenNoResult(){
+    public void testFindByUsername_WhenNoResult() {
         //given
         String username = "bruce";
         repository.save(cart);
@@ -80,6 +83,6 @@ public class CartRepositoryTest {
         var result = repository.findByUsername(username, CartProjection.class);
 
         //then
-        assertThat(result).isNull();
+        assertThat(result).isEmpty();
     }
 }
