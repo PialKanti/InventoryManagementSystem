@@ -98,6 +98,6 @@ public class CartServiceTest {
 
         //then
         verify(repository).findById(id);
-        verify(repository).save(any());
+        verify(repository).save(cart);
     }
 }
