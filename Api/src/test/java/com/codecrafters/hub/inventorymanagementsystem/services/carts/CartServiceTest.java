@@ -59,4 +59,9 @@ public class CartServiceTest {
         verify(repository).existsByUsername(createRequest.getUsername());
         verify(repository).save(any());
     }
+
+    @Test
+    public void testUpdate_WhenCartIdNotExists(){
+
+    }
 }
