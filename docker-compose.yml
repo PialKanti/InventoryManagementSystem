@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  mysqldb:
+    image: 'mysql:8.2.0'
+    container_name: mysql_db_c
+    ports:
+      - 3307:3306
+    environment:
+      MYSQL_DATABASE: inventory_demo
+      MYSQL_USER: pial
+      MYSQL_PASSWORD: Pial@2023
+      MYSQL_ROOT_PASSWORD: Pial@2023
+
+  api:
+    build: ./Api
+    container_name: api_c
+    ports:
+      - 8080:8080
+    depends_on:
+      - mysqldb
+    environment:
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: Pial@2023
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysqldb:3306/inventory_demo?createDatabaseIfNotExist=true
