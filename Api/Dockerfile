@@ -1,5 +1,10 @@
-FROM openjdk:21-ea-slim
+FROM gradle:jdk21-alpine AS build
 WORKDIR /app
-COPY /build/libs/inventorymanagementsystem-1.0.0.jar .
+COPY /src/main ./src/main
+COPY build.gradle .
+COPY settings.gradle .
+RUN gradle clean build
+
+FROM tomcat
 EXPOSE 8080
-ENTRYPOINT ["java","-jar","inventorymanagementsystem-1.0.0.jar"]
+COPY --from=build /app/build/libs/inventorymanagementsystem-1.0.0.war /usr/local/tomcat/webapps
