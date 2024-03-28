@@ -9,6 +9,7 @@ import com.codecrafters.hub.inventorymanagementsystem.entities.User;
 import com.codecrafters.hub.inventorymanagementsystem.repositories.BlackListedTokenRepository;
 import com.codecrafters.hub.inventorymanagementsystem.utils.JwtUtils;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,7 @@ import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AuthService {
     private final UserService userService;
     private final BlackListedTokenRepository tokenRepository;
@@ -28,9 +30,11 @@ public class AuthService {
     }
 
     public LoginResponse login(LoginRequest request) {
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
+        log.info("Login requested for {}", request.getUsername());
+        var authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
 
-        User user = userService.findByUsername(request.getUsername(), User.class);
+        //User user = userService.findByUsername(request.getUsername(), User.class);
+        var user = (User) authentication.getPrincipal();
         String accessToken = jwtService.generateToken(user);
         return LoginResponse
                 .builder()
