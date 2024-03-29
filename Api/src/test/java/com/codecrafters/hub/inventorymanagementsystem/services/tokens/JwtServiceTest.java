@@ -70,10 +70,11 @@ class JwtServiceTest {
     @Test
     void checkIfTokenNotRevoked() {
         //given
-        given(repository.findByToken(anyString()))
+        var token = "someToken";
+        given(repository.findByToken(token))
                 .willReturn(Optional.empty());
         //when
-        boolean expected = testService.isTokenRevoked(anyString());
+        boolean expected = testService.isTokenRevoked(token);
 
         //then
         assertThat(expected).isFalse();

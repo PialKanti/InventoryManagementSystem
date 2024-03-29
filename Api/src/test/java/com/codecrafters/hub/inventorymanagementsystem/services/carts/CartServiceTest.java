@@ -59,13 +59,13 @@ public class CartServiceTest {
                 .cartItems(new ArrayList<>())
                 .build();
         when(repository.existsByUsername(createRequest.getUsername())).thenReturn(false);
-        when(repository.save(any())).thenReturn(cart);
+        when(repository.save(any(Cart.class))).thenReturn(cart);
 
         //when
         service.create(createRequest);
         //then
         verify(repository).existsByUsername(createRequest.getUsername());
-        verify(repository).save(any());
+        verify(repository).save(any(Cart.class));
     }
 
     @Test
@@ -92,7 +92,7 @@ public class CartServiceTest {
         Cart cart = Cart.builder().id(id).username("robert").cartItems(new ArrayList<>()).build();
         CartUpdateRequest request = CartUpdateRequest.builder().cartItems(new ArrayList<>()).build();
         when(repository.findById(id)).thenReturn(Optional.of(cart));
-        when(repository.save(any())).thenReturn(cart);
+        when(repository.save(any(Cart.class))).thenReturn(cart);
 
         //when
         service.update(id, request);
