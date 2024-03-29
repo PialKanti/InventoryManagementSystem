@@ -82,7 +82,7 @@ class JwtServiceTest {
     @Test
     void checkIfTokenExpired() {
         // Given
-        long accessTokenExpiration = jwtProperties.getAccessTokenExpiration();
+        long accessTokenExpiration = jwtProperties.getTokenExpiration();
         ReflectionTestUtils.setField(jwtProperties, "accessTokenExpiration", 1L);
 
         User user = User.builder().username("Robert").build();

@@ -1,15 +1,13 @@
 package com.codecrafters.hub.inventorymanagementsystem.properties;
 
-import lombok.Getter;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
+import lombok.Data;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Configuration;
 
-@Component
-@Getter
+@Data
+@Configuration
+@ConfigurationProperties(prefix = "jwt.config")
 public class JwtProperties {
-    @Value("${jwt.encryption.key}")
     private String encryptionKey;
-    @Value("${jwt.access-token.expiration}")
-    private long accessTokenExpiration;
-
+    private long tokenExpiration;
 }
