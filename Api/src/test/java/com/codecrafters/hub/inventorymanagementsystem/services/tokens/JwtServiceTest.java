@@ -2,7 +2,7 @@ package com.codecrafters.hub.inventorymanagementsystem.services.tokens;
 
 import com.codecrafters.hub.inventorymanagementsystem.entities.BlackListedToken;
 import com.codecrafters.hub.inventorymanagementsystem.entities.User;
-import com.codecrafters.hub.inventorymanagementsystem.properties.JwtProperties;
+import com.codecrafters.hub.inventorymanagementsystem.configs.JwtConfig;
 import com.codecrafters.hub.inventorymanagementsystem.repositories.BlackListedTokenRepository;
 import com.codecrafters.hub.inventorymanagementsystem.services.JwtService;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -11,8 +11,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.Optional;
@@ -22,18 +20,20 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 
-@SpringBootTest(classes = JwtProperties.class)
 @ExtendWith(MockitoExtension.class)
 class JwtServiceTest {
     @Mock
     private BlackListedTokenRepository repository;
     private JwtService testService;
-    @Autowired
-    private JwtProperties jwtProperties;
+    private JwtConfig jwtConfig;
 
     @BeforeEach
     void setUp() {
-        testService = new JwtService(jwtProperties, repository);
+        jwtConfig = new JwtConfig();
+        jwtConfig.setEncryptionKey("5heUCJxsTsaYyTE6+XB+tnpvdZkttNv5PBWHe9v9q73kGjDa2+UI2YQMWPj1Fpec");
+        jwtConfig.setTokenExpiration(600000);
+
+        testService = new JwtService(jwtConfig, repository);
     }
 
     @Test
@@ -82,8 +82,8 @@ class JwtServiceTest {
     @Test
     void checkIfTokenExpired() {
         // Given
-        long accessTokenExpiration = jwtProperties.getTokenExpiration();
-        ReflectionTestUtils.setField(jwtProperties, "accessTokenExpiration", 1L);
+        long accessTokenExpiration = jwtConfig.getTokenExpiration();
+        ReflectionTestUtils.setField(jwtConfig, "tokenExpiration", 1L);
 
         User user = User.builder().username("Robert").build();
         String expiredToken = testService.generateToken(user);
@@ -94,7 +94,7 @@ class JwtServiceTest {
         assertThatThrownBy(() -> testService.isTokenExpired(expiredToken))
                 .isInstanceOf(ExpiredJwtException.class);
 
-        ReflectionTestUtils.setField(jwtProperties, "accessTokenExpiration", accessTokenExpiration);
+        ReflectionTestUtils.setField(jwtConfig, "tokenExpiration", accessTokenExpiration);
     }
 
     @Test
