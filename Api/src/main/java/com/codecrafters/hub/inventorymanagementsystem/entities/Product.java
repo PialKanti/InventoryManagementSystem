@@ -14,6 +14,10 @@ import java.util.List;
 @Setter
 @SuperBuilder
 @NoArgsConstructor
+@NamedEntityGraph(name = "productEntityGraph", attributeNodes = {
+        @NamedAttributeNode("category"),
+        @NamedAttributeNode("ratings")
+})
 public class Product extends AuditableEntity {
     @Column(nullable = false, length = 200)
     private String title;
