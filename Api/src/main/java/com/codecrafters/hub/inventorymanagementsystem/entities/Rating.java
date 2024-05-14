@@ -26,4 +26,7 @@ public class Rating extends NonAuditableEntity {
     @Column(name = "created_on")
     @JsonIgnore
     private LocalDateTime createdOn;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 }

@@ -4,9 +4,12 @@ import com.codecrafters.hub.inventorymanagementsystem.dtos.request.products.Prod
 import com.codecrafters.hub.inventorymanagementsystem.dtos.request.products.ProductRatingRequest;
 import com.codecrafters.hub.inventorymanagementsystem.dtos.request.products.ProductUpdateRequest;
 import com.codecrafters.hub.inventorymanagementsystem.dtos.response.products.ProductResponse;
+import com.codecrafters.hub.inventorymanagementsystem.dtos.response.products.RatingResponse;
+import com.codecrafters.hub.inventorymanagementsystem.dtos.response.users.UserResponse;
 import com.codecrafters.hub.inventorymanagementsystem.entities.Category;
 import com.codecrafters.hub.inventorymanagementsystem.entities.Product;
 import com.codecrafters.hub.inventorymanagementsystem.entities.Rating;
+import com.codecrafters.hub.inventorymanagementsystem.entities.User;
 import com.codecrafters.hub.inventorymanagementsystem.repositories.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,20 +21,25 @@ import java.util.ArrayList;
 public class ProductService extends BaseService<Product, Long, ProductCreateRequest, ProductUpdateRequest, ProductResponse> {
     private final ProductRepository productRepository;
     private final CategoryService categoryService;
+    private final UserService userService;
 
     @Autowired
-    public ProductService(ProductRepository repository, CategoryService categoryService) {
+    public ProductService(ProductRepository repository, CategoryService categoryService, UserService userService) {
         super(repository);
         this.productRepository = repository;
         this.categoryService = categoryService;
+        this.userService = userService;
     }
 
-    public Rating addRating(Long productId, ProductRatingRequest request) {
+    public RatingResponse addRating(Long productId, ProductRatingRequest request) {
         Product product = findById(productId, Product.class);
+        User user = userService.findByUsername(request.username(), User.class);
+
         Rating rating = Rating.builder()
                 .rating(request.rating())
                 .comment(request.comment())
                 .product(product)
+                .user(user)
                 .createdOn(LocalDateTime.now())
                 .build();
 
@@ -44,7 +52,15 @@ public class ProductService extends BaseService<Product, Long, ProductCreateRequ
         product.setRatings(existingRatings);
         productRepository.save(product);
 
-        return rating;
+        return RatingResponse.builder()
+                .ratings(rating.getRating())
+                .comment(request.comment())
+                .user(UserResponse.builder()
+                        .username(user.getUsername())
+                        .email(user.getEmail())
+                        .firstName(user.getFirstName())
+                        .lastName(user.getLastName()).build())
+                .build();
     }
 
     @Override

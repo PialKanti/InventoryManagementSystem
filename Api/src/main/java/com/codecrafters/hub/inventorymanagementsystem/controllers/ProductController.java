@@ -5,6 +5,7 @@ import com.codecrafters.hub.inventorymanagementsystem.dtos.request.products.Prod
 import com.codecrafters.hub.inventorymanagementsystem.dtos.request.products.ProductUpdateRequest;
 import com.codecrafters.hub.inventorymanagementsystem.dtos.response.BasePaginatedResponse;
 import com.codecrafters.hub.inventorymanagementsystem.dtos.response.EntityResponse;
+import com.codecrafters.hub.inventorymanagementsystem.dtos.response.products.RatingResponse;
 import com.codecrafters.hub.inventorymanagementsystem.entities.Rating;
 import com.codecrafters.hub.inventorymanagementsystem.entities.projections.ProductProjection;
 import com.codecrafters.hub.inventorymanagementsystem.services.ProductService;
@@ -62,7 +63,7 @@ public class ProductController {
     }
 
     @PostMapping(value = "/{id}/ratings")
-    public ResponseEntity<Rating> addRating(@PathVariable(name = "id") Long productId, @RequestBody ProductRatingRequest request) {
+    public ResponseEntity<RatingResponse> addRating(@PathVariable(name = "id") Long productId, @RequestBody ProductRatingRequest request) {
         return ResponseEntity.ok(service.addRating(productId, request));
     }
 }
