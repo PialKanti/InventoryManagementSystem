@@ -1,9 +1,11 @@
 package com.codecrafters.hub.inventorymanagementsystem.controllers;
 
 import com.codecrafters.hub.inventorymanagementsystem.dtos.request.products.ProductCreateRequest;
+import com.codecrafters.hub.inventorymanagementsystem.dtos.request.products.ProductRatingRequest;
 import com.codecrafters.hub.inventorymanagementsystem.dtos.request.products.ProductUpdateRequest;
 import com.codecrafters.hub.inventorymanagementsystem.dtos.response.BasePaginatedResponse;
 import com.codecrafters.hub.inventorymanagementsystem.dtos.response.EntityResponse;
+import com.codecrafters.hub.inventorymanagementsystem.entities.Rating;
 import com.codecrafters.hub.inventorymanagementsystem.entities.projections.ProductProjection;
 import com.codecrafters.hub.inventorymanagementsystem.services.ProductService;
 import lombok.RequiredArgsConstructor;
@@ -57,5 +59,10 @@ public class ProductController {
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         service.deleteById(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping(value = "/{id}/ratings")
+    public ResponseEntity<Rating> addRating(@PathVariable(name = "id") Long productId, @RequestBody ProductRatingRequest request) {
+        return ResponseEntity.ok(service.addRating(productId, request));
     }
 }

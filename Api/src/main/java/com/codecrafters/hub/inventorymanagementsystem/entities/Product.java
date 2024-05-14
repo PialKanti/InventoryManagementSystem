@@ -5,6 +5,9 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table(name = "products")
 @Getter
@@ -23,4 +26,6 @@ public class Product extends AuditableEntity {
     private float price;
     @Column(nullable = false)
     private int quantity;
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    private List<Rating> ratings;
 }
