@@ -3,9 +3,12 @@ package com.codecrafters.hub.inventorymanagementsystem.entities.listeners;
 import com.codecrafters.hub.inventorymanagementsystem.entities.Product;
 import jakarta.persistence.PostPersist;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.jms.JmsException;
 import org.springframework.jms.core.JmsTemplate;
 
 @RequiredArgsConstructor
+@Slf4j
 public class ElasticSearchIndexingListener {
     private final JmsTemplate jmsTemplate;
 
@@ -18,6 +21,11 @@ public class ElasticSearchIndexingListener {
                 .price(product.getPrice())
                 .categoryId(product.getCategory().getId())
                 .build();
-        jmsTemplate.convertAndSend("productElasticSearch", entityToBeIndexed);
+
+        try {
+            jmsTemplate.convertAndSend("productElasticSearch", entityToBeIndexed);
+        } catch (JmsException e) {
+            log.error("Error thrown while sending message to Jms message queue. Message: {}", e.getMessage());
+        }
     }
 }
