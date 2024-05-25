@@ -1,8 +1,10 @@
 package com.codecrafters.hub.inventorymanagementsystem.elasticsearch.documents;
 
 import com.codecrafters.hub.inventorymanagementsystem.elasticsearch.constants.Indexes;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
@@ -11,6 +13,8 @@ import org.springframework.data.elasticsearch.annotations.FieldType;
 @Document(indexName = Indexes.INDEX_PRODUCT)
 @Data
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Product {
     @Id
     private long id;
