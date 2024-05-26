@@ -17,7 +17,10 @@ public class ElasticsearchProductService {
 
     public IndexResponse create(Product product) {
         try {
-            IndexRequest<Product> indexRequest = IndexRequest.of(builder -> builder.index(Indexes.INDEX_PRODUCT).document(product));
+            IndexRequest<Product> indexRequest = IndexRequest.of(builder -> builder
+                    .index(Indexes.INDEX_PRODUCT)
+                    .id(String.valueOf(product.getId()))
+                    .document(product));
             return repository.add(indexRequest);
         } catch (IOException e) {
             throw new RuntimeException(e);
