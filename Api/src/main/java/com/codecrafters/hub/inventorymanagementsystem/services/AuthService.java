@@ -14,8 +14,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -47,7 +45,6 @@ public class AuthService {
         tokenRepository.save(BlackListedToken
                 .builder()
                 .token(jwtToken)
-                .expiryDateTime(LocalDateTime.now())
                 .build());
     }
 }

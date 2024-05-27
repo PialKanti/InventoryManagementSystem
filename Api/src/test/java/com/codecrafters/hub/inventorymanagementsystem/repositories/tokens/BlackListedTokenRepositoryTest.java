@@ -7,8 +7,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
-import java.time.LocalDateTime;
-
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 
@@ -30,7 +28,6 @@ class BlackListedTokenRepositoryTest {
                 .builder()
                 .id(1L)
                 .token(tokenValue)
-                .expiryDateTime(LocalDateTime.now())
                 .build();
         testRepository.save(token);
 

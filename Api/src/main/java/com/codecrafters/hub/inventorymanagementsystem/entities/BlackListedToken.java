@@ -1,24 +1,17 @@
 package com.codecrafters.hub.inventorymanagementsystem.entities;
 
-import com.codecrafters.hub.inventorymanagementsystem.entities.common.NonAuditableEntity;
+import com.codecrafters.hub.inventorymanagementsystem.constans.RedisHashKey;
 import jakarta.persistence.*;
 import lombok.*;
-import lombok.experimental.SuperBuilder;
+import org.springframework.data.redis.core.RedisHash;
+import org.springframework.data.redis.core.index.Indexed;
 
-import java.time.LocalDateTime;
-
-@Entity
-@Table(name = "blacklist_tokens")
-@Getter
-@Setter
-@SuperBuilder
-@NoArgsConstructor
-public class BlackListedToken extends NonAuditableEntity {
+@Data
+@Builder
+@RedisHash(value = RedisHashKey.AUTH_BLACKLISTED_TOKEN, timeToLive = 600)
+public class BlackListedToken {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @Column(name = "token")
+    @Indexed
     private String token;
-    @Column(name = "expired_at")
-    private LocalDateTime expiryDateTime;
 }
