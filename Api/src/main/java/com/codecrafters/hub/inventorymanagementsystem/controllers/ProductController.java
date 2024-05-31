@@ -6,7 +6,9 @@ import com.codecrafters.hub.inventorymanagementsystem.dtos.request.products.Prod
 import com.codecrafters.hub.inventorymanagementsystem.dtos.response.BasePaginatedResponse;
 import com.codecrafters.hub.inventorymanagementsystem.dtos.response.EntityResponse;
 import com.codecrafters.hub.inventorymanagementsystem.dtos.response.products.RatingResponse;
-import com.codecrafters.hub.inventorymanagementsystem.entities.Rating;
+import com.codecrafters.hub.inventorymanagementsystem.elasticsearch.documents.Product;
+import com.codecrafters.hub.inventorymanagementsystem.elasticsearch.dtos.request.ProductSearchRequest;
+import com.codecrafters.hub.inventorymanagementsystem.elasticsearch.services.ElasticsearchProductService;
 import com.codecrafters.hub.inventorymanagementsystem.entities.projections.ProductProjection;
 import com.codecrafters.hub.inventorymanagementsystem.services.ProductService;
 import lombok.RequiredArgsConstructor;
@@ -18,12 +20,14 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/products")
 public class ProductController {
     private final ProductService service;
+    private final ElasticsearchProductService esService;
 
     @GetMapping
     public ResponseEntity<BasePaginatedResponse<ProductProjection>> findAll(@RequestParam(name = "page", defaultValue = "0", required = false) int page,
@@ -33,6 +37,11 @@ public class ProductController {
         Sort sortable = ("asc".equals(orderBy)) ? Sort.by(sortBy) : Sort.by(sortBy).descending();
         Pageable pageable = PageRequest.of(page, pageSize, sortable);
         return ResponseEntity.ok(service.findAll(pageable, ProductProjection.class));
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<Product>> search(@ModelAttribute ProductSearchRequest request) {
+        return ResponseEntity.ok(esService.search(request));
     }
 
     @GetMapping(value = "/{id}")
