@@ -2,9 +2,11 @@ package com.codecrafters.hub.inventorymanagementsystem.elasticsearch.repositorie
 
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
 import co.elastic.clients.elasticsearch.core.*;
+import com.codecrafters.hub.inventorymanagementsystem.dtos.response.BasePaginatedResponse;
 import com.codecrafters.hub.inventorymanagementsystem.elasticsearch.dtos.request.ProductSearchRequest;
 import com.codecrafters.hub.inventorymanagementsystem.elasticsearch.documents.Product;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.data.elasticsearch.core.SearchHit;
 import org.springframework.data.elasticsearch.core.SearchHits;
@@ -34,7 +36,7 @@ public class ElasticsearchProductRepository {
         return client.delete(request);
     }
 
-    public List<Product> search(ProductSearchRequest searchRequest) {
+    public BasePaginatedResponse<Product> search(ProductSearchRequest searchRequest, Pageable pageable) {
         Criteria criteria = new Criteria("title").contains(searchRequest.getTitle()).and("price")
                 .between(searchRequest.getMinPrice(), searchRequest.getMaxPrice());
         if (searchRequest.getCategoryId() != null) {
@@ -42,7 +44,20 @@ public class ElasticsearchProductRepository {
         }
 
         Query query = new CriteriaQuery(criteria);
+        query.setPageable(pageable);
+
         SearchHits<Product> searchHits = searchOperations.search(query, Product.class);
-        return searchHits.getSearchHits().stream().map(SearchHit::getContent).toList();
+        List<Product> products = searchHits.getSearchHits().stream().map(SearchHit::getContent).toList();
+
+        long totalItems = searchHits.getTotalHits();
+        int totalPages = (int) Math.ceil((double) totalItems / pageable.getPageSize());
+
+        return BasePaginatedResponse.<Product>builder()
+                .page(pageable.getPageNumber())
+                .pageSize(pageable.getPageSize())
+                .totalItems(totalItems)
+                .totalPages(totalPages)
+                .data(products)
+                .build();
     }
 }

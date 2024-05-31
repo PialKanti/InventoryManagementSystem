@@ -1,15 +1,16 @@
 package com.codecrafters.hub.inventorymanagementsystem.elasticsearch.services;
 
 import co.elastic.clients.elasticsearch.core.*;
+import com.codecrafters.hub.inventorymanagementsystem.dtos.response.BasePaginatedResponse;
 import com.codecrafters.hub.inventorymanagementsystem.elasticsearch.constants.Indexes;
 import com.codecrafters.hub.inventorymanagementsystem.elasticsearch.dtos.request.ProductSearchRequest;
 import com.codecrafters.hub.inventorymanagementsystem.elasticsearch.documents.Product;
 import com.codecrafters.hub.inventorymanagementsystem.elasticsearch.repositories.ElasticsearchProductRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -51,7 +52,7 @@ public class ElasticsearchProductService {
         }
     }
 
-    public List<Product> search(ProductSearchRequest searchCriteria) {
-        return repository.search(searchCriteria);
+    public BasePaginatedResponse<Product> search(ProductSearchRequest searchCriteria, Pageable pageable) {
+        return repository.search(searchCriteria, pageable);
     }
 }

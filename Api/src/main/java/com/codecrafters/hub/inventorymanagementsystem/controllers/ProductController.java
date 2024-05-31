@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -40,8 +39,11 @@ public class ProductController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<List<Product>> search(@ModelAttribute ProductSearchRequest request) {
-        return ResponseEntity.ok(esService.search(request));
+    public ResponseEntity<BasePaginatedResponse<Product>> search(@RequestParam(name = "page", defaultValue = "0", required = false) int page,
+                                                                 @RequestParam(name = "pageSize", defaultValue = "5", required = false) int pageSize,
+                                                                 @ModelAttribute ProductSearchRequest request) {
+        Pageable pageable = PageRequest.of(page, pageSize);
+        return ResponseEntity.ok(esService.search(request, pageable));
     }
 
     @GetMapping(value = "/{id}")
