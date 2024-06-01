@@ -3,6 +3,7 @@ package com.codecrafters.hub.inventorymanagementsystem.services;
 import com.codecrafters.hub.inventorymanagementsystem.dtos.request.products.ProductCreateRequest;
 import com.codecrafters.hub.inventorymanagementsystem.dtos.request.products.ProductRatingRequest;
 import com.codecrafters.hub.inventorymanagementsystem.dtos.request.products.ProductUpdateRequest;
+import com.codecrafters.hub.inventorymanagementsystem.dtos.response.EntityResponse;
 import com.codecrafters.hub.inventorymanagementsystem.dtos.response.products.ProductResponse;
 import com.codecrafters.hub.inventorymanagementsystem.dtos.response.products.RatingResponse;
 import com.codecrafters.hub.inventorymanagementsystem.dtos.response.users.UserResponse;
@@ -16,6 +17,8 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ProductService extends BaseService<Product, Long, ProductCreateRequest, ProductUpdateRequest, ProductResponse> {
@@ -29,6 +32,12 @@ public class ProductService extends BaseService<Product, Long, ProductCreateRequ
         this.productRepository = repository;
         this.categoryService = categoryService;
         this.userService = userService;
+    }
+
+    public List<EntityResponse> createInBulk(List<ProductCreateRequest> bulkRequest){
+        List<Product> products = bulkRequest.stream().map(this::convertToCreateEntity).toList();
+        var bulkResponse = productRepository.saveAll(products);
+        return bulkResponse.stream().map(this::convertToEntityResponse).collect(Collectors.toList());
     }
 
     public RatingResponse addRating(Long productId, ProductRatingRequest request) {

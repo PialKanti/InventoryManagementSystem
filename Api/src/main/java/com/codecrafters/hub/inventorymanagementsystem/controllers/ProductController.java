@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -52,7 +53,7 @@ public class ProductController {
     }
 
     @PostMapping
-    public ResponseEntity<EntityResponse> create(@RequestBody ProductCreateRequest request) {
+    public ResponseEntity<EntityResponse> createInBulk(@RequestBody ProductCreateRequest request) {
         var entityResponse = service.create(request);
         String uriString = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
@@ -60,6 +61,12 @@ public class ProductController {
                 .toUriString();
 
         return ResponseEntity.created(URI.create(uriString)).body(entityResponse);
+    }
+
+    @PostMapping(value = "/bulk")
+    public ResponseEntity<List<EntityResponse>> createInBulk(@RequestBody List<ProductCreateRequest> bulkRequest) {
+        var response = service.createInBulk(bulkRequest);
+        return ResponseEntity.ok(response);
     }
 
     @PutMapping(value = "/{id}")
