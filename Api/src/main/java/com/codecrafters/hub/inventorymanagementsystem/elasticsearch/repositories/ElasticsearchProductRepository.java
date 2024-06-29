@@ -37,10 +37,16 @@ public class ElasticsearchProductRepository {
     }
 
     public BasePaginatedResponse<Product> search(ProductSearchRequest searchRequest, Pageable pageable) {
-        Criteria criteria = new Criteria("title").contains(searchRequest.getTitle()).and("price")
-                .between(searchRequest.getMinPrice(), searchRequest.getMaxPrice());
+        Criteria criteria = new Criteria();
+
+        if(searchRequest.getTitle() != null){
+            criteria = criteria.and("title").contains(searchRequest.getTitle());
+        }
         if (searchRequest.getCategoryId() != null) {
             criteria = criteria.and("categoryId").is(searchRequest.getCategoryId());
+        }
+        if (searchRequest.getMinPrice() != null && searchRequest.getMaxPrice() != null) {
+            criteria = criteria.and("price").between(searchRequest.getMinPrice(), searchRequest.getMaxPrice());
         }
 
         Query query = new CriteriaQuery(criteria);
