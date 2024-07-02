@@ -101,6 +101,7 @@ public class ProductService extends BaseService<Product, Long, ProductCreateRequ
                 .id(entity.getId())
                 .title(entity.getTitle())
                 .description(entity.getDescription())
+                .averageRating(entity.getAverageRating())
                 .price(entity.getPrice())
                 .quantity(entity.getQuantity())
                 .build();

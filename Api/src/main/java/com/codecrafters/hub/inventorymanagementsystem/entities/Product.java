@@ -31,6 +31,8 @@ public class Product extends AuditableEntity {
     private float price;
     @Column(nullable = false)
     private int quantity;
+    @Column(name = "avg_rating")
+    private float averageRating;
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
     private List<Rating> ratings;
 }

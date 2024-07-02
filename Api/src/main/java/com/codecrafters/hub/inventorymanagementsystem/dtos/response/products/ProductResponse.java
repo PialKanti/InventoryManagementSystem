@@ -11,6 +11,7 @@ import lombok.experimental.SuperBuilder;
 public class ProductResponse extends EntityResponse {
     private String title;
     private String description;
+    private float averageRating;
     private float price;
     private int quantity;
 }
