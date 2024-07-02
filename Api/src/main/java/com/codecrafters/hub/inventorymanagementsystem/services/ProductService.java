@@ -17,7 +17,9 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -52,15 +54,18 @@ public class ProductService extends BaseService<Product, Long, ProductCreateRequ
                 .createdOn(LocalDateTime.now())
                 .build();
 
-        var existingRatings = product.getRatings();
-        if (existingRatings == null) {
-            existingRatings = new ArrayList<>();
-        }
-        existingRatings.add(rating);
+        var ratings = Optional.ofNullable(product.getRatings()).orElseGet(ArrayList::new);
+        ratings.add(rating);
+        product.setRatings(ratings);
 
-        product.setRatings(existingRatings);
-        double averageRating = product.getRatings().stream().mapToDouble(Rating::getRating).average().orElse(0.0);
+        double averageRating = Optional.ofNullable(product.getRatings())
+                .orElseGet(Collections::emptyList)
+                .stream()
+                .mapToDouble(Rating::getRating)
+                .average()
+                .orElse(0.0);
         product.setAverageRating((float) averageRating);
+
         productRepository.save(product);
 
         return RatingResponse.builder()
