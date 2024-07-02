@@ -34,7 +34,7 @@ public class ProductService extends BaseService<Product, Long, ProductCreateRequ
         this.userService = userService;
     }
 
-    public List<EntityResponse> createInBulk(List<ProductCreateRequest> bulkRequest){
+    public List<EntityResponse> createInBulk(List<ProductCreateRequest> bulkRequest) {
         List<Product> products = bulkRequest.stream().map(this::convertToCreateEntity).toList();
         var bulkResponse = productRepository.saveAll(products);
         return bulkResponse.stream().map(this::convertToEntityResponse).collect(Collectors.toList());
@@ -59,6 +59,8 @@ public class ProductService extends BaseService<Product, Long, ProductCreateRequ
         existingRatings.add(rating);
 
         product.setRatings(existingRatings);
+        double averageRating = product.getRatings().stream().mapToDouble(Rating::getRating).average().orElse(0.0);
+        product.setAverageRating((float) averageRating);
         productRepository.save(product);
 
         return RatingResponse.builder()

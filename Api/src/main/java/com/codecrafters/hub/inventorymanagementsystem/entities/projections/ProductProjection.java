@@ -7,6 +7,8 @@ public interface ProductProjection extends BaseProjection {
 
     String getDescription();
 
+    Float getAverageRating();
+
     BigDecimal getPrice();
 
     Integer getQuantity();
