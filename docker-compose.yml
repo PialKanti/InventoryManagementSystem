@@ -1,25 +1,65 @@
-version: '3.8'
-
 services:
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.13.4
+    container_name: elasticsearch_c
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    networks:
+      - elastic
+    volumes:
+      - elasticsearch_data:/usr/share/elasticsearch/data
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.13.4
+    container_name: kibana
+    ports:
+      - "5601:5601"
+    networks:
+      - elastic
+    depends_on:
+      - elasticsearch
+
+  redis:
+    container_name: redis-stack-c
+    image: redis/redis-stack:latest
+    ports:
+      - "6379:6379"
+      - "8001:8001"
+
   mysqldb:
     image: 'mysql:8.2.0'
     container_name: mysql_db_c
     ports:
-      - 3307:3306
+      - 3306:3306
     environment:
       MYSQL_DATABASE: inventory_demo
       MYSQL_USER: pial
       MYSQL_PASSWORD: Pial@2023
       MYSQL_ROOT_PASSWORD: Pial@2023
-
+  
   api:
     build: ./Api
-    container_name: api_c
+    container_name: inventory_api
     ports:
       - 8080:8080
     depends_on:
+      - elasticsearch
       - mysqldb
+      - redis
     environment:
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: Pial@2023
       SPRING_DATASOURCE_URL: jdbc:mysql://mysqldb:3306/inventory_demo?createDatabaseIfNotExist=true
+
+  
+networks:
+  elastic:
+    driver: bridge
+
+volumes:
+  elasticsearch_data:
+    driver: local
