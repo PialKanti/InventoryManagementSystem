@@ -55,6 +55,14 @@ services:
       SPRING_DATASOURCE_PASSWORD: Pial@2023
       SPRING_DATASOURCE_URL: jdbc:mysql://mysqldb:3306/inventory_demo?createDatabaseIfNotExist=true
 
+  frontend:
+    build: ./ClientApp/online-shopping-app
+    container_name: inventory_frontend
+    ports:
+      - 80:80
+    depends_on:
+      - api
+
   
 networks:
   elastic:
