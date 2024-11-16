@@ -22,7 +22,8 @@
 </template>
 
 <script setup>
-import axios, { HttpStatusCode } from 'axios';
+import { HttpStatusCode } from 'axios';
+import axiosInstance from '@/plugins/axios';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 
@@ -46,7 +47,7 @@ const register = async () => {
 
     console.log(data);
 
-    await axios.post('/api/auth/register', data)
+    await axiosInstance.post('/auth/register', data)
         .then(response => {
             console.log(response);
 

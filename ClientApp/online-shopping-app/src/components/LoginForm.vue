@@ -13,7 +13,8 @@
 
 <script setup>
 import { useAuthStore } from '@/stores/authStore';
-import axios, { HttpStatusCode } from 'axios';
+import { HttpStatusCode } from 'axios';
+import axiosInstance from '@/plugins/axios';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { deleteLocalStore } from '@/utils/localStore';
@@ -36,7 +37,7 @@ const login = async () => {
 
     deleteLocalStore();
 
-    await axios.post('/api/auth/login', data)
+    await axiosInstance.post('/auth/login', data)
         .then(async response => {
             console.log(response);
             if (response.status === HttpStatusCode.Ok) {
@@ -64,7 +65,7 @@ const login = async () => {
 };
 
 const fetchUserInfo = async () => {
-    return await axios.get(`api/users/${username.value}`)
+    return await axiosInstance.get(`/users/${username.value}`)
         .then(response => response.data);
 }
 

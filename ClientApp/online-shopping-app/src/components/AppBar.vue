@@ -36,7 +36,8 @@
 
 <script setup>
 import { useAuthStore } from '@/stores/authStore';
-import axios, { HttpStatusCode } from 'axios';
+import { HttpStatusCode } from 'axios';
+import axiosInstance from '@/plugins/axios';
 import { computed } from 'vue';
 import { ref } from 'vue';
 import { performLogout } from '@/services/auth';
@@ -58,7 +59,7 @@ const getFirstLetterUpperCase = (word) => {
 };
 
 const logout = async () => {
-    await axios.get('/api/auth/logout')
+    await axiosInstance.get('/api/auth/logout')
         .then(response => {
             if (response.status === HttpStatusCode.NoContent) {
                 performLogout();

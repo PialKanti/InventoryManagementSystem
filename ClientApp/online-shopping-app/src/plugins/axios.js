@@ -6,7 +6,7 @@ const axiosInstance = axios.create({
     baseURL: import.meta.env.VITE_BASE_URL,
 });
 
-axios.interceptors.request.use((config) => {
+axiosInstance.interceptors.request.use((config) => {
     const authStore = useAuthStore();
     if (!config.url.includes('/login') && !config.url.includes('/register')) {
         config.headers = {
@@ -17,7 +17,7 @@ axios.interceptors.request.use((config) => {
     return config;
 });
 
-axios.interceptors.response.use(response => {
+axiosInstance.interceptors.response.use(response => {
     return response;
 }, error => {
     console.error(error);
