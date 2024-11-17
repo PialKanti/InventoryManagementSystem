@@ -29,12 +29,19 @@ services:
     ports:
       - "6379:6379"
       - "8001:8001"
+    networks:
+      - backend_net
+    command: ["redis-server", "--bind", "0.0.0.0", "--protected-mode", "no"]
+    environment:
+    - REDIS_PASSWORD=Pial@2023
 
   mysqldb:
     image: 'mysql:8.2.0'
     container_name: mysql_db_c
     ports:
       - 3306:3306
+    networks:
+      - backend_net
     environment:
       MYSQL_DATABASE: inventory_demo
       MYSQL_USER: pial
@@ -46,6 +53,9 @@ services:
     container_name: inventory_api
     ports:
       - 8080:8080
+    networks:
+      - backend_net
+      - elastic
     depends_on:
       - elasticsearch
       - mysqldb
@@ -66,6 +76,8 @@ services:
   
 networks:
   elastic:
+    driver: bridge
+  backend_net:
     driver: bridge
 
 volumes:
