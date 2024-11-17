@@ -3,7 +3,8 @@ import axios, { HttpStatusCode } from "axios";
 import { performLogout } from '@/services/auth';
 
 const axiosInstance = axios.create({
-    baseURL: import.meta.env.VITE_BASE_URL,
+    withCredentials: true,
+    baseURL: import.meta.env.VITE_BASE_URL
 });
 
 axiosInstance.interceptors.request.use((config) => {
