@@ -9,7 +9,7 @@ public class ESConfig extends ElasticsearchConfiguration {
     @Override
     public ClientConfiguration clientConfiguration() {
         return ClientConfiguration.builder()
-                .connectedTo("localhost:9200")
+                .connectedTo("elasticsearch_c:9200")
                 .build();
     }
 }
