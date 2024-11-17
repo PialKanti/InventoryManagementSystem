@@ -59,7 +59,7 @@ const getFirstLetterUpperCase = (word) => {
 };
 
 const logout = async () => {
-    await axiosInstance.get('/api/auth/logout')
+    await axiosInstance.get('/auth/logout')
         .then(response => {
             if (response.status === HttpStatusCode.NoContent) {
                 performLogout();

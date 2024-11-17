@@ -2,7 +2,7 @@ import axiosInstance from '@/plugins/axios';
 
 const getAllProducts = async (currentPage, itemsPerPage) => {
     try {
-        return await axiosInstance.get(`/api/products?page=${currentPage}&pageSize=${itemsPerPage}`);
+        return await axiosInstance.get(`/products?page=${currentPage}&pageSize=${itemsPerPage}`);
     } catch (error) {
         console.log('Error occurred during fetching all products: ', error);
         throw error;
@@ -11,7 +11,7 @@ const getAllProducts = async (currentPage, itemsPerPage) => {
 
 const getProduct = async (id) => {
     try {
-        return await axiosInstance.get(`/api/products/${id}`);
+        return await axiosInstance.get(`/products/${id}`);
     } catch (error) {
         console.log('Error occurred during fetching product: ', error);
         throw error;
@@ -20,7 +20,7 @@ const getProduct = async (id) => {
 
 const createProduct = async (formData) => {
     try {
-        return await axiosInstance.post('/api/products', formData);
+        return await axiosInstance.post('/products', formData);
     } catch (error) {
         console.log('Error occurred during creating product: ', error);
         throw error;
@@ -29,7 +29,7 @@ const createProduct = async (formData) => {
 
 const updateProduct = async (id, formData) => {
     try {
-        return await axiosInstance.put(`/api/products/${id}`, formData);
+        return await axiosInstance.put(`/products/${id}`, formData);
     } catch (error) {
         console.log('Error occurred during updating product: ', error);
         throw error;
@@ -38,7 +38,7 @@ const updateProduct = async (id, formData) => {
 
 const deleteProduct = async (id) => {
     try {
-        return await axiosInstance.delete(`/api/products/${id}`);
+        return await axiosInstance.delete(`/products/${id}`);
     } catch (error) {
         console.log('Error occurred during deleting product: ', error);
         throw error;
