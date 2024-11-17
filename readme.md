@@ -18,3 +18,10 @@ Use Gradle to build the `Api` project:
 Use Docker compose for running both backend and frontend application:
 
     docker compose up
+
+
+## Accessing the Frontend
+
+After starting the application, open your browser and navigate to:
+
+[http://localhost:3000](http://localhost:3000)
