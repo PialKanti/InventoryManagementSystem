@@ -1,0 +1,19 @@
+# Database connection
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: Pial@2023
+    url: jdbc:mysql://localhost:3306/inventory_demo?createDatabaseIfNotExist=true
+
+  # Redis
+  data:
+    redis:
+      host: localhost
+      port: 6379
+
+# Elasticsearch
+app:
+  elasticsearch:
+    host: localhost
+    port: 9200

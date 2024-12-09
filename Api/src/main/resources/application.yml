@@ -1,0 +1,25 @@
+spring:
+  profiles:
+    active: dev
+
+  jpa:
+    generate-ddl: true
+    show-sql: true
+    properties:
+      hibernate:
+        ddl-auto: create-drop
+        format_sql: true
+
+  # ActiveMQ Artemis
+  artemis:
+    mode: embedded
+
+# Jwt Token Config
+jwt:
+  config:
+    encryption-key: 5heUCJxsTsaYyTE6+XB+tnpvdZkttNv5PBWHe9v9q73kGjDa2+UI2YQMWPj1Fpec
+    token-expiration: 600000
+
+logging:
+  level:
+    org.springframework.security: TRACE
