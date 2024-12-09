@@ -31,7 +31,6 @@ public class AuthService {
         log.info("Login requested for {}", request.getUsername());
         var authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
 
-        //User user = userService.findByUsername(request.getUsername(), User.class);
         var user = (User) authentication.getPrincipal();
         String accessToken = jwtService.generateToken(user);
         return LoginResponse
