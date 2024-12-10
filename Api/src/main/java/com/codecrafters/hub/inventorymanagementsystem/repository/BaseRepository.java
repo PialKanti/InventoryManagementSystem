@@ -9,6 +9,6 @@ import java.util.Optional;
 
 @NoRepositoryBean
 public interface BaseRepository<T, Id> extends JpaRepository<T, Id> {
-    <R> Page<R> findAll(Pageable pageable, Class<R> type);
+    <R> Page<R> findAllBy(Pageable pageable, Class<R> type);
     <R> Optional<R> findById(Id id, Class<R> type);
 }

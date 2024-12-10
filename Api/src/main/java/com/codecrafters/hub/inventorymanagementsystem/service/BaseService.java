@@ -5,8 +5,6 @@ import com.codecrafters.hub.inventorymanagementsystem.repository.BaseRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Pageable;
 
-import java.util.List;
-
 public abstract class BaseService<T, ID> {
     private final BaseRepository<T, ID> repository;
 
@@ -15,7 +13,7 @@ public abstract class BaseService<T, ID> {
     }
 
     public <R> BasePaginatedResponse<R> findAll(Pageable pageable, Class<R> type) {
-        var page = repository.findAll(pageable, type);
+        var page = repository.findAllBy(pageable, type);
         return BasePaginatedResponse
                 .<R>builder()
                 .page(page.getNumber())
