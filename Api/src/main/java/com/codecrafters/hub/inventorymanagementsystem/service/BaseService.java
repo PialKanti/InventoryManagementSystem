@@ -14,12 +14,8 @@ public abstract class BaseService<T, ID> {
         this.repository = repository;
     }
 
-    public <R> List<R> findAll(Class<R> type) {
-        return repository.findAllBy(type);
-    }
-
     public <R> BasePaginatedResponse<R> findAll(Pageable pageable, Class<R> type) {
-        var page = repository.findAllBy(pageable, type);
+        var page = repository.findAll(pageable, type);
         return BasePaginatedResponse
                 .<R>builder()
                 .page(page.getNumber())
