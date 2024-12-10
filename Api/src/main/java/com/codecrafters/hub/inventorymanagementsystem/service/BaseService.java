@@ -7,10 +7,10 @@ import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
-public abstract class BaseService<T, Id, CreateRequest, UpdateRequest, EntityResponse> {
-    private final BaseRepository<T, Id> repository;
+public abstract class BaseService<T, ID> {
+    private final BaseRepository<T, ID> repository;
 
-    public BaseService(BaseRepository<T, Id> repository) {
+    protected BaseService(BaseRepository<T, ID> repository) {
         this.repository = repository;
     }
 
@@ -30,33 +30,19 @@ public abstract class BaseService<T, Id, CreateRequest, UpdateRequest, EntityRes
                 .build();
     }
 
-    public <R> R findById(Id id, Class<R> type) {
+    public <R> R findById(ID id, Class<R> type) {
         return repository.findById(id, type).orElseThrow(EntityNotFoundException::new);
     }
 
-    public EntityResponse create(CreateRequest request) {
-        T entity = convertToCreateEntity(request);
-        return convertToEntityResponse(repository.save(entity));
+    protected T save(T entity) {
+        return repository.save(entity);
     }
 
-    public EntityResponse update(Id id, UpdateRequest request) throws EntityNotFoundException {
-        T entity = repository.findById(id).orElseThrow(EntityNotFoundException::new);
-        T updatedEntity = convertToUpdateEntity(entity, request);
-
-        return convertToEntityResponse(repository.save(updatedEntity));
-    }
-
-    public void deleteById(Id id) throws EntityNotFoundException {
+    public void deleteById(ID id) throws EntityNotFoundException {
         if (!repository.existsById(id)) {
             throw new EntityNotFoundException();
         }
 
         repository.deleteById(id);
     }
-
-    protected abstract T convertToCreateEntity(CreateRequest request);
-
-    protected abstract T convertToUpdateEntity(T entity, UpdateRequest request);
-
-    protected abstract EntityResponse convertToEntityResponse(T entity);
 }

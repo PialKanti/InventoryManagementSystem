@@ -1,12 +1,14 @@
 package com.codecrafters.hub.inventorymanagementsystem.model.dto.response;
 
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 
 import java.util.List;
 
-@Data
 @Builder
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class BasePaginatedResponse<T> {
     private int page;
     private int pageSize;

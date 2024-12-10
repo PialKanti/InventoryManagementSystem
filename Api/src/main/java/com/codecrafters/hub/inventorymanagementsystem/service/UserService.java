@@ -10,8 +10,8 @@ import com.codecrafters.hub.inventorymanagementsystem.model.enums.UserRole;
 import com.codecrafters.hub.inventorymanagementsystem.exception.PasswordMismatchException;
 import com.codecrafters.hub.inventorymanagementsystem.repository.RoleRepository;
 import com.codecrafters.hub.inventorymanagementsystem.repository.UserRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.EntityNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -29,17 +29,21 @@ import java.util.Optional;
 
 @Service
 @CacheConfig(cacheNames = "users")
-public class UserService extends BaseService<User, Long, RegistrationRequest, UserUpdateRequest, UserResponse> implements UserDetailsService {
+public class UserService extends BaseService<User, Long> implements UserDetailsService {
     private final UserRepository repository;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
+    private final ObjectMapper objectMapper;
 
-    @Autowired
-    public UserService(UserRepository repository, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository repository,
+                       RoleRepository roleRepository,
+                       PasswordEncoder passwordEncoder,
+                       ObjectMapper objectMapper) {
         super(repository);
         this.repository = repository;
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
+        this.objectMapper = objectMapper;
     }
 
     @Override
@@ -52,25 +56,39 @@ public class UserService extends BaseService<User, Long, RegistrationRequest, Us
         return repository.findByUsername(username, type).orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 
-    @CacheEvict(key = "#username")
-    public UserResponse update(String username, UserUpdateRequest request) throws EntityNotFoundException {
-        User entity = repository.findByUsername(username, User.class).orElseThrow(EntityNotFoundException::new);
-        User updatedEntity = convertToUpdateEntity(entity, request);
-
-        return convertToEntityResponse(repository.save(updatedEntity));
+    public UserResponse create(RegistrationRequest request) {
+        User user = mapToEntity(request);
+        return mapToResponse(repository.save(user));
     }
 
-    @Override
-    protected User convertToCreateEntity(RegistrationRequest request) {
-        return User
-                .builder()
-                .firstName(request.getFirstName())
-                .lastName(request.getLastName())
-                .username(request.getUsername())
-                .email(request.getEmail())
-                .password(passwordEncoder.encode(request.getPassword()))
-                .roles(extractRoleEntities(request.getRoles()))
-                .build();
+    @CacheEvict(key = "#username")
+    public UserResponse update(String username, UserUpdateRequest request) throws EntityNotFoundException {
+        User user = repository.findByUsername(username, User.class).orElseThrow(EntityNotFoundException::new);
+        user.setFirstName(request.getFirstName());
+        user.setLastName(request.getLastName());
+        user.setRoles(extractRoleEntities(request.getRoles()));
+
+        return mapToResponse(repository.save(user));
+    }
+
+    public void updatePassword(String username, ChangePasswordRequest request) throws PasswordMismatchException {
+        User user = repository.findByUsername(username, User.class)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        if (!passwordEncoder.matches(request.getOldPassword(), user.getPassword())) {
+            throw new PasswordMismatchException("Invalid old password");
+        }
+
+        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+        repository.save(user);
+    }
+
+    @Transactional
+    public void deleteByUsername(String username) {
+        if (!repository.existsByUsername(username)) {
+            throw new EntityNotFoundException();
+        }
+
+        repository.deleteByUsername(username);
     }
 
     private List<Role> extractRoleEntities(List<UserRole> enumRoles) {
@@ -94,43 +112,19 @@ public class UserService extends BaseService<User, Long, RegistrationRequest, Us
                 .orElseThrow(() -> new NoSuchElementException("User role does exist"));
     }
 
-    @Override
-    protected User convertToUpdateEntity(User entity, UserUpdateRequest request) {
-        entity.setFirstName(request.getFirstName());
-        entity.setLastName(request.getLastName());
-        entity.setRoles(extractRoleEntities(request.getRoles()));
-
-        return entity;
-    }
-
-    @Override
-    protected UserResponse convertToEntityResponse(User entity) {
-        return UserResponse
+    private User mapToEntity(RegistrationRequest request) {
+        return User
                 .builder()
-                .firstName(entity.getFirstName())
-                .lastName(entity.getLastName())
-                .username(entity.getUsername())
-                .email(entity.getEmail())
+                .firstName(request.getFirstName())
+                .lastName(request.getLastName())
+                .username(request.getUsername())
+                .email(request.getEmail())
+                .password(passwordEncoder.encode(request.getPassword()))
+                .roles(extractRoleEntities(request.getRoles()))
                 .build();
     }
 
-    public void updatePassword(String username, ChangePasswordRequest request) throws PasswordMismatchException {
-        User user = repository.findByUsername(username, User.class)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-        if (!passwordEncoder.matches(request.getOldPassword(), user.getPassword())) {
-            throw new PasswordMismatchException("Invalid old password");
-        }
-
-        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
-        repository.save(user);
-    }
-
-    @Transactional
-    public void deleteByUsername(String username) {
-        if (!repository.existsByUsername(username)) {
-            throw new EntityNotFoundException();
-        }
-
-        repository.deleteByUsername(username);
+    private UserResponse mapToResponse(User entity) {
+        return objectMapper.convertValue(entity, UserResponse.class);
     }
 }

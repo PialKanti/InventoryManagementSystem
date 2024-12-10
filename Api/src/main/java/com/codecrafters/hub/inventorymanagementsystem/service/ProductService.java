@@ -12,6 +12,7 @@ import com.codecrafters.hub.inventorymanagementsystem.model.entity.Product;
 import com.codecrafters.hub.inventorymanagementsystem.model.entity.Rating;
 import com.codecrafters.hub.inventorymanagementsystem.model.entity.User;
 import com.codecrafters.hub.inventorymanagementsystem.repository.ProductRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,23 +24,46 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-public class ProductService extends BaseService<Product, Long, ProductCreateRequest, ProductUpdateRequest, ProductResponse> {
+public class ProductService extends BaseService<Product, Long> {
     private final ProductRepository productRepository;
     private final CategoryService categoryService;
     private final UserService userService;
+    private final ObjectMapper objectMapper;
 
     @Autowired
-    public ProductService(ProductRepository repository, CategoryService categoryService, UserService userService) {
+    public ProductService(ProductRepository repository,
+                          CategoryService categoryService,
+                          UserService userService,
+                          ObjectMapper objectMapper) {
         super(repository);
         this.productRepository = repository;
         this.categoryService = categoryService;
         this.userService = userService;
+        this.objectMapper = objectMapper;
+    }
+
+    public ProductResponse create(ProductCreateRequest request) {
+        Product product = mapToEntity(request);
+
+        var createdEntity = super.save(product);
+        return mapToResponse(createdEntity);
     }
 
     public List<EntityResponse> createInBulk(List<ProductCreateRequest> bulkRequest) {
-        List<Product> products = bulkRequest.stream().map(this::convertToCreateEntity).toList();
+        List<Product> products = bulkRequest.stream().map(this::mapToEntity).toList();
         var bulkResponse = productRepository.saveAll(products);
-        return bulkResponse.stream().map(this::convertToEntityResponse).collect(Collectors.toList());
+        return bulkResponse.stream().map(this::mapToResponse).collect(Collectors.toList());
+    }
+
+    public ProductResponse update(Long id, ProductUpdateRequest request) {
+        Product product = findById(id, Product.class);
+        product.setTitle(request.getTitle());
+        product.setDescription(request.getDescription());
+        product.setPrice(request.getPrice());
+        product.setQuantity(request.getQuantity());
+
+        var updatedEntity = super.save(product);
+        return mapToResponse(updatedEntity);
     }
 
     public RatingResponse addRating(Long productId, ProductRatingRequest request) {
@@ -79,8 +103,7 @@ public class ProductService extends BaseService<Product, Long, ProductCreateRequ
                 .build();
     }
 
-    @Override
-    protected Product convertToCreateEntity(ProductCreateRequest request) {
+    private Product mapToEntity(ProductCreateRequest request) {
         return Product
                 .builder()
                 .title(request.getTitle())
@@ -91,26 +114,7 @@ public class ProductService extends BaseService<Product, Long, ProductCreateRequ
                 .build();
     }
 
-    @Override
-    protected Product convertToUpdateEntity(Product entity, ProductUpdateRequest request) {
-        entity.setTitle(request.getTitle());
-        entity.setDescription(request.getDescription());
-        entity.setPrice(request.getPrice());
-        entity.setQuantity(request.getQuantity());
-
-        return entity;
-    }
-
-    @Override
-    protected ProductResponse convertToEntityResponse(Product entity) {
-        return ProductResponse
-                .builder()
-                .id(entity.getId())
-                .title(entity.getTitle())
-                .description(entity.getDescription())
-                .averageRating(entity.getAverageRating())
-                .price(entity.getPrice())
-                .quantity(entity.getQuantity())
-                .build();
+    private ProductResponse mapToResponse(Product entity) {
+        return objectMapper.convertValue(entity, ProductResponse.class);
     }
 }

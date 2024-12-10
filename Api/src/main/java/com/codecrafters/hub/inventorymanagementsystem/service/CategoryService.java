@@ -8,21 +8,24 @@ import com.codecrafters.hub.inventorymanagementsystem.model.entity.Category;
 import com.codecrafters.hub.inventorymanagementsystem.model.entity.projection.ProductProjection;
 import com.codecrafters.hub.inventorymanagementsystem.repository.CategoryRepository;
 import com.codecrafters.hub.inventorymanagementsystem.repository.ProductRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.EntityNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
-public class CategoryService extends BaseService<Category, Long, CategoryCreateRequest, CategoryUpdateRequest, CategoryResponse> {
+public class CategoryService extends BaseService<Category, Long> {
     private final CategoryRepository categoryRepository;
     private final ProductRepository productRepository;
+    private final ObjectMapper objectMapper;
 
-    @Autowired
-    public CategoryService(CategoryRepository categoryRepository, ProductRepository productRepository) {
+    public CategoryService(CategoryRepository categoryRepository,
+                           ProductRepository productRepository,
+                           ObjectMapper objectMapper) {
         super(categoryRepository);
         this.categoryRepository = categoryRepository;
         this.productRepository = productRepository;
+        this.objectMapper = objectMapper;
     }
 
     public BasePaginatedResponse<ProductProjection> getProductsByCategoryId(Long id, Pageable pageable) {
@@ -42,26 +45,21 @@ public class CategoryService extends BaseService<Category, Long, CategoryCreateR
                 .build();
     }
 
-    @Override
-    protected Category convertToCreateEntity(CategoryCreateRequest request) {
-        return Category
+    public CategoryResponse create(CategoryCreateRequest request) {
+        Category category = Category
                 .builder()
                 .name(request.getName())
                 .build();
+
+        var createdEntity = save(category);
+        return objectMapper.convertValue(createdEntity, CategoryResponse.class);
     }
 
-    @Override
-    protected Category convertToUpdateEntity(Category entity, CategoryUpdateRequest request) {
-        entity.setName(request.getName());
-        return entity;
-    }
+    public CategoryResponse update(Long id, CategoryUpdateRequest request) {
+        Category category = findById(id, Category.class);
+        category.setName(request.getName());
 
-    @Override
-    protected CategoryResponse convertToEntityResponse(Category entity) {
-        return CategoryResponse
-                .builder()
-                .id(entity.getId())
-                .name(entity.getName())
-                .build();
+        var updatedEntity = save(category);
+        return objectMapper.convertValue(updatedEntity, CategoryResponse.class);
     }
 }

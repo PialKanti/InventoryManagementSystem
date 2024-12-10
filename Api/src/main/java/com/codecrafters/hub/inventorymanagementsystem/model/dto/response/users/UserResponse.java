@@ -1,10 +1,12 @@
 package com.codecrafters.hub.inventorymanagementsystem.model.dto.response.users;
 
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 
-@Data
 @Builder
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class UserResponse {
     private String firstName;
     private String lastName;
