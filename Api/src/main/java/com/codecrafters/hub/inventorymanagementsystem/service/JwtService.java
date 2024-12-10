@@ -1,6 +1,6 @@
 package com.codecrafters.hub.inventorymanagementsystem.service;
 
-import com.codecrafters.hub.inventorymanagementsystem.config.JwtConfig;
+import com.codecrafters.hub.inventorymanagementsystem.config.JwtProperties;
 import com.codecrafters.hub.inventorymanagementsystem.repository.BlackListedTokenRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -19,7 +19,7 @@ import java.util.function.Function;
 @Service
 @RequiredArgsConstructor
 public class JwtService {
-    private final JwtConfig jwtConfig;
+    private final JwtProperties jwtProperties;
     private final BlackListedTokenRepository repository;
 
     public String generateToken(UserDetails userDetails) {
@@ -31,7 +31,7 @@ public class JwtService {
                 .claims(claims)
                 .subject(userDetails.getUsername())
                 .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + jwtConfig.getTokenExpiration()))
+                .expiration(new Date(System.currentTimeMillis() + jwtProperties.getTokenExpiration()))
                 .signWith(getSigningKey(), Jwts.SIG.HS256)
                 .compact();
     }
@@ -73,7 +73,7 @@ public class JwtService {
     }
 
     private SecretKey getSigningKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(jwtConfig.getEncryptionKey());
+        byte[] keyBytes = Decoders.BASE64.decode(jwtProperties.getEncryptionKey());
         return Keys.hmacShaKeyFor(keyBytes);
     }
 }
