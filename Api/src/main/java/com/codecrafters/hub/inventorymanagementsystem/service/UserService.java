@@ -30,17 +30,17 @@ import java.util.Optional;
 @Service
 @CacheConfig(cacheNames = "users")
 public class UserService extends BaseService<User, Long> implements UserDetailsService {
-    private final UserRepository repository;
+    private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
     private final ObjectMapper objectMapper;
 
-    public UserService(UserRepository repository,
+    public UserService(UserRepository userRepository,
                        RoleRepository roleRepository,
                        PasswordEncoder passwordEncoder,
                        ObjectMapper objectMapper) {
-        super(repository);
-        this.repository = repository;
+        super(userRepository);
+        this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
         this.objectMapper = objectMapper;
@@ -49,46 +49,46 @@ public class UserService extends BaseService<User, Long> implements UserDetailsS
     @Override
     @Cacheable(key = "#username")
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return repository.findByUsername(username, UserDetails.class).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        return findByUsername(username, UserDetails.class);
     }
 
     public <T> T findByUsername(String username, Class<T> type) {
-        return repository.findByUsername(username, type).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        return userRepository.findByUsername(username, type).orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 
     public UserResponse create(RegistrationRequest request) {
         User user = mapToEntity(request);
-        return mapToResponse(repository.save(user));
+        return mapToResponse(save(user));
     }
 
     @CacheEvict(key = "#username")
     public UserResponse update(String username, UserUpdateRequest request) throws EntityNotFoundException {
-        User user = repository.findByUsername(username, User.class).orElseThrow(EntityNotFoundException::new);
+        User user = findByUsername(username, User.class);
         user.setFirstName(request.getFirstName());
         user.setLastName(request.getLastName());
         user.setRoles(extractRoleEntities(request.getRoles()));
 
-        return mapToResponse(repository.save(user));
+        return mapToResponse(save(user));
     }
 
     public void updatePassword(String username, ChangePasswordRequest request) throws PasswordMismatchException {
-        User user = repository.findByUsername(username, User.class)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        User user = findByUsername(username, User.class);
+
         if (!passwordEncoder.matches(request.getOldPassword(), user.getPassword())) {
             throw new PasswordMismatchException("Invalid old password");
         }
 
         user.setPassword(passwordEncoder.encode(request.getNewPassword()));
-        repository.save(user);
+        save(user);
     }
 
     @Transactional
     public void deleteByUsername(String username) {
-        if (!repository.existsByUsername(username)) {
+        if (!userRepository.existsByUsername(username)) {
             throw new EntityNotFoundException();
         }
 
-        repository.deleteByUsername(username);
+        userRepository.deleteByUsername(username);
     }
 
     private List<Role> extractRoleEntities(List<UserRole> enumRoles) {

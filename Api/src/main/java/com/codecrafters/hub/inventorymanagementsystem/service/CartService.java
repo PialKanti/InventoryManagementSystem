@@ -15,21 +15,21 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class CartService extends BaseService<Cart, Long> {
-    private final CartRepository repository;
+    private final CartRepository cartRepository;
     private final ProductService productService;
     private final ObjectMapper objectMapper;
 
-    public CartService(CartRepository repository,
+    public CartService(CartRepository cartRepository,
                        ProductService productService,
                        ObjectMapper objectMapper) {
-        super(repository);
-        this.repository = repository;
+        super(cartRepository);
+        this.cartRepository = cartRepository;
         this.productService = productService;
         this.objectMapper = objectMapper;
     }
 
     public CartResponse create(CartCreateRequest request) {
-        if (repository.existsByUsername(request.getUsername())) {
+        if (cartRepository.existsByUsername(request.getUsername())) {
             throw new DuplicateCartException("User has already created a cart.");
         }
 
@@ -41,12 +41,11 @@ public class CartService extends BaseService<Cart, Long> {
                         .toList())
                 .build();
 
-        var createdEntity = super.save(cart);
-        return objectMapper.convertValue(createdEntity, CartResponse.class);
+        return mapToResponse(save(cart));
     }
 
     public CartProjection findByUsername(String username) {
-        return repository.findByUsername(username, CartProjection.class).orElseThrow(EntityNotFoundException::new);
+        return cartRepository.findByUsername(username, CartProjection.class).orElseThrow(EntityNotFoundException::new);
     }
 
     private CartItem getCartItemEntity(CartItemDto cartItemDto) {
@@ -56,5 +55,9 @@ public class CartService extends BaseService<Cart, Long> {
                 .product(product)
                 .quantity(cartItemDto.getQuantity())
                 .build();
+    }
+
+    private CartResponse mapToResponse(Cart cart) {
+        return objectMapper.convertValue(cart, CartResponse.class);
     }
 }

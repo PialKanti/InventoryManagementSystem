@@ -25,18 +25,16 @@ import java.util.stream.Collectors;
 
 @Service
 public class ProductService extends BaseService<Product, Long> {
-    private final ProductRepository productRepository;
     private final CategoryService categoryService;
     private final UserService userService;
     private final ObjectMapper objectMapper;
 
     @Autowired
-    public ProductService(ProductRepository repository,
+    public ProductService(ProductRepository productRepository,
                           CategoryService categoryService,
                           UserService userService,
                           ObjectMapper objectMapper) {
-        super(repository);
-        this.productRepository = repository;
+        super(productRepository);
         this.categoryService = categoryService;
         this.userService = userService;
         this.objectMapper = objectMapper;
@@ -44,14 +42,12 @@ public class ProductService extends BaseService<Product, Long> {
 
     public ProductResponse create(ProductCreateRequest request) {
         Product product = mapToEntity(request);
-
-        var createdEntity = super.save(product);
-        return mapToResponse(createdEntity);
+        return mapToResponse(save(product));
     }
 
     public List<EntityResponse> createInBulk(List<ProductCreateRequest> bulkRequest) {
         List<Product> products = bulkRequest.stream().map(this::mapToEntity).toList();
-        var bulkResponse = productRepository.saveAll(products);
+        var bulkResponse = saveAll(products);
         return bulkResponse.stream().map(this::mapToResponse).collect(Collectors.toList());
     }
 
@@ -90,7 +86,7 @@ public class ProductService extends BaseService<Product, Long> {
                 .orElse(0.0);
         product.setAverageRating((float) averageRating);
 
-        productRepository.save(product);
+        save(product);
 
         return RatingResponse.builder()
                 .ratings(rating.getRating())

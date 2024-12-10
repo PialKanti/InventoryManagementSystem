@@ -50,16 +50,18 @@ public class CategoryService extends BaseService<Category, Long> {
                 .builder()
                 .name(request.getName())
                 .build();
-
-        var createdEntity = save(category);
-        return objectMapper.convertValue(createdEntity, CategoryResponse.class);
+        
+        return mapToResponse(save(category));
     }
 
     public CategoryResponse update(Long id, CategoryUpdateRequest request) {
         Category category = findById(id, Category.class);
         category.setName(request.getName());
 
-        var updatedEntity = save(category);
-        return objectMapper.convertValue(updatedEntity, CategoryResponse.class);
+        return mapToResponse(save(category));
+    }
+
+    private CategoryResponse mapToResponse(Category category) {
+        return objectMapper.convertValue(category, CategoryResponse.class);
     }
 }

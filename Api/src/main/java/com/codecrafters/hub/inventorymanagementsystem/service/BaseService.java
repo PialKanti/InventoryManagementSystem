@@ -5,15 +5,25 @@ import com.codecrafters.hub.inventorymanagementsystem.repository.BaseRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Pageable;
 
-public abstract class BaseService<T, ID> {
-    private final BaseRepository<T, ID> repository;
+import java.util.List;
 
-    protected BaseService(BaseRepository<T, ID> repository) {
-        this.repository = repository;
+public abstract class BaseService<T, ID> {
+    private final BaseRepository<T, ID> baseRepository;
+
+    protected BaseService(BaseRepository<T, ID> baseRepository) {
+        this.baseRepository = baseRepository;
+    }
+
+    protected T save(T entity) {
+        return baseRepository.save(entity);
+    }
+
+    protected List<T> saveAll(List<T> entities) {
+        return baseRepository.saveAll(entities);
     }
 
     public <R> BasePaginatedResponse<R> findAll(Pageable pageable, Class<R> type) {
-        var page = repository.findAllBy(pageable, type);
+        var page = baseRepository.findAllBy(pageable, type);
         return BasePaginatedResponse
                 .<R>builder()
                 .page(page.getNumber())
@@ -25,18 +35,14 @@ public abstract class BaseService<T, ID> {
     }
 
     public <R> R findById(ID id, Class<R> type) {
-        return repository.findById(id, type).orElseThrow(EntityNotFoundException::new);
-    }
-
-    protected T save(T entity) {
-        return repository.save(entity);
+        return baseRepository.findById(id, type).orElseThrow(EntityNotFoundException::new);
     }
 
     public void deleteById(ID id) throws EntityNotFoundException {
-        if (!repository.existsById(id)) {
+        if (!baseRepository.existsById(id)) {
             throw new EntityNotFoundException();
         }
 
-        repository.deleteById(id);
+        baseRepository.deleteById(id);
     }
 }
