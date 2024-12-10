@@ -1,7 +1,7 @@
 package com.codecrafters.hub.inventorymanagementsystem.elasticsearch.services;
 
 import co.elastic.clients.elasticsearch.core.*;
-import com.codecrafters.hub.inventorymanagementsystem.dtos.response.BasePaginatedResponse;
+import com.codecrafters.hub.inventorymanagementsystem.model.dto.response.BasePaginatedResponse;
 import com.codecrafters.hub.inventorymanagementsystem.elasticsearch.constants.Indexes;
 import com.codecrafters.hub.inventorymanagementsystem.elasticsearch.dtos.request.ProductSearchRequest;
 import com.codecrafters.hub.inventorymanagementsystem.elasticsearch.documents.Product;

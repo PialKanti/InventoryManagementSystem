@@ -2,7 +2,7 @@ package com.codecrafters.hub.inventorymanagementsystem.elasticsearch.repositorie
 
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
 import co.elastic.clients.elasticsearch.core.*;
-import com.codecrafters.hub.inventorymanagementsystem.dtos.response.BasePaginatedResponse;
+import com.codecrafters.hub.inventorymanagementsystem.model.dto.response.BasePaginatedResponse;
 import com.codecrafters.hub.inventorymanagementsystem.elasticsearch.dtos.request.ProductSearchRequest;
 import com.codecrafters.hub.inventorymanagementsystem.elasticsearch.documents.Product;
 import lombok.RequiredArgsConstructor;

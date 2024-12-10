@@ -1,6 +1,6 @@
 package com.codecrafters.hub.inventorymanagementsystem.elasticsearch.listeners;
 
-import com.codecrafters.hub.inventorymanagementsystem.constans.JmsDestination;
+import com.codecrafters.hub.inventorymanagementsystem.constant.JmsDestination;
 import com.codecrafters.hub.inventorymanagementsystem.elasticsearch.documents.Product;
 import com.codecrafters.hub.inventorymanagementsystem.elasticsearch.services.ElasticsearchProductService;
 import lombok.RequiredArgsConstructor;
