@@ -17,15 +17,13 @@ import org.springframework.stereotype.Service;
 public class CategoryService extends BaseService<Category, Long> {
     private final CategoryRepository categoryRepository;
     private final ProductRepository productRepository;
-    private final ObjectMapper objectMapper;
 
     public CategoryService(CategoryRepository categoryRepository,
                            ProductRepository productRepository,
                            ObjectMapper objectMapper) {
-        super(categoryRepository);
+        super(categoryRepository, objectMapper);
         this.categoryRepository = categoryRepository;
         this.productRepository = productRepository;
-        this.objectMapper = objectMapper;
     }
 
     public BasePaginatedResponse<ProductProjection> getProductsByCategoryId(Long id, Pageable pageable) {
@@ -51,17 +49,13 @@ public class CategoryService extends BaseService<Category, Long> {
                 .name(request.getName())
                 .build();
         
-        return mapToResponse(save(category));
+        return mapToDto(save(category), CategoryResponse.class);
     }
 
     public CategoryResponse update(Long id, CategoryUpdateRequest request) {
         Category category = findById(id, Category.class);
         category.setName(request.getName());
 
-        return mapToResponse(save(category));
-    }
-
-    private CategoryResponse mapToResponse(Category category) {
-        return objectMapper.convertValue(category, CategoryResponse.class);
+        return mapToDto(save(category), CategoryResponse.class);
     }
 }

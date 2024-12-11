@@ -2,6 +2,7 @@ package com.codecrafters.hub.inventorymanagementsystem.service;
 
 import com.codecrafters.hub.inventorymanagementsystem.model.dto.response.BasePaginatedResponse;
 import com.codecrafters.hub.inventorymanagementsystem.repository.BaseRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Pageable;
 
@@ -9,9 +10,12 @@ import java.util.List;
 
 public abstract class BaseService<T, ID> {
     private final BaseRepository<T, ID> baseRepository;
+    private final ObjectMapper objectMapper;
 
-    protected BaseService(BaseRepository<T, ID> baseRepository) {
+    protected BaseService(BaseRepository<T, ID> baseRepository,
+                          ObjectMapper objectMapper) {
         this.baseRepository = baseRepository;
+        this.objectMapper = objectMapper;
     }
 
     protected T save(T entity) {
@@ -44,5 +48,9 @@ public abstract class BaseService<T, ID> {
         }
 
         baseRepository.deleteById(id);
+    }
+
+    protected <R> R mapToDto(T entity, Class<R> dtoClass) {
+        return objectMapper.convertValue(entity, dtoClass);
     }
 }

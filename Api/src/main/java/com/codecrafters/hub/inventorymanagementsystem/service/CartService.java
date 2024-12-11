@@ -6,26 +6,22 @@ import com.codecrafters.hub.inventorymanagementsystem.model.dto.response.carts.C
 import com.codecrafters.hub.inventorymanagementsystem.model.entity.Cart;
 import com.codecrafters.hub.inventorymanagementsystem.model.entity.CartItem;
 import com.codecrafters.hub.inventorymanagementsystem.model.entity.Product;
-import com.codecrafters.hub.inventorymanagementsystem.model.entity.projection.CartProjection;
 import com.codecrafters.hub.inventorymanagementsystem.exception.DuplicateCartException;
 import com.codecrafters.hub.inventorymanagementsystem.repository.CartRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
 public class CartService extends BaseService<Cart, Long> {
     private final CartRepository cartRepository;
     private final ProductService productService;
-    private final ObjectMapper objectMapper;
 
     public CartService(CartRepository cartRepository,
                        ProductService productService,
                        ObjectMapper objectMapper) {
-        super(cartRepository);
+        super(cartRepository, objectMapper);
         this.cartRepository = cartRepository;
         this.productService = productService;
-        this.objectMapper = objectMapper;
     }
 
     public CartResponse create(CartCreateRequest request) {
@@ -41,11 +37,7 @@ public class CartService extends BaseService<Cart, Long> {
                         .toList())
                 .build();
 
-        return mapToResponse(save(cart));
-    }
-
-    public CartProjection findByUsername(String username) {
-        return cartRepository.findByUsername(username, CartProjection.class).orElseThrow(EntityNotFoundException::new);
+        return mapToDto(save(cart), CartResponse.class);
     }
 
     private CartItem getCartItemEntity(CartItemDto cartItemDto) {
@@ -55,9 +47,5 @@ public class CartService extends BaseService<Cart, Long> {
                 .product(product)
                 .quantity(cartItemDto.getQuantity())
                 .build();
-    }
-
-    private CartResponse mapToResponse(Cart cart) {
-        return objectMapper.convertValue(cart, CartResponse.class);
     }
 }

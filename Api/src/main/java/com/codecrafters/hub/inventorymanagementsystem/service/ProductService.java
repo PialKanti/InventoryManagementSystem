@@ -27,28 +27,27 @@ import java.util.stream.Collectors;
 public class ProductService extends BaseService<Product, Long> {
     private final CategoryService categoryService;
     private final UserService userService;
-    private final ObjectMapper objectMapper;
 
     @Autowired
     public ProductService(ProductRepository productRepository,
                           CategoryService categoryService,
                           UserService userService,
                           ObjectMapper objectMapper) {
-        super(productRepository);
+        super(productRepository, objectMapper);
         this.categoryService = categoryService;
         this.userService = userService;
-        this.objectMapper = objectMapper;
     }
 
     public ProductResponse create(ProductCreateRequest request) {
         Product product = mapToEntity(request);
-        return mapToResponse(save(product));
+        return mapToDto(save(product), ProductResponse.class);
     }
 
     public List<EntityResponse> createInBulk(List<ProductCreateRequest> bulkRequest) {
         List<Product> products = bulkRequest.stream().map(this::mapToEntity).toList();
         var bulkResponse = saveAll(products);
-        return bulkResponse.stream().map(this::mapToResponse).collect(Collectors.toList());
+        return bulkResponse.stream().map(entity -> mapToDto(entity, ProductResponse.class))
+                .collect(Collectors.toList());
     }
 
     public ProductResponse update(Long id, ProductUpdateRequest request) {
@@ -58,8 +57,7 @@ public class ProductService extends BaseService<Product, Long> {
         product.setPrice(request.getPrice());
         product.setQuantity(request.getQuantity());
 
-        var updatedEntity = super.save(product);
-        return mapToResponse(updatedEntity);
+        return mapToDto(save(product), ProductResponse.class);
     }
 
     public RatingResponse addRating(Long productId, ProductRatingRequest request) {
@@ -108,9 +106,5 @@ public class ProductService extends BaseService<Product, Long> {
                 .quantity(request.getQuantity())
                 .category(categoryService.findById(request.getCategoryId(), Category.class))
                 .build();
-    }
-
-    private ProductResponse mapToResponse(Product entity) {
-        return objectMapper.convertValue(entity, ProductResponse.class);
     }
 }

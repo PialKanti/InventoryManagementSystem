@@ -33,17 +33,15 @@ public class UserService extends BaseService<User, Long> implements UserDetailsS
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
-    private final ObjectMapper objectMapper;
 
     public UserService(UserRepository userRepository,
                        RoleRepository roleRepository,
                        PasswordEncoder passwordEncoder,
                        ObjectMapper objectMapper) {
-        super(userRepository);
+        super(userRepository, objectMapper);
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
-        this.objectMapper = objectMapper;
     }
 
     @Override
@@ -58,7 +56,7 @@ public class UserService extends BaseService<User, Long> implements UserDetailsS
 
     public UserResponse create(RegistrationRequest request) {
         User user = mapToEntity(request);
-        return mapToResponse(save(user));
+        return mapToDto(save(user), UserResponse.class);
     }
 
     @CacheEvict(key = "#username")
@@ -68,7 +66,7 @@ public class UserService extends BaseService<User, Long> implements UserDetailsS
         user.setLastName(request.getLastName());
         user.setRoles(extractRoleEntities(request.getRoles()));
 
-        return mapToResponse(save(user));
+        return mapToDto(save(user), UserResponse.class);
     }
 
     public void updatePassword(String username, ChangePasswordRequest request) throws PasswordMismatchException {
@@ -122,9 +120,5 @@ public class UserService extends BaseService<User, Long> implements UserDetailsS
                 .password(passwordEncoder.encode(request.getPassword()))
                 .roles(extractRoleEntities(request.getRoles()))
                 .build();
-    }
-
-    private UserResponse mapToResponse(User entity) {
-        return objectMapper.convertValue(entity, UserResponse.class);
     }
 }
