@@ -7,6 +7,7 @@ import com.codecrafters.hub.inventorymanagementsystem.model.entity.Cart;
 import com.codecrafters.hub.inventorymanagementsystem.model.entity.CartItem;
 import com.codecrafters.hub.inventorymanagementsystem.model.entity.Product;
 import com.codecrafters.hub.inventorymanagementsystem.exception.DuplicateCartException;
+import com.codecrafters.hub.inventorymanagementsystem.model.enums.ExceptionConstant;
 import com.codecrafters.hub.inventorymanagementsystem.repository.CartRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Service;
@@ -26,7 +27,7 @@ public class CartService extends BaseService<Cart, Long> {
 
     public CartResponse create(CartCreateRequest request) {
         if (cartRepository.existsByUsername(request.getUsername())) {
-            throw new DuplicateCartException("User has already created a cart.");
+            throw new DuplicateCartException(ExceptionConstant.DUPLICATE_CART_EXCEPTION.getMessage());
         }
 
         Cart cart = Cart

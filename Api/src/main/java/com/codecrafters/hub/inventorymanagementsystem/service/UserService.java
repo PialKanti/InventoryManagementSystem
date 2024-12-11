@@ -6,6 +6,7 @@ import com.codecrafters.hub.inventorymanagementsystem.model.dto.request.users.Us
 import com.codecrafters.hub.inventorymanagementsystem.model.dto.response.users.UserResponse;
 import com.codecrafters.hub.inventorymanagementsystem.model.entity.Role;
 import com.codecrafters.hub.inventorymanagementsystem.model.entity.User;
+import com.codecrafters.hub.inventorymanagementsystem.model.enums.ExceptionConstant;
 import com.codecrafters.hub.inventorymanagementsystem.model.enums.UserRole;
 import com.codecrafters.hub.inventorymanagementsystem.exception.PasswordMismatchException;
 import com.codecrafters.hub.inventorymanagementsystem.repository.RoleRepository;
@@ -24,7 +25,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -51,7 +51,8 @@ public class UserService extends BaseService<User, Long> implements UserDetailsS
     }
 
     public <T> T findByUsername(String username, Class<T> type) {
-        return userRepository.findByUsername(username, type).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        return userRepository.findByUsername(username, type)
+                .orElseThrow(() -> new UsernameNotFoundException(ExceptionConstant.USER_NOT_FOUND.getMessage()));
     }
 
     public UserResponse create(RegistrationRequest request) {
@@ -73,7 +74,7 @@ public class UserService extends BaseService<User, Long> implements UserDetailsS
         User user = findByUsername(username, User.class);
 
         if (!passwordEncoder.matches(request.getOldPassword(), user.getPassword())) {
-            throw new PasswordMismatchException("Invalid old password");
+            throw new PasswordMismatchException(ExceptionConstant.INVALID_OLD_PASSWORD.getMessage());
         }
 
         user.setPassword(passwordEncoder.encode(request.getNewPassword()));
@@ -107,7 +108,7 @@ public class UserService extends BaseService<User, Long> implements UserDetailsS
 
     private Role getDefaultRole() {
         return roleRepository.findByKey(UserRole.USER.toString())
-                .orElseThrow(() -> new NoSuchElementException("User role does exist"));
+                .orElseThrow(() -> new EntityNotFoundException(ExceptionConstant.USER_ROLE_NOT_FOUND.getMessage()));
     }
 
     private User mapToEntity(RegistrationRequest request) {

@@ -6,6 +6,7 @@ import com.codecrafters.hub.inventorymanagementsystem.model.dto.response.BasePag
 import com.codecrafters.hub.inventorymanagementsystem.model.dto.response.categories.CategoryResponse;
 import com.codecrafters.hub.inventorymanagementsystem.model.entity.Category;
 import com.codecrafters.hub.inventorymanagementsystem.model.entity.projection.ProductProjection;
+import com.codecrafters.hub.inventorymanagementsystem.model.enums.ExceptionConstant;
 import com.codecrafters.hub.inventorymanagementsystem.repository.CategoryRepository;
 import com.codecrafters.hub.inventorymanagementsystem.repository.ProductRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -28,7 +29,7 @@ public class CategoryService extends BaseService<Category, Long> {
 
     public BasePaginatedResponse<ProductProjection> getProductsByCategoryId(Long id, Pageable pageable) {
         if (!categoryRepository.existsById(id)) {
-            throw new EntityNotFoundException("Category not found");
+            throw new EntityNotFoundException(ExceptionConstant.CATEGORY_NOT_FOUND.getMessage());
         }
 
         var page = productRepository.findByCategoryId(id, pageable, ProductProjection.class);
