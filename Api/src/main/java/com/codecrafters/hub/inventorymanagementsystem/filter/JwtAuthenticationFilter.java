@@ -1,6 +1,7 @@
 package com.codecrafters.hub.inventorymanagementsystem.filter;
 
 import com.codecrafters.hub.inventorymanagementsystem.model.dto.response.ErrorResponse;
+import com.codecrafters.hub.inventorymanagementsystem.model.enums.ExceptionConstant;
 import com.codecrafters.hub.inventorymanagementsystem.service.JwtService;
 import com.codecrafters.hub.inventorymanagementsystem.service.UserService;
 import com.codecrafters.hub.inventorymanagementsystem.util.JwtUtils;
@@ -66,9 +67,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             filterChain.doFilter(request, response);
         } catch (ExpiredJwtException exception) {
-            writeErrorMessageToResponse(response, "JWT token expired");
+            writeErrorMessageToResponse(response, ExceptionConstant.JWT_TOKEN_EXPIRED.getMessage());
         } catch (UsernameNotFoundException exception) {
-            writeErrorMessageToResponse(response, "User not found");
+            writeErrorMessageToResponse(response, ExceptionConstant.USER_NOT_FOUND.getMessage());
         }
     }
 
