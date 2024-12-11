@@ -20,7 +20,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(value = {EntityNotFoundException.class})
     public ResponseEntity<ErrorResponse> handleEntityNotFoundException(EntityNotFoundException exception) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ErrorResponse.build(HttpStatus.NOT_FOUND, "Entity not found"));
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ErrorResponse.build(HttpStatus.NOT_FOUND, exception.getMessage()));
     }
 
     @ExceptionHandler(value = {UsernameNotFoundException.class})

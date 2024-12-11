@@ -8,22 +8,19 @@ import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
-public abstract class BaseService<T, ID> {
+public abstract class BaseCrudService<T, ID> {
     private final BaseRepository<T, ID> baseRepository;
     private final ObjectMapper objectMapper;
 
-    protected BaseService(BaseRepository<T, ID> baseRepository,
-                          ObjectMapper objectMapper) {
+    protected BaseCrudService(BaseRepository<T, ID> baseRepository,
+                              ObjectMapper objectMapper) {
         this.baseRepository = baseRepository;
         this.objectMapper = objectMapper;
     }
 
-    protected T save(T entity) {
-        return baseRepository.save(entity);
-    }
-
-    protected List<T> saveAll(List<T> entities) {
-        return baseRepository.saveAll(entities);
+    public <R> R findById(ID id, Class<R> type){
+        return baseRepository.findById(id, type)
+                .orElseThrow(this::entityNotFoundException);
     }
 
     public <R> BasePaginatedResponse<R> findAll(Pageable pageable, Class<R> type) {
@@ -38,13 +35,17 @@ public abstract class BaseService<T, ID> {
                 .build();
     }
 
-    public <R> R findById(ID id, Class<R> type) {
-        return baseRepository.findById(id, type).orElseThrow(EntityNotFoundException::new);
+    protected T save(T entity) {
+        return baseRepository.save(entity);
     }
 
-    public void deleteById(ID id) throws EntityNotFoundException {
+    protected List<T> saveAll(List<T> entities) {
+        return baseRepository.saveAll(entities);
+    }
+
+    public void deleteById(ID id) {
         if (!baseRepository.existsById(id)) {
-            throw new EntityNotFoundException();
+            throw entityNotFoundException();
         }
 
         baseRepository.deleteById(id);
@@ -52,5 +53,11 @@ public abstract class BaseService<T, ID> {
 
     protected <R> R mapToDto(T entity, Class<R> dtoClass) {
         return objectMapper.convertValue(entity, dtoClass);
+    }
+
+    protected abstract String getEntityNotFoundMessage();
+
+    private EntityNotFoundException entityNotFoundException() {
+        return new EntityNotFoundException(getEntityNotFoundMessage());
     }
 }

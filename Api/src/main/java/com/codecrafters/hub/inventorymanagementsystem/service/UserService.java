@@ -29,7 +29,7 @@ import java.util.Optional;
 
 @Service
 @CacheConfig(cacheNames = "users")
-public class UserService extends BaseService<User, Long> implements UserDetailsService {
+public class UserService extends BaseCrudService<User, Long> implements UserDetailsService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
@@ -121,5 +121,10 @@ public class UserService extends BaseService<User, Long> implements UserDetailsS
                 .password(passwordEncoder.encode(request.getPassword()))
                 .roles(extractRoleEntities(request.getRoles()))
                 .build();
+    }
+
+    @Override
+    protected String getEntityNotFoundMessage() {
+        return ExceptionConstant.USER_NOT_FOUND.getMessage();
     }
 }

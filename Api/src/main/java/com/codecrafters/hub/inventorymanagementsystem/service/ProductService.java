@@ -11,8 +11,10 @@ import com.codecrafters.hub.inventorymanagementsystem.model.entity.Category;
 import com.codecrafters.hub.inventorymanagementsystem.model.entity.Product;
 import com.codecrafters.hub.inventorymanagementsystem.model.entity.Rating;
 import com.codecrafters.hub.inventorymanagementsystem.model.entity.User;
+import com.codecrafters.hub.inventorymanagementsystem.model.enums.ExceptionConstant;
 import com.codecrafters.hub.inventorymanagementsystem.repository.ProductRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,7 +26,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-public class ProductService extends BaseService<Product, Long> {
+public class ProductService extends BaseCrudService<Product, Long> {
     private final CategoryService categoryService;
     private final UserService userService;
 
@@ -106,5 +108,10 @@ public class ProductService extends BaseService<Product, Long> {
                 .quantity(request.getQuantity())
                 .category(categoryService.findById(request.getCategoryId(), Category.class))
                 .build();
+    }
+
+    @Override
+    protected String getEntityNotFoundMessage() {
+        return ExceptionConstant.PRODUCT_NOT_FOUND.getMessage();
     }
 }

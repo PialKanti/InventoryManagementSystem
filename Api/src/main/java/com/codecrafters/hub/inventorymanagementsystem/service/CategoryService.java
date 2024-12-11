@@ -15,7 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
-public class CategoryService extends BaseService<Category, Long> {
+public class CategoryService extends BaseCrudService<Category, Long> {
     private final CategoryRepository categoryRepository;
     private final ProductRepository productRepository;
 
@@ -58,5 +58,10 @@ public class CategoryService extends BaseService<Category, Long> {
         category.setName(request.getName());
 
         return mapToDto(save(category), CategoryResponse.class);
+    }
+
+    @Override
+    protected String getEntityNotFoundMessage() {
+        return ExceptionConstant.CATEGORY_NOT_FOUND.getMessage();
     }
 }

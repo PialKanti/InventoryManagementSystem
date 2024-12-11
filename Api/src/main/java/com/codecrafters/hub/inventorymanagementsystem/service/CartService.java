@@ -13,7 +13,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Service;
 
 @Service
-public class CartService extends BaseService<Cart, Long> {
+public class CartService extends BaseCrudService<Cart, Long> {
     private final CartRepository cartRepository;
     private final ProductService productService;
 
@@ -48,5 +48,10 @@ public class CartService extends BaseService<Cart, Long> {
                 .product(product)
                 .quantity(cartItemDto.getQuantity())
                 .build();
+    }
+
+    @Override
+    protected String getEntityNotFoundMessage() {
+        return ExceptionConstant.CART_NOT_FOUND.getMessage();
     }
 }
