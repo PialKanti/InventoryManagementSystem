@@ -1,6 +1,7 @@
 package com.codecrafters.hub.inventorymanagementsystem.advice;
 
 import com.codecrafters.hub.inventorymanagementsystem.exception.PasswordMismatchException;
+import com.codecrafters.hub.inventorymanagementsystem.model.enums.ExceptionConstant;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
@@ -14,7 +15,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class GlobalExceptionHandler {
     @ExceptionHandler(value = {BadCredentialsException.class})
     public ResponseEntity<ProblemDetail> handleBadCredentialsException(BadCredentialsException exception) {
-        return createResponseEntity(HttpStatus.UNAUTHORIZED, "Username or password is incorrect");
+        return createResponseEntity(HttpStatus.UNAUTHORIZED, ExceptionConstant.BAD_CREDENTIALS_EXCEPTION.getMessage());
     }
 
     @ExceptionHandler(value = {EntityNotFoundException.class})

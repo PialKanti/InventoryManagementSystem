@@ -1,5 +1,7 @@
 package com.codecrafters.hub.inventorymanagementsystem.filter;
 
+import com.codecrafters.hub.inventorymanagementsystem.model.dto.response.ErrorResponse;
+import com.codecrafters.hub.inventorymanagementsystem.model.enums.ExceptionConstant;
 import com.codecrafters.hub.inventorymanagementsystem.service.JwtService;
 import com.codecrafters.hub.inventorymanagementsystem.service.UserService;
 import com.codecrafters.hub.inventorymanagementsystem.util.JwtUtils;
@@ -32,7 +34,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final ObjectMapper objectMapper;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+            throws ServletException, IOException {
         try {
             String authHeader = request.getHeader("Authorization");
             final String authHeaderPrefix = "Bearer ";
@@ -52,7 +55,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 }
 
                 if (jwtService.isTokenValid(jwtToken, userDetails)) {
-                    UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                    UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userDetails,
+                            null, userDetails.getAuthorities());
                     authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
                     // SecurityContextHolder.getContext().setAuthentication() creates race conditions across multiple threads
@@ -64,9 +68,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             filterChain.doFilter(request, response);
         } catch (ExpiredJwtException exception) {
-            writeErrorMessageToResponse(response, "JWT token expired");
+            writeErrorMessageToResponse(response, ExceptionConstant.JWT_TOKEN_EXPIRED.getMessage());
         } catch (UsernameNotFoundException exception) {
-            writeErrorMessageToResponse(response, "User not found");
+            writeErrorMessageToResponse(response, ExceptionConstant.USER_NOT_FOUND.getMessage());
         }
     }
 

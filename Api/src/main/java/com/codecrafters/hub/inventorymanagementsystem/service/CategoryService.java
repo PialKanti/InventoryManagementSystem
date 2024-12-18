@@ -6,6 +6,7 @@ import com.codecrafters.hub.inventorymanagementsystem.model.dto.response.BasePag
 import com.codecrafters.hub.inventorymanagementsystem.model.dto.response.categories.CategoryResponse;
 import com.codecrafters.hub.inventorymanagementsystem.model.entity.Category;
 import com.codecrafters.hub.inventorymanagementsystem.model.entity.projection.ProductProjection;
+import com.codecrafters.hub.inventorymanagementsystem.model.enums.ExceptionConstant;
 import com.codecrafters.hub.inventorymanagementsystem.repository.CategoryRepository;
 import com.codecrafters.hub.inventorymanagementsystem.repository.ProductRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -14,23 +15,21 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
-public class CategoryService extends BaseService<Category, Long> {
+public class CategoryService extends BaseCrudService<Category, Long> {
     private final CategoryRepository categoryRepository;
     private final ProductRepository productRepository;
-    private final ObjectMapper objectMapper;
 
     public CategoryService(CategoryRepository categoryRepository,
                            ProductRepository productRepository,
                            ObjectMapper objectMapper) {
-        super(categoryRepository);
+        super(categoryRepository, objectMapper);
         this.categoryRepository = categoryRepository;
         this.productRepository = productRepository;
-        this.objectMapper = objectMapper;
     }
 
     public BasePaginatedResponse<ProductProjection> getProductsByCategoryId(Long id, Pageable pageable) {
         if (!categoryRepository.existsById(id)) {
-            throw new EntityNotFoundException("Category not found");
+            throw new EntityNotFoundException(ExceptionConstant.CATEGORY_NOT_FOUND.getMessage());
         }
 
         var page = productRepository.findByCategoryId(id, pageable, ProductProjection.class);
@@ -51,17 +50,18 @@ public class CategoryService extends BaseService<Category, Long> {
                 .name(request.getName())
                 .build();
         
-        return mapToResponse(save(category));
+        return mapToDto(save(category), CategoryResponse.class);
     }
 
     public CategoryResponse update(Long id, CategoryUpdateRequest request) {
         Category category = findById(id, Category.class);
         category.setName(request.getName());
 
-        return mapToResponse(save(category));
+        return mapToDto(save(category), CategoryResponse.class);
     }
 
-    private CategoryResponse mapToResponse(Category category) {
-        return objectMapper.convertValue(category, CategoryResponse.class);
+    @Override
+    protected String getEntityNotFoundMessage() {
+        return ExceptionConstant.CATEGORY_NOT_FOUND.getMessage();
     }
 }

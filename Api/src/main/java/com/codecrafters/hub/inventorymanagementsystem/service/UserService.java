@@ -6,6 +6,7 @@ import com.codecrafters.hub.inventorymanagementsystem.model.dto.request.users.Us
 import com.codecrafters.hub.inventorymanagementsystem.model.dto.response.users.UserResponse;
 import com.codecrafters.hub.inventorymanagementsystem.model.entity.Role;
 import com.codecrafters.hub.inventorymanagementsystem.model.entity.User;
+import com.codecrafters.hub.inventorymanagementsystem.model.enums.ExceptionConstant;
 import com.codecrafters.hub.inventorymanagementsystem.model.enums.UserRole;
 import com.codecrafters.hub.inventorymanagementsystem.exception.PasswordMismatchException;
 import com.codecrafters.hub.inventorymanagementsystem.repository.RoleRepository;
@@ -24,26 +25,23 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
 @CacheConfig(cacheNames = "users")
-public class UserService extends BaseService<User, Long> implements UserDetailsService {
+public class UserService extends BaseCrudService<User, Long> implements UserDetailsService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
-    private final ObjectMapper objectMapper;
 
     public UserService(UserRepository userRepository,
                        RoleRepository roleRepository,
                        PasswordEncoder passwordEncoder,
                        ObjectMapper objectMapper) {
-        super(userRepository);
+        super(userRepository, objectMapper);
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
-        this.objectMapper = objectMapper;
     }
 
     @Override
@@ -53,12 +51,13 @@ public class UserService extends BaseService<User, Long> implements UserDetailsS
     }
 
     public <T> T findByUsername(String username, Class<T> type) {
-        return userRepository.findByUsername(username, type).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        return userRepository.findByUsername(username, type)
+                .orElseThrow(() -> new UsernameNotFoundException(ExceptionConstant.USER_NOT_FOUND.getMessage()));
     }
 
     public UserResponse create(RegistrationRequest request) {
         User user = mapToEntity(request);
-        return mapToResponse(save(user));
+        return mapToDto(save(user), UserResponse.class);
     }
 
     @CacheEvict(key = "#username")
@@ -68,14 +67,14 @@ public class UserService extends BaseService<User, Long> implements UserDetailsS
         user.setLastName(request.getLastName());
         user.setRoles(extractRoleEntities(request.getRoles()));
 
-        return mapToResponse(save(user));
+        return mapToDto(save(user), UserResponse.class);
     }
 
     public void updatePassword(String username, ChangePasswordRequest request) throws PasswordMismatchException {
         User user = findByUsername(username, User.class);
 
         if (!passwordEncoder.matches(request.getOldPassword(), user.getPassword())) {
-            throw new PasswordMismatchException("Invalid old password");
+            throw new PasswordMismatchException(ExceptionConstant.INVALID_OLD_PASSWORD.getMessage());
         }
 
         user.setPassword(passwordEncoder.encode(request.getNewPassword()));
@@ -109,7 +108,7 @@ public class UserService extends BaseService<User, Long> implements UserDetailsS
 
     private Role getDefaultRole() {
         return roleRepository.findByKey(UserRole.USER.toString())
-                .orElseThrow(() -> new NoSuchElementException("User role does exist"));
+                .orElseThrow(() -> new EntityNotFoundException(ExceptionConstant.USER_ROLE_NOT_FOUND.getMessage()));
     }
 
     private User mapToEntity(RegistrationRequest request) {
@@ -124,7 +123,8 @@ public class UserService extends BaseService<User, Long> implements UserDetailsS
                 .build();
     }
 
-    private UserResponse mapToResponse(User entity) {
-        return objectMapper.convertValue(entity, UserResponse.class);
+    @Override
+    protected String getEntityNotFoundMessage() {
+        return ExceptionConstant.USER_NOT_FOUND.getMessage();
     }
 }

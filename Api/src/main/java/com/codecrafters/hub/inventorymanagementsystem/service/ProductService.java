@@ -11,8 +11,10 @@ import com.codecrafters.hub.inventorymanagementsystem.model.entity.Category;
 import com.codecrafters.hub.inventorymanagementsystem.model.entity.Product;
 import com.codecrafters.hub.inventorymanagementsystem.model.entity.Rating;
 import com.codecrafters.hub.inventorymanagementsystem.model.entity.User;
+import com.codecrafters.hub.inventorymanagementsystem.model.enums.ExceptionConstant;
 import com.codecrafters.hub.inventorymanagementsystem.repository.ProductRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,31 +26,30 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-public class ProductService extends BaseService<Product, Long> {
+public class ProductService extends BaseCrudService<Product, Long> {
     private final CategoryService categoryService;
     private final UserService userService;
-    private final ObjectMapper objectMapper;
 
     @Autowired
     public ProductService(ProductRepository productRepository,
                           CategoryService categoryService,
                           UserService userService,
                           ObjectMapper objectMapper) {
-        super(productRepository);
+        super(productRepository, objectMapper);
         this.categoryService = categoryService;
         this.userService = userService;
-        this.objectMapper = objectMapper;
     }
 
     public ProductResponse create(ProductCreateRequest request) {
         Product product = mapToEntity(request);
-        return mapToResponse(save(product));
+        return mapToDto(save(product), ProductResponse.class);
     }
 
     public List<EntityResponse> createInBulk(List<ProductCreateRequest> bulkRequest) {
         List<Product> products = bulkRequest.stream().map(this::mapToEntity).toList();
         var bulkResponse = saveAll(products);
-        return bulkResponse.stream().map(this::mapToResponse).collect(Collectors.toList());
+        return bulkResponse.stream().map(entity -> mapToDto(entity, ProductResponse.class))
+                .collect(Collectors.toList());
     }
 
     public ProductResponse update(Long id, ProductUpdateRequest request) {
@@ -58,8 +59,7 @@ public class ProductService extends BaseService<Product, Long> {
         product.setPrice(request.getPrice());
         product.setQuantity(request.getQuantity());
 
-        var updatedEntity = super.save(product);
-        return mapToResponse(updatedEntity);
+        return mapToDto(save(product), ProductResponse.class);
     }
 
     public RatingResponse addRating(Long productId, ProductRatingRequest request) {
@@ -110,7 +110,8 @@ public class ProductService extends BaseService<Product, Long> {
                 .build();
     }
 
-    private ProductResponse mapToResponse(Product entity) {
-        return objectMapper.convertValue(entity, ProductResponse.class);
+    @Override
+    protected String getEntityNotFoundMessage() {
+        return ExceptionConstant.PRODUCT_NOT_FOUND.getMessage();
     }
 }

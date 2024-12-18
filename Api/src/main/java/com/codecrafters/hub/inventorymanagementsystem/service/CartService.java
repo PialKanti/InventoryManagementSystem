@@ -6,31 +6,28 @@ import com.codecrafters.hub.inventorymanagementsystem.model.dto.response.carts.C
 import com.codecrafters.hub.inventorymanagementsystem.model.entity.Cart;
 import com.codecrafters.hub.inventorymanagementsystem.model.entity.CartItem;
 import com.codecrafters.hub.inventorymanagementsystem.model.entity.Product;
-import com.codecrafters.hub.inventorymanagementsystem.model.entity.projection.CartProjection;
 import com.codecrafters.hub.inventorymanagementsystem.exception.DuplicateCartException;
+import com.codecrafters.hub.inventorymanagementsystem.model.enums.ExceptionConstant;
 import com.codecrafters.hub.inventorymanagementsystem.repository.CartRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
-public class CartService extends BaseService<Cart, Long> {
+public class CartService extends BaseCrudService<Cart, Long> {
     private final CartRepository cartRepository;
     private final ProductService productService;
-    private final ObjectMapper objectMapper;
 
     public CartService(CartRepository cartRepository,
                        ProductService productService,
                        ObjectMapper objectMapper) {
-        super(cartRepository);
+        super(cartRepository, objectMapper);
         this.cartRepository = cartRepository;
         this.productService = productService;
-        this.objectMapper = objectMapper;
     }
 
     public CartResponse create(CartCreateRequest request) {
         if (cartRepository.existsByUsername(request.getUsername())) {
-            throw new DuplicateCartException("User has already created a cart.");
+            throw new DuplicateCartException(ExceptionConstant.DUPLICATE_CART_EXCEPTION.getMessage());
         }
 
         Cart cart = Cart
@@ -41,11 +38,7 @@ public class CartService extends BaseService<Cart, Long> {
                         .toList())
                 .build();
 
-        return mapToResponse(save(cart));
-    }
-
-    public CartProjection findByUsername(String username) {
-        return cartRepository.findByUsername(username, CartProjection.class).orElseThrow(EntityNotFoundException::new);
+        return mapToDto(save(cart), CartResponse.class);
     }
 
     private CartItem getCartItemEntity(CartItemDto cartItemDto) {
@@ -57,7 +50,8 @@ public class CartService extends BaseService<Cart, Long> {
                 .build();
     }
 
-    private CartResponse mapToResponse(Cart cart) {
-        return objectMapper.convertValue(cart, CartResponse.class);
+    @Override
+    protected String getEntityNotFoundMessage() {
+        return ExceptionConstant.CART_NOT_FOUND.getMessage();
     }
 }
