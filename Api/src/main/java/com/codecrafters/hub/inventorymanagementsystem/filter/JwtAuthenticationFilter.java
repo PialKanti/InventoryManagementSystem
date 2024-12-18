@@ -1,6 +1,5 @@
 package com.codecrafters.hub.inventorymanagementsystem.filter;
 
-import com.codecrafters.hub.inventorymanagementsystem.model.dto.response.ErrorResponse;
 import com.codecrafters.hub.inventorymanagementsystem.service.JwtService;
 import com.codecrafters.hub.inventorymanagementsystem.service.UserService;
 import com.codecrafters.hub.inventorymanagementsystem.util.JwtUtils;
@@ -13,6 +12,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ProblemDetail;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -75,6 +75,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.setStatus(status.value());
-        response.getWriter().write(objectMapper.writeValueAsString(ErrorResponse.build(status, errorMessage)));
+        response.getWriter().write(objectMapper.writeValueAsString(ProblemDetail.forStatusAndDetail(status, errorMessage)));
     }
 }
