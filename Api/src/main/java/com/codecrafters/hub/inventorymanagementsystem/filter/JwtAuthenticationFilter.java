@@ -1,6 +1,5 @@
 package com.codecrafters.hub.inventorymanagementsystem.filter;
 
-import com.codecrafters.hub.inventorymanagementsystem.model.dto.response.ErrorResponse;
 import com.codecrafters.hub.inventorymanagementsystem.model.enums.ExceptionConstant;
 import com.codecrafters.hub.inventorymanagementsystem.service.JwtService;
 import com.codecrafters.hub.inventorymanagementsystem.service.UserService;
