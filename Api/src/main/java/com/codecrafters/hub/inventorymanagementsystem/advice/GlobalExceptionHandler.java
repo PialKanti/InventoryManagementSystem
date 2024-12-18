@@ -13,6 +13,11 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+    @ExceptionHandler(value = {RuntimeException.class})
+    public ResponseEntity<ProblemDetail> handleRuntimeException(RuntimeException exception) {
+        return createResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR, exception.getMessage());
+    }
+
     @ExceptionHandler(value = {BadCredentialsException.class})
     public ResponseEntity<ProblemDetail> handleBadCredentialsException(BadCredentialsException exception) {
         return createResponseEntity(HttpStatus.UNAUTHORIZED, ExceptionConstant.BAD_CREDENTIALS_EXCEPTION.getMessage());
