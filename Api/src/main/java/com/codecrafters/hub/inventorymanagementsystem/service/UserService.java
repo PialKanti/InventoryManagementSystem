@@ -63,9 +63,9 @@ public class UserService extends BaseCrudService<User, Long> implements UserDeta
     @CacheEvict(key = "#username")
     public UserResponse update(String username, UserUpdateRequest request) throws EntityNotFoundException {
         User user = findByUsername(username, User.class);
-        user.setFirstName(request.getFirstName());
-        user.setLastName(request.getLastName());
-        user.setRoles(extractRoleEntities(request.getRoles()));
+        user.setFirstName(request.firstName());
+        user.setLastName(request.lastName());
+        user.setRoles(extractRoleEntities(request.roles()));
 
         return mapToDto(save(user), UserResponse.class);
     }
@@ -73,11 +73,11 @@ public class UserService extends BaseCrudService<User, Long> implements UserDeta
     public void updatePassword(String username, ChangePasswordRequest request) throws PasswordMismatchException {
         User user = findByUsername(username, User.class);
 
-        if (!passwordEncoder.matches(request.getOldPassword(), user.getPassword())) {
+        if (!passwordEncoder.matches(request.oldPassword(), user.getPassword())) {
             throw new PasswordMismatchException(ExceptionConstant.INVALID_OLD_PASSWORD.getMessage());
         }
 
-        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+        user.setPassword(passwordEncoder.encode(request.newPassword()));
         save(user);
     }
 
@@ -114,12 +114,12 @@ public class UserService extends BaseCrudService<User, Long> implements UserDeta
     private User mapToEntity(RegistrationRequest request) {
         return User
                 .builder()
-                .firstName(request.getFirstName())
-                .lastName(request.getLastName())
-                .username(request.getUsername())
-                .email(request.getEmail())
-                .password(passwordEncoder.encode(request.getPassword()))
-                .roles(extractRoleEntities(request.getRoles()))
+                .firstName(request.firstName())
+                .lastName(request.lastName())
+                .username(request.username())
+                .email(request.email())
+                .password(passwordEncoder.encode(request.password()))
+                .roles(extractRoleEntities(request.roles()))
                 .build();
     }
 

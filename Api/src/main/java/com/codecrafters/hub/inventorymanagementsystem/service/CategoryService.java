@@ -47,7 +47,7 @@ public class CategoryService extends BaseCrudService<Category, Long> {
     public CategoryResponse create(CategoryCreateRequest request) {
         Category category = Category
                 .builder()
-                .name(request.getName())
+                .name(request.name())
                 .build();
         
         return mapToDto(save(category), CategoryResponse.class);
@@ -55,7 +55,7 @@ public class CategoryService extends BaseCrudService<Category, Long> {
 
     public CategoryResponse update(Long id, CategoryUpdateRequest request) {
         Category category = findById(id, Category.class);
-        category.setName(request.getName());
+        category.setName(request.name());
 
         return mapToDto(save(category), CategoryResponse.class);
     }

@@ -26,14 +26,14 @@ public class CartService extends BaseCrudService<Cart, Long> {
     }
 
     public CartResponse create(CartCreateRequest request) {
-        if (cartRepository.existsByUsername(request.getUsername())) {
+        if (cartRepository.existsByUsername(request.username())) {
             throw new DuplicateCartException(ExceptionConstant.DUPLICATE_CART_EXCEPTION.getMessage());
         }
 
         Cart cart = Cart
                 .builder()
-                .username(request.getUsername())
-                .cartItems(request.getCartItems().stream()
+                .username(request.username())
+                .cartItems(request.cartItems().stream()
                         .map(this::getCartItemEntity)
                         .toList())
                 .build();
@@ -42,11 +42,11 @@ public class CartService extends BaseCrudService<Cart, Long> {
     }
 
     private CartItem getCartItemEntity(CartItemDto cartItemDto) {
-        var product = productService.findById(cartItemDto.getProductId(), Product.class);
+        var product = productService.findById(cartItemDto.productId(), Product.class);
         return CartItem
                 .builder()
                 .product(product)
-                .quantity(cartItemDto.getQuantity())
+                .quantity(cartItemDto.quantity())
                 .build();
     }
 

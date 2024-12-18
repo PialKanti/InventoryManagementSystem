@@ -53,10 +53,10 @@ public class ProductService extends BaseCrudService<Product, Long> {
 
     public ProductResponse update(Long id, ProductUpdateRequest request) {
         Product product = findById(id, Product.class);
-        product.setTitle(request.getTitle());
-        product.setDescription(request.getDescription());
-        product.setPrice(request.getPrice());
-        product.setQuantity(request.getQuantity());
+        product.setTitle(request.title());
+        product.setDescription(request.description());
+        product.setPrice(request.price());
+        product.setQuantity(request.quantity());
 
         return mapToDto(save(product), ProductResponse.class);
     }
@@ -101,11 +101,11 @@ public class ProductService extends BaseCrudService<Product, Long> {
     private Product mapToEntity(ProductCreateRequest request) {
         return Product
                 .builder()
-                .title(request.getTitle())
-                .description(request.getDescription())
-                .price(request.getPrice())
-                .quantity(request.getQuantity())
-                .category(categoryService.findById(request.getCategoryId(), Category.class))
+                .title(request.title())
+                .description(request.description())
+                .price(request.price())
+                .quantity(request.quantity())
+                .category(categoryService.findById(request.categoryId(), Category.class))
                 .build();
     }
 
