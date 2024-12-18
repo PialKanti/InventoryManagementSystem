@@ -5,7 +5,7 @@ import com.codecrafters.hub.inventorymanagementsystem.model.dto.request.categori
 import com.codecrafters.hub.inventorymanagementsystem.model.dto.response.BasePaginatedResponse;
 import com.codecrafters.hub.inventorymanagementsystem.model.dto.response.categories.CategoryResponse;
 import com.codecrafters.hub.inventorymanagementsystem.model.entity.Category;
-import com.codecrafters.hub.inventorymanagementsystem.model.entity.projection.ProductProjection;
+import com.codecrafters.hub.inventorymanagementsystem.model.projection.ProductProjection;
 import com.codecrafters.hub.inventorymanagementsystem.model.enums.ExceptionConstant;
 import com.codecrafters.hub.inventorymanagementsystem.repository.CategoryRepository;
 import com.codecrafters.hub.inventorymanagementsystem.repository.ProductRepository;

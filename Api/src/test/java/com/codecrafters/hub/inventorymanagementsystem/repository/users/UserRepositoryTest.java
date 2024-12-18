@@ -1,7 +1,7 @@
 package com.codecrafters.hub.inventorymanagementsystem.repository.users;
 
 import com.codecrafters.hub.inventorymanagementsystem.model.entity.User;
-import com.codecrafters.hub.inventorymanagementsystem.model.entity.projection.UserProjection;
+import com.codecrafters.hub.inventorymanagementsystem.model.projection.UserProjection;
 import com.codecrafters.hub.inventorymanagementsystem.repository.UserRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

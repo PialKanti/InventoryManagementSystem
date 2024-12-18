@@ -4,8 +4,8 @@ import com.codecrafters.hub.inventorymanagementsystem.model.dto.request.categori
 import com.codecrafters.hub.inventorymanagementsystem.model.dto.request.categories.CategoryUpdateRequest;
 import com.codecrafters.hub.inventorymanagementsystem.model.dto.response.BasePaginatedResponse;
 import com.codecrafters.hub.inventorymanagementsystem.model.dto.response.EntityResponse;
-import com.codecrafters.hub.inventorymanagementsystem.model.entity.projection.CategoryProjection;
-import com.codecrafters.hub.inventorymanagementsystem.model.entity.projection.ProductProjection;
+import com.codecrafters.hub.inventorymanagementsystem.model.projection.CategoryProjection;
+import com.codecrafters.hub.inventorymanagementsystem.model.projection.ProductProjection;
 import com.codecrafters.hub.inventorymanagementsystem.service.CategoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;

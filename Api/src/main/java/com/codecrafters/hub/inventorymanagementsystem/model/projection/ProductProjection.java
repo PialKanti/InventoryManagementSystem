@@ -1,4 +1,4 @@
-package com.codecrafters.hub.inventorymanagementsystem.model.entity.projection;
+package com.codecrafters.hub.inventorymanagementsystem.model.projection;
 
 import java.math.BigDecimal;
 

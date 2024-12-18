@@ -9,7 +9,7 @@ import com.codecrafters.hub.inventorymanagementsystem.model.dto.response.product
 import com.codecrafters.hub.inventorymanagementsystem.elasticsearch.documents.Product;
 import com.codecrafters.hub.inventorymanagementsystem.elasticsearch.dtos.request.ProductSearchRequest;
 import com.codecrafters.hub.inventorymanagementsystem.elasticsearch.services.ElasticsearchProductService;
-import com.codecrafters.hub.inventorymanagementsystem.model.entity.projection.ProductProjection;
+import com.codecrafters.hub.inventorymanagementsystem.model.projection.ProductProjection;
 import com.codecrafters.hub.inventorymanagementsystem.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;

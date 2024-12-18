@@ -4,7 +4,7 @@ import com.codecrafters.hub.inventorymanagementsystem.model.dto.request.auth.Cha
 import com.codecrafters.hub.inventorymanagementsystem.model.dto.request.users.UserUpdateRequest;
 import com.codecrafters.hub.inventorymanagementsystem.model.dto.response.BasePaginatedResponse;
 import com.codecrafters.hub.inventorymanagementsystem.model.dto.response.users.UserResponse;
-import com.codecrafters.hub.inventorymanagementsystem.model.entity.projection.UserProjection;
+import com.codecrafters.hub.inventorymanagementsystem.model.projection.UserProjection;
 import com.codecrafters.hub.inventorymanagementsystem.exception.PasswordMismatchException;
 import com.codecrafters.hub.inventorymanagementsystem.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;

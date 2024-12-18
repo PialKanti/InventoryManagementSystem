@@ -1,7 +1,7 @@
 package com.codecrafters.hub.inventorymanagementsystem.repository.carts;
 
 import com.codecrafters.hub.inventorymanagementsystem.model.entity.Cart;
-import com.codecrafters.hub.inventorymanagementsystem.model.entity.projection.CartProjection;
+import com.codecrafters.hub.inventorymanagementsystem.model.projection.CartProjection;
 import com.codecrafters.hub.inventorymanagementsystem.repository.CartRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
