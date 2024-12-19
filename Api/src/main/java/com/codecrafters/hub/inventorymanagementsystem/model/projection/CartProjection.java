@@ -8,7 +8,14 @@ public interface CartProjection {
     List<CartItem> getCartItems();
 
     interface CartItem{
+        Long getId();
         ProductProjection getProduct();
         Integer getQuantity();
+    }
+
+    interface ProductProjection{
+        Long getId();
+        String getTitle();
+        Float getPrice();
     }
 }
