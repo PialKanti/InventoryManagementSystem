@@ -25,9 +25,11 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 import java.util.List;
 
+import static com.codecrafters.hub.inventorymanagementsystem.constant.ApiEndpointConstant.PRODUCT_ENDPOINT;
+
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/products")
+@RequestMapping(value = PRODUCT_ENDPOINT)
 @Tag(
         name = "Product API",
         description = "Endpoints for managing products, including retrieval, bulk operations, searching, and adding ratings."

@@ -18,9 +18,11 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
+import static com.codecrafters.hub.inventorymanagementsystem.constant.ApiEndpointConstant.USER_ENDPOINT;
+
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/users")
+@RequestMapping(value = USER_ENDPOINT)
 @Tag(
         name = "User Management API",
         description = "Endpoints for managing user information, including retrieval, updates, and deletion."

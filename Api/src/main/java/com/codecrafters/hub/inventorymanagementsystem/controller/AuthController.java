@@ -13,9 +13,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import static com.codecrafters.hub.inventorymanagementsystem.constant.ApiEndpointConstant.AUTH_ENDPOINT;
+
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(value = "/api/v1/auth")
+@RequestMapping(value = AUTH_ENDPOINT)
 @Tag(
         name = "Authentication API",
         description = "Endpoints for user authentication, including registration, login, and logout."
