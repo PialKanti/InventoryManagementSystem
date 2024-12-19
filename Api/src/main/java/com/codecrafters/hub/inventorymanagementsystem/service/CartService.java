@@ -9,6 +9,7 @@ import com.codecrafters.hub.inventorymanagementsystem.model.entity.CartItem;
 import com.codecrafters.hub.inventorymanagementsystem.model.entity.Product;
 import com.codecrafters.hub.inventorymanagementsystem.exception.DuplicateCartException;
 import com.codecrafters.hub.inventorymanagementsystem.model.enums.ExceptionConstant;
+import com.codecrafters.hub.inventorymanagementsystem.model.projection.CartProjection;
 import com.codecrafters.hub.inventorymanagementsystem.repository.CartRepository;
 import com.codecrafters.hub.inventorymanagementsystem.util.SecurityUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -16,6 +17,9 @@ import jakarta.transaction.Transactional;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -31,20 +35,12 @@ public class CartService extends BaseCrudService<Cart, Long> {
         this.productService = productService;
     }
 
-    public CartResponse create(CartCreateRequest request) {
-        if (cartRepository.existsByUsername(request.username())) {
-            throw new DuplicateCartException(ExceptionConstant.DUPLICATE_CART_EXCEPTION.getMessage());
-        }
+    public CartProjection findByUsername() {
+        UserDetails currentUser = SecurityUtil.getCurrentUser()
+                .orElseThrow(() -> new UnauthenticatedUserException(ExceptionConstant.UNAUTHENTICATED_USER_EXCEPTION.getMessage()));
 
-        Cart cart = Cart
-                .builder()
-                .username(request.username())
-                .cartItems(request.cartItems().stream()
-                        .map(this::getCartItemEntity)
-                        .toList())
-                .build();
-
-        return mapToDto(save(cart), CartResponse.class);
+        return cartRepository.findByUsername(currentUser.getUsername(), CartProjection.class)
+                .orElseThrow(super::entityNotFoundException);
     }
 
     @Transactional
@@ -55,9 +51,7 @@ public class CartService extends BaseCrudService<Cart, Long> {
         Cart cart = cartRepository.findByUsername(currentUser.getUsername(), Cart.class)
                 .orElseGet(() -> create(currentUser.getUsername()));
 
-        Optional<CartItem> existingCartItem = cart.getCartItems().stream()
-                .filter(item -> item.getProduct().getId().equals(cartItemDto.productId()))
-                .findFirst();
+        Optional<CartItem> existingCartItem = getExistingCartItem(cart, cartItemDto.productId());
 
         if(existingCartItem.isPresent()) {
             CartItem cartItem = existingCartItem.get();
@@ -68,7 +62,7 @@ public class CartService extends BaseCrudService<Cart, Long> {
                     .quantity(cartItemDto.quantity())
                     .build();
 
-            cart.getCartItems().add(newCartItem);
+            cart.addCartItem(newCartItem);
         }
 
         cartRepository.save(cart);
@@ -82,13 +76,10 @@ public class CartService extends BaseCrudService<Cart, Long> {
         return cartRepository.save(cart);
     }
 
-    private CartItem getCartItemEntity(CartItemDto cartItemDto) {
-        var product = productService.findById(cartItemDto.productId(), Product.class);
-        return CartItem
-                .builder()
-                .product(product)
-                .quantity(cartItemDto.quantity())
-                .build();
+    private Optional<CartItem> getExistingCartItem(Cart cart, Long productId) {
+        return cart.getCartItems().stream()
+                .filter(item -> item.getProduct().getId().equals(productId))
+                .findFirst();
     }
 
     @Override
