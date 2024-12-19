@@ -1,13 +1,10 @@
 package com.codecrafters.hub.inventorymanagementsystem.service;
 
 import com.codecrafters.hub.inventorymanagementsystem.exception.UnauthenticatedUserException;
-import com.codecrafters.hub.inventorymanagementsystem.model.dto.request.carts.CartCreateRequest;
 import com.codecrafters.hub.inventorymanagementsystem.model.dto.request.carts.CartItemDto;
-import com.codecrafters.hub.inventorymanagementsystem.model.dto.response.carts.CartResponse;
 import com.codecrafters.hub.inventorymanagementsystem.model.entity.Cart;
 import com.codecrafters.hub.inventorymanagementsystem.model.entity.CartItem;
 import com.codecrafters.hub.inventorymanagementsystem.model.entity.Product;
-import com.codecrafters.hub.inventorymanagementsystem.exception.DuplicateCartException;
 import com.codecrafters.hub.inventorymanagementsystem.model.enums.ExceptionConstant;
 import com.codecrafters.hub.inventorymanagementsystem.model.projection.CartProjection;
 import com.codecrafters.hub.inventorymanagementsystem.repository.CartRepository;
@@ -17,9 +14,6 @@ import jakarta.transaction.Transactional;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import java.util.Optional;
 
 @Service
