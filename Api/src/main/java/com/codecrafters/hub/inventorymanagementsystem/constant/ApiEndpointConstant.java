@@ -18,4 +18,7 @@ public class ApiEndpointConstant {
 
     /* Product Endpoints */
     public static final String PRODUCT_ENDPOINT = API_VERSION + "/products";
+
+    /* Cart Endpoints */
+    public static final String CART_ENDPOINT = API_VERSION + "/carts/mine";
 }

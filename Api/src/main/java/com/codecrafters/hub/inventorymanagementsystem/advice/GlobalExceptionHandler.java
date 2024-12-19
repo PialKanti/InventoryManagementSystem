@@ -1,6 +1,7 @@
 package com.codecrafters.hub.inventorymanagementsystem.advice;
 
 import com.codecrafters.hub.inventorymanagementsystem.exception.PasswordMismatchException;
+import com.codecrafters.hub.inventorymanagementsystem.exception.UnauthenticatedUserException;
 import com.codecrafters.hub.inventorymanagementsystem.model.enums.ExceptionConstant;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
@@ -35,6 +36,11 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(value = {PasswordMismatchException.class})
     public ResponseEntity<ProblemDetail> handlePasswordMismatchException(PasswordMismatchException exception) {
+        return createResponseEntity(HttpStatus.UNAUTHORIZED, exception.getMessage());
+    }
+
+    @ExceptionHandler(value = {UnauthenticatedUserException.class})
+    public ResponseEntity<ProblemDetail> handleUnauthenticatedUserException(UnauthenticatedUserException exception) {
         return createResponseEntity(HttpStatus.UNAUTHORIZED, exception.getMessage());
     }
 

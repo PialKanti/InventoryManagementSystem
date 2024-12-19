@@ -18,4 +18,6 @@ public class Cart extends AuditableEntity {
     private String username;
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL)
     private List<CartItem> cartItems;
+    @Column(name = "is_deleted")
+    private boolean isDeleted;
 }
