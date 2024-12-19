@@ -29,11 +29,11 @@ public class CartService extends BaseCrudService<Cart, Long> {
         this.productService = productService;
     }
 
-    public CartProjection findByUsername() {
+    public CartProjection findCurrentUserCart() {
         UserDetails currentUser = SecurityUtil.getCurrentUser()
                 .orElseThrow(() -> new UnauthenticatedUserException(ExceptionConstant.UNAUTHENTICATED_USER_EXCEPTION.getMessage()));
 
-        return cartRepository.findByUsername(currentUser.getUsername(), CartProjection.class)
+        return cartRepository.findByUsernameAndDeletedFalse(currentUser.getUsername(), CartProjection.class)
                 .orElseThrow(super::entityNotFoundException);
     }
 
@@ -42,7 +42,7 @@ public class CartService extends BaseCrudService<Cart, Long> {
         UserDetails currentUser = SecurityUtil.getCurrentUser()
                 .orElseThrow(() -> new UnauthenticatedUserException(ExceptionConstant.UNAUTHENTICATED_USER_EXCEPTION.getMessage()));
 
-        Cart cart = cartRepository.findByUsername(currentUser.getUsername(), Cart.class)
+        Cart cart = cartRepository.findByUsernameAndDeletedFalse(currentUser.getUsername(), Cart.class)
                 .orElseGet(() -> create(currentUser.getUsername()));
 
         Optional<CartItem> existingCartItem = getExistingCartItem(cart, cartItemDto.productId());

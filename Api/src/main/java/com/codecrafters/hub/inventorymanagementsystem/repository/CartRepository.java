@@ -7,6 +7,5 @@ import java.util.Optional;
 
 @Repository
 public interface CartRepository extends BaseRepository<Cart, Long>{
-    boolean existsByUsername(String username);
-    <T> Optional<T> findByUsername(String username, Class<T> type);
+    <T> Optional<T> findByUsernameAndDeletedFalse(String username, Class<T> type);
 }

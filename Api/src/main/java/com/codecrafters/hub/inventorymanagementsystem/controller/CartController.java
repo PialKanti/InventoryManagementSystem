@@ -22,7 +22,7 @@ public class CartController {
 
     @GetMapping
     public ResponseEntity<CartProjection> findCart() {
-        return ResponseEntity.ok(cartService.findByUsername());
+        return ResponseEntity.ok(cartService.findCurrentUserCart());
     }
 
     @PostMapping("/items")

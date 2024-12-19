@@ -21,7 +21,7 @@ public class Cart extends AuditableEntity {
     @Builder.Default
     private List<CartItem> cartItems = new ArrayList<>();
     @Column(name = "is_deleted")
-    private boolean isDeleted;
+    private boolean deleted;
 
     public void addCartItem(CartItem cartItem) {
         cartItems.add(cartItem);
