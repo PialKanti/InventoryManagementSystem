@@ -44,10 +44,7 @@ public class CartService extends BaseCrudService<Cart, Long> {
 
     @Transactional
     public CartResponse addItemToCart(CartItemUpsertRequest createRequest) {
-        UserDetails currentUser = getAuthenticatedUser();
-
-        Cart cart = cartRepository.findByUsernameAndDeletedFalse(currentUser.getUsername(), Cart.class)
-                .orElseGet(() -> create(currentUser.getUsername()));
+        Cart cart = getCurrentUserCart(true);
 
         Optional<CartItem> cartItemOptional = getMatchingCartItem(cart,
                 item -> item.getProduct().getId().equals(createRequest.productId()));
@@ -87,11 +84,7 @@ public class CartService extends BaseCrudService<Cart, Long> {
 
     @Transactional
     public CartResponse updateItemInCart(Long itemId, CartItemUpsertRequest updateRequest) {
-        UserDetails currentUser = SecurityUtil.getCurrentUser()
-                .orElseThrow(this::unauthenticatedUserException);
-
-        Cart cart = cartRepository.findByUsernameAndDeletedFalse(currentUser.getUsername(), Cart.class)
-                .orElseThrow(super::entityNotFoundException);
+        Cart cart = getCurrentUserCart(false);
 
         CartItem cartItem = getMatchingCartItem(cart, item -> item.getId().equals(itemId))
                 .orElseThrow(() -> super.entityNotFoundException(ExceptionConstant.CART_ITEM_NOT_FOUND.getMessage()));
@@ -109,6 +102,19 @@ public class CartService extends BaseCrudService<Cart, Long> {
 
         return objectMapper.convertValue(updatedCart, CartResponse.class);
     }
+
+    private Cart getCurrentUserCart(boolean createIfNotExist) {
+        UserDetails currentUser = getAuthenticatedUser();
+        return cartRepository.findByUsernameAndDeletedFalse(currentUser.getUsername(), Cart.class)
+                .orElseGet(() -> {
+                    if (createIfNotExist) {
+                        return create(currentUser.getUsername());
+                    } else {
+                        throw super.entityNotFoundException();
+                    }
+                });
+    }
+
 
     private Cart create(String username){
         Cart cart = Cart.builder()
