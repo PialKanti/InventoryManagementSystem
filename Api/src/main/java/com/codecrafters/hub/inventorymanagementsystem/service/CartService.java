@@ -1,5 +1,6 @@
 package com.codecrafters.hub.inventorymanagementsystem.service;
 
+import com.codecrafters.hub.inventorymanagementsystem.exception.InsufficientProductException;
 import com.codecrafters.hub.inventorymanagementsystem.exception.UnauthenticatedUserException;
 import com.codecrafters.hub.inventorymanagementsystem.model.dto.request.carts.CartItemDto;
 import com.codecrafters.hub.inventorymanagementsystem.model.dto.request.carts.CartItemUpdateRequest;
@@ -44,28 +45,35 @@ public class CartService extends BaseCrudService<Cart, Long> {
 
     @Transactional
     public CartResponse addItemToCart(CartItemDto cartItemDto) {
-        UserDetails currentUser = SecurityUtil.getCurrentUser()
-                .orElseThrow(this::unauthenticatedUserException);
+        validateStockAvailability(cartItemDto.productId(), cartItemDto.quantity());
+
+        UserDetails currentUser = getAuthenticatedUser();
 
         Cart cart = cartRepository.findByUsernameAndDeletedFalse(currentUser.getUsername(), Cart.class)
                 .orElseGet(() -> create(currentUser.getUsername()));
 
-        Optional<CartItem> existingCartItem = getMatchingCartItem(cart,
+        Optional<CartItem> cartItemOptional = getMatchingCartItem(cart,
                 item -> item.getProduct().getId().equals(cartItemDto.productId()));
 
-        if(existingCartItem.isPresent()) {
-            CartItem cartItem = existingCartItem.get();
-            cartItem.setQuantity(cartItem.getQuantity() + cartItemDto.quantity());
-        }else{
+        Product cartItemProduct;
+
+        if (cartItemOptional.isPresent()) {
+            CartItem existingCartItem = cartItemOptional.get();
+            existingCartItem.setQuantity(existingCartItem.getQuantity() + cartItemDto.quantity());
+            cartItemProduct = existingCartItem.getProduct();
+        } else {
             CartItem newCartItem = CartItem.builder()
                     .product(productService.findById(cartItemDto.productId(), Product.class))
                     .quantity(cartItemDto.quantity())
                     .build();
 
             cart.addCartItem(newCartItem);
+            cartItemProduct = newCartItem.getProduct();
         }
 
         Cart savedCart = cartRepository.save(cart);
+
+        productService.decreaseProductStock(cartItemProduct, cartItemDto.quantity());
 
         return objectMapper.convertValue(savedCart, CartResponse.class);
     }
@@ -96,18 +104,33 @@ public class CartService extends BaseCrudService<Cart, Long> {
         return cartRepository.save(cart);
     }
 
+    @Override
+    protected String getEntityNotFoundMessage() {
+        return ExceptionConstant.CART_NOT_FOUND.getMessage();
+    }
+
+    private void validateStockAvailability(Long productId, int quantity) {
+        if (!productService.isStockAvailable(productId, quantity)) {
+            throw insufficientProductException();
+        }
+    }
+
+    private UserDetails getAuthenticatedUser() {
+        return SecurityUtil.getCurrentUser()
+                .orElseThrow(this::unauthenticatedUserException);
+    }
+
     private Optional<CartItem> getMatchingCartItem(Cart cart, Predicate<CartItem> predicate) {
         return cart.getCartItems().stream()
                 .filter(predicate)
                 .findFirst();
     }
 
-    @Override
-    protected String getEntityNotFoundMessage() {
-        return ExceptionConstant.CART_NOT_FOUND.getMessage();
-    }
-
     private UnauthenticatedUserException unauthenticatedUserException() {
         return new UnauthenticatedUserException(ExceptionConstant.UNAUTHENTICATED_USER_EXCEPTION.getMessage());
+    }
+
+    private InsufficientProductException insufficientProductException() {
+        return new InsufficientProductException(ExceptionConstant.INSUFFICIENT_PRODUCTS_EXCEPTION.getMessage());
     }
 }

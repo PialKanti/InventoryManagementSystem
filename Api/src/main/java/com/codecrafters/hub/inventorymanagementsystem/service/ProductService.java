@@ -98,6 +98,16 @@ public class ProductService extends BaseCrudService<Product, Long> {
                 .build();
     }
 
+    public boolean isStockAvailable(Long productId, int quantity) {
+        Product product = findById(productId, Product.class);
+        return product.getQuantity() >= quantity;
+    }
+
+    public void decreaseProductStock(Product product, int quantity) {
+        product.setQuantity(product.getQuantity() - quantity);
+        super.save(product);
+    }
+
     private Product mapToEntity(ProductCreateRequest request) {
         return Product
                 .builder()
