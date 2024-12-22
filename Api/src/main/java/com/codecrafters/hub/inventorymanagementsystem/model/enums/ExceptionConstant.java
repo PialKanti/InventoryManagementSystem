@@ -15,6 +15,7 @@ public enum ExceptionConstant {
     CATEGORY_NOT_FOUND("Category not found"),
     PRODUCT_NOT_FOUND("Product not found"),
     CART_NOT_FOUND("No cart not found"),
+    CART_ITEM_NOT_FOUND("This item does not exist in cart"),
     DUPLICATE_CART_EXCEPTION("Cart already exists for this user");
 
     private final String message;

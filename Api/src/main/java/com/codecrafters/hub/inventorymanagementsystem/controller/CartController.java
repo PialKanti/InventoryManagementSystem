@@ -1,6 +1,7 @@
 package com.codecrafters.hub.inventorymanagementsystem.controller;
 
 import com.codecrafters.hub.inventorymanagementsystem.model.dto.request.carts.CartItemDto;
+import com.codecrafters.hub.inventorymanagementsystem.model.dto.request.carts.CartItemUpdateRequest;
 import com.codecrafters.hub.inventorymanagementsystem.model.dto.response.carts.CartResponse;
 import com.codecrafters.hub.inventorymanagementsystem.model.projection.CartProjection;
 import com.codecrafters.hub.inventorymanagementsystem.service.CartService;
@@ -29,5 +30,10 @@ public class CartController {
     @PostMapping("/items")
     public ResponseEntity<CartResponse> addItem(@RequestBody CartItemDto request) {
         return ResponseEntity.ok(cartService.addItemToCart(request));
+    }
+
+    @PutMapping("/items/{itemId}")
+    public ResponseEntity<CartResponse> updateItem(@PathVariable Long itemId, @RequestBody CartItemUpdateRequest request) {
+        return ResponseEntity.ok(cartService.updateItemInCart(itemId, request));
     }
 }

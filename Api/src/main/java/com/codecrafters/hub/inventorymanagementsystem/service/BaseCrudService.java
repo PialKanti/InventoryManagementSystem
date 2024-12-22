@@ -60,4 +60,8 @@ public abstract class BaseCrudService<T, ID> {
     protected EntityNotFoundException entityNotFoundException() {
         return new EntityNotFoundException(getEntityNotFoundMessage());
     }
+
+    protected EntityNotFoundException entityNotFoundException(String message) {
+        return new EntityNotFoundException(message);
+    }
 }

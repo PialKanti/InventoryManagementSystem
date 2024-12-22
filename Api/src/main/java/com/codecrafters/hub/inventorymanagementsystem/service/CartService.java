@@ -2,6 +2,7 @@ package com.codecrafters.hub.inventorymanagementsystem.service;
 
 import com.codecrafters.hub.inventorymanagementsystem.exception.UnauthenticatedUserException;
 import com.codecrafters.hub.inventorymanagementsystem.model.dto.request.carts.CartItemDto;
+import com.codecrafters.hub.inventorymanagementsystem.model.dto.request.carts.CartItemUpdateRequest;
 import com.codecrafters.hub.inventorymanagementsystem.model.dto.response.carts.CartResponse;
 import com.codecrafters.hub.inventorymanagementsystem.model.entity.Cart;
 import com.codecrafters.hub.inventorymanagementsystem.model.entity.CartItem;
@@ -16,6 +17,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.function.Predicate;
 
 @Service
 public class CartService extends BaseCrudService<Cart, Long> {
@@ -48,7 +50,8 @@ public class CartService extends BaseCrudService<Cart, Long> {
         Cart cart = cartRepository.findByUsernameAndDeletedFalse(currentUser.getUsername(), Cart.class)
                 .orElseGet(() -> create(currentUser.getUsername()));
 
-        Optional<CartItem> existingCartItem = getExistingCartItem(cart, cartItemDto.productId());
+        Optional<CartItem> existingCartItem = getMatchingCartItem(cart,
+                item -> item.getProduct().getId().equals(cartItemDto.productId()));
 
         if(existingCartItem.isPresent()) {
             CartItem cartItem = existingCartItem.get();
@@ -67,6 +70,24 @@ public class CartService extends BaseCrudService<Cart, Long> {
         return objectMapper.convertValue(savedCart, CartResponse.class);
     }
 
+    @Transactional
+    public CartResponse updateItemInCart(Long itemId, CartItemUpdateRequest updateRequest) {
+        UserDetails currentUser = SecurityUtil.getCurrentUser()
+                .orElseThrow(this::unauthenticatedUserException);
+
+        Cart cart = cartRepository.findByUsernameAndDeletedFalse(currentUser.getUsername(), Cart.class)
+                .orElseThrow(super::entityNotFoundException);
+
+        CartItem cartItem = getMatchingCartItem(cart, item -> item.getId().equals(itemId))
+                .orElseThrow(() -> super.entityNotFoundException(ExceptionConstant.CART_ITEM_NOT_FOUND.getMessage()));
+
+        cartItem.setQuantity(updateRequest.quantity());
+
+        Cart updatedCart = cartRepository.save(cart);
+
+        return objectMapper.convertValue(updatedCart, CartResponse.class);
+    }
+
     private Cart create(String username){
         Cart cart = Cart.builder()
                 .username(username)
@@ -75,9 +96,9 @@ public class CartService extends BaseCrudService<Cart, Long> {
         return cartRepository.save(cart);
     }
 
-    private Optional<CartItem> getExistingCartItem(Cart cart, Long productId) {
+    private Optional<CartItem> getMatchingCartItem(Cart cart, Predicate<CartItem> predicate) {
         return cart.getCartItems().stream()
-                .filter(item -> item.getProduct().getId().equals(productId))
+                .filter(predicate)
                 .findFirst();
     }
 
