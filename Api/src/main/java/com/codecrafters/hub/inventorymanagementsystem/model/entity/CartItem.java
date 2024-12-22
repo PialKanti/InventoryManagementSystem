@@ -1,6 +1,7 @@
 package com.codecrafters.hub.inventorymanagementsystem.model.entity;
 
 import com.codecrafters.hub.inventorymanagementsystem.model.entity.common.NonAuditableEntity;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -18,5 +19,6 @@ public class CartItem extends NonAuditableEntity{
     private int quantity;
     @ManyToOne
     @JoinColumn(name = "cart_id")
+    @JsonBackReference
     private Cart cart;
 }

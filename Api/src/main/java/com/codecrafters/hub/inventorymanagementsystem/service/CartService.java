@@ -2,6 +2,7 @@ package com.codecrafters.hub.inventorymanagementsystem.service;
 
 import com.codecrafters.hub.inventorymanagementsystem.exception.UnauthenticatedUserException;
 import com.codecrafters.hub.inventorymanagementsystem.model.dto.request.carts.CartItemDto;
+import com.codecrafters.hub.inventorymanagementsystem.model.dto.response.carts.CartResponse;
 import com.codecrafters.hub.inventorymanagementsystem.model.entity.Cart;
 import com.codecrafters.hub.inventorymanagementsystem.model.entity.CartItem;
 import com.codecrafters.hub.inventorymanagementsystem.model.entity.Product;
@@ -20,6 +21,7 @@ import java.util.Optional;
 public class CartService extends BaseCrudService<Cart, Long> {
     private final CartRepository cartRepository;
     private final ProductService productService;
+    private final ObjectMapper objectMapper;
 
     public CartService(CartRepository cartRepository,
                        ProductService productService,
@@ -27,6 +29,7 @@ public class CartService extends BaseCrudService<Cart, Long> {
         super(cartRepository, objectMapper);
         this.cartRepository = cartRepository;
         this.productService = productService;
+        this.objectMapper = objectMapper;
     }
 
     public CartProjection findCurrentUserCart() {
@@ -38,7 +41,7 @@ public class CartService extends BaseCrudService<Cart, Long> {
     }
 
     @Transactional
-    public void addItemToCart(CartItemDto cartItemDto) {
+    public CartResponse addItemToCart(CartItemDto cartItemDto) {
         UserDetails currentUser = SecurityUtil.getCurrentUser()
                 .orElseThrow(() -> new UnauthenticatedUserException(ExceptionConstant.UNAUTHENTICATED_USER_EXCEPTION.getMessage()));
 
@@ -59,7 +62,9 @@ public class CartService extends BaseCrudService<Cart, Long> {
             cart.addCartItem(newCartItem);
         }
 
-        cartRepository.save(cart);
+        Cart savedCart = cartRepository.save(cart);
+
+        return objectMapper.convertValue(savedCart, CartResponse.class);
     }
 
     private Cart create(String username){

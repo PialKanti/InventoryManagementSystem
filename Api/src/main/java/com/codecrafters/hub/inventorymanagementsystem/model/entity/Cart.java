@@ -1,6 +1,7 @@
 package com.codecrafters.hub.inventorymanagementsystem.model.entity;
 
 import com.codecrafters.hub.inventorymanagementsystem.model.entity.common.AuditableEntity;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -19,6 +20,7 @@ public class Cart extends AuditableEntity {
     private String username;
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL)
     @Builder.Default
+    @JsonManagedReference
     private List<CartItem> cartItems = new ArrayList<>();
     @Column(name = "is_deleted")
     private boolean deleted;
