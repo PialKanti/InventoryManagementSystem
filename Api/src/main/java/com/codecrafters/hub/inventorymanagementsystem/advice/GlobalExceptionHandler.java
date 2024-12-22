@@ -1,5 +1,6 @@
 package com.codecrafters.hub.inventorymanagementsystem.advice;
 
+import com.codecrafters.hub.inventorymanagementsystem.exception.InsufficientProductException;
 import com.codecrafters.hub.inventorymanagementsystem.exception.PasswordMismatchException;
 import com.codecrafters.hub.inventorymanagementsystem.exception.UnauthenticatedUserException;
 import com.codecrafters.hub.inventorymanagementsystem.model.enums.ExceptionConstant;
@@ -42,6 +43,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = {UnauthenticatedUserException.class})
     public ResponseEntity<ProblemDetail> handleUnauthenticatedUserException(UnauthenticatedUserException exception) {
         return createResponseEntity(HttpStatus.UNAUTHORIZED, exception.getMessage());
+    }
+
+    @ExceptionHandler(value = {InsufficientProductException.class})
+    public ResponseEntity<ProblemDetail> handleInsufficientProductException(InsufficientProductException exception) {
+        return createResponseEntity(HttpStatus.BAD_REQUEST, exception.getMessage());
     }
 
     private ResponseEntity<ProblemDetail> createResponseEntity(HttpStatus status, String message) {
