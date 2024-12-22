@@ -44,36 +44,44 @@ public class CartService extends BaseCrudService<Cart, Long> {
     }
 
     @Transactional
-    public CartResponse addItemToCart(CartItemDto cartItemDto) {
-        validateStockAvailability(cartItemDto.productId(), cartItemDto.quantity());
-
+    public CartResponse addItemToCart(CartItemDto createRequest) {
         UserDetails currentUser = getAuthenticatedUser();
 
         Cart cart = cartRepository.findByUsernameAndDeletedFalse(currentUser.getUsername(), Cart.class)
                 .orElseGet(() -> create(currentUser.getUsername()));
 
         Optional<CartItem> cartItemOptional = getMatchingCartItem(cart,
-                item -> item.getProduct().getId().equals(cartItemDto.productId()));
+                item -> item.getProduct().getId().equals(createRequest.productId()));
 
         Product cartItemProduct;
+        int quantityToAdjust = createRequest.quantity();
 
         if (cartItemOptional.isPresent()) {
             CartItem existingCartItem = cartItemOptional.get();
-            existingCartItem.setQuantity(existingCartItem.getQuantity() + cartItemDto.quantity());
+
+            quantityToAdjust -= existingCartItem.getQuantity();
+
+            validateStockAvailability(createRequest.productId(), quantityToAdjust);
+
+            existingCartItem.setQuantity(createRequest.quantity());
+
             cartItemProduct = existingCartItem.getProduct();
         } else {
+            validateStockAvailability(createRequest.productId(), quantityToAdjust);
+
             CartItem newCartItem = CartItem.builder()
-                    .product(productService.findById(cartItemDto.productId(), Product.class))
-                    .quantity(cartItemDto.quantity())
+                    .product(productService.findById(createRequest.productId(), Product.class))
+                    .quantity(createRequest.quantity())
                     .build();
 
             cart.addCartItem(newCartItem);
+
             cartItemProduct = newCartItem.getProduct();
         }
 
         Cart savedCart = cartRepository.save(cart);
 
-        productService.decreaseProductStock(cartItemProduct, cartItemDto.quantity());
+        productService.updateStock(cartItemProduct, cartItemProduct.getQuantity() - quantityToAdjust);
 
         return objectMapper.convertValue(savedCart, CartResponse.class);
     }
@@ -89,9 +97,16 @@ public class CartService extends BaseCrudService<Cart, Long> {
         CartItem cartItem = getMatchingCartItem(cart, item -> item.getId().equals(itemId))
                 .orElseThrow(() -> super.entityNotFoundException(ExceptionConstant.CART_ITEM_NOT_FOUND.getMessage()));
 
+
+        int quantityToAdjust = updateRequest.quantity() - cartItem.getQuantity();
+        validateStockAvailability(updateRequest.productId(), quantityToAdjust);
+
+
         cartItem.setQuantity(updateRequest.quantity());
 
         Cart updatedCart = cartRepository.save(cart);
+
+        productService.updateStock(cartItem.getProduct(), cartItem.getProduct().getQuantity() - quantityToAdjust);
 
         return objectMapper.convertValue(updatedCart, CartResponse.class);
     }
@@ -110,7 +125,7 @@ public class CartService extends BaseCrudService<Cart, Long> {
     }
 
     private void validateStockAvailability(Long productId, int quantity) {
-        if (!productService.isStockAvailable(productId, quantity)) {
+        if (quantity > 0 && !productService.isStockAvailable(productId, quantity)) {
             throw insufficientProductException();
         }
     }

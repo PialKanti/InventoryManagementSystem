@@ -103,8 +103,8 @@ public class ProductService extends BaseCrudService<Product, Long> {
         return product.getQuantity() >= quantity;
     }
 
-    public void decreaseProductStock(Product product, int quantity) {
-        product.setQuantity(product.getQuantity() - quantity);
+    public void updateStock(Product product, int quantity) {
+        product.setQuantity(quantity);
         super.save(product);
     }
 
