@@ -2,8 +2,7 @@ package com.codecrafters.hub.inventorymanagementsystem.service;
 
 import com.codecrafters.hub.inventorymanagementsystem.exception.InsufficientProductException;
 import com.codecrafters.hub.inventorymanagementsystem.exception.UnauthenticatedUserException;
-import com.codecrafters.hub.inventorymanagementsystem.model.dto.request.carts.CartItemDto;
-import com.codecrafters.hub.inventorymanagementsystem.model.dto.request.carts.CartItemUpdateRequest;
+import com.codecrafters.hub.inventorymanagementsystem.model.dto.request.carts.CartItemUpsertRequest;
 import com.codecrafters.hub.inventorymanagementsystem.model.dto.response.carts.CartResponse;
 import com.codecrafters.hub.inventorymanagementsystem.model.entity.Cart;
 import com.codecrafters.hub.inventorymanagementsystem.model.entity.CartItem;
@@ -44,7 +43,7 @@ public class CartService extends BaseCrudService<Cart, Long> {
     }
 
     @Transactional
-    public CartResponse addItemToCart(CartItemDto createRequest) {
+    public CartResponse addItemToCart(CartItemUpsertRequest createRequest) {
         UserDetails currentUser = getAuthenticatedUser();
 
         Cart cart = cartRepository.findByUsernameAndDeletedFalse(currentUser.getUsername(), Cart.class)
@@ -87,7 +86,7 @@ public class CartService extends BaseCrudService<Cart, Long> {
     }
 
     @Transactional
-    public CartResponse updateItemInCart(Long itemId, CartItemUpdateRequest updateRequest) {
+    public CartResponse updateItemInCart(Long itemId, CartItemUpsertRequest updateRequest) {
         UserDetails currentUser = SecurityUtil.getCurrentUser()
                 .orElseThrow(this::unauthenticatedUserException);
 
