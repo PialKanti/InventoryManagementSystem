@@ -46,40 +46,10 @@ public class CartService extends BaseCrudService<Cart, Long> {
     public CartResponse addItemToCart(CartItemUpsertRequest createRequest) {
         Cart cart = getCurrentUserCart(true);
 
-        Optional<CartItem> cartItemOptional = getMatchingCartItem(cart,
-                item -> item.getProduct().getId().equals(createRequest.productId()));
+        CartItem cartItem = getMatchingCartItem(cart,
+                item -> item.getProduct().getId().equals(createRequest.productId())).orElse(null);
 
-        Product cartItemProduct;
-        int quantityToAdjust = createRequest.quantity();
-
-        if (cartItemOptional.isPresent()) {
-            CartItem existingCartItem = cartItemOptional.get();
-
-            quantityToAdjust -= existingCartItem.getQuantity();
-
-            validateStockAvailability(createRequest.productId(), quantityToAdjust);
-
-            existingCartItem.setQuantity(createRequest.quantity());
-
-            cartItemProduct = existingCartItem.getProduct();
-        } else {
-            validateStockAvailability(createRequest.productId(), quantityToAdjust);
-
-            CartItem newCartItem = CartItem.builder()
-                    .product(productService.findById(createRequest.productId(), Product.class))
-                    .quantity(createRequest.quantity())
-                    .build();
-
-            cart.addCartItem(newCartItem);
-
-            cartItemProduct = newCartItem.getProduct();
-        }
-
-        Cart savedCart = cartRepository.save(cart);
-
-        productService.updateStock(cartItemProduct, cartItemProduct.getQuantity() - quantityToAdjust);
-
-        return objectMapper.convertValue(savedCart, CartResponse.class);
+        return addOrUpdateItemToCart(cart, cartItem, createRequest);
     }
 
     @Transactional
@@ -90,17 +60,7 @@ public class CartService extends BaseCrudService<Cart, Long> {
                 .orElseThrow(() -> super.entityNotFoundException(ExceptionConstant.CART_ITEM_NOT_FOUND.getMessage()));
 
 
-        int quantityToAdjust = updateRequest.quantity() - cartItem.getQuantity();
-        validateStockAvailability(updateRequest.productId(), quantityToAdjust);
-
-
-        cartItem.setQuantity(updateRequest.quantity());
-
-        Cart updatedCart = cartRepository.save(cart);
-
-        productService.updateStock(cartItem.getProduct(), cartItem.getProduct().getQuantity() - quantityToAdjust);
-
-        return objectMapper.convertValue(updatedCart, CartResponse.class);
+        return addOrUpdateItemToCart(cart, cartItem, updateRequest);
     }
 
     private Cart getCurrentUserCart(boolean createIfNotExist) {
@@ -122,6 +82,34 @@ public class CartService extends BaseCrudService<Cart, Long> {
                 .build();
 
         return cartRepository.save(cart);
+    }
+
+    private CartResponse addOrUpdateItemToCart(Cart cart, CartItem cartItem, CartItemUpsertRequest request) {
+        int quantityToAdjust = request.quantity();
+
+        if (cartItem != null) {
+            quantityToAdjust -= cartItem.getQuantity();
+
+            validateStockAvailability(request.productId(), quantityToAdjust);
+
+            cartItem.setQuantity(request.quantity());
+        } else {
+            validateStockAvailability(request.productId(), quantityToAdjust);
+
+            cartItem = CartItem.builder()
+                    .product(productService.findById(request.productId(), Product.class))
+                    .quantity(request.quantity())
+                    .build();
+
+            cart.addCartItem(cartItem);
+        }
+
+        Cart savedCart = cartRepository.save(cart);
+
+        Product cartItemProduct = cartItem.getProduct();
+        productService.updateStock(cartItemProduct, cartItemProduct.getQuantity() - quantityToAdjust);
+
+        return objectMapper.convertValue(savedCart, CartResponse.class);
     }
 
     @Override
