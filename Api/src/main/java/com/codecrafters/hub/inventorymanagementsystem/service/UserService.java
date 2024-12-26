@@ -13,9 +13,7 @@ import com.codecrafters.hub.inventorymanagementsystem.repository.RoleRepository;
 import com.codecrafters.hub.inventorymanagementsystem.repository.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.EntityNotFoundException;
-import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -28,7 +26,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-@CacheConfig(cacheNames = "users")
+@Slf4j
 public class UserService extends BaseCrudService<User, Long> implements UserDetailsService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
@@ -45,9 +43,8 @@ public class UserService extends BaseCrudService<User, Long> implements UserDeta
     }
 
     @Override
-    @Cacheable(key = "#username")
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return findByUsername(username, UserDetails.class);
+        return findByUsername(username, User.class);
     }
 
     public <T> T findByUsername(String username, Class<T> type) {
@@ -60,7 +57,6 @@ public class UserService extends BaseCrudService<User, Long> implements UserDeta
         return mapToDto(save(user), UserResponse.class);
     }
 
-    @CacheEvict(key = "#username")
     public UserResponse update(String username, UserUpdateRequest request) throws EntityNotFoundException {
         User user = findByUsername(username, User.class);
         user.setFirstName(request.firstName());
