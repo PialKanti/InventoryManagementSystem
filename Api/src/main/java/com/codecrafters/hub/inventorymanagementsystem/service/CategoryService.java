@@ -14,17 +14,22 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import static com.codecrafters.hub.inventorymanagementsystem.constant.RedisHashKey.CATEGORY_CACHE_KEY_PREFIX;
+
 @Service
 public class CategoryService extends BaseCrudService<Category, Long> {
     private final CategoryRepository categoryRepository;
     private final ProductRepository productRepository;
+    private final CacheService cacheService;
 
     public CategoryService(CategoryRepository categoryRepository,
                            ProductRepository productRepository,
+                           CacheService cacheService,
                            ObjectMapper objectMapper) {
         super(categoryRepository, objectMapper);
         this.categoryRepository = categoryRepository;
         this.productRepository = productRepository;
+        this.cacheService = cacheService;
     }
 
     public BasePaginatedResponse<ProductProjection> getProductsByCategoryId(Long id, Pageable pageable) {
@@ -49,15 +54,27 @@ public class CategoryService extends BaseCrudService<Category, Long> {
                 .builder()
                 .name(request.name())
                 .build();
-        
-        return mapToDto(save(category), CategoryResponse.class);
+
+        Category savedCategory = save(category);
+        cacheService.put(CATEGORY_CACHE_KEY_PREFIX + savedCategory.getId(), savedCategory);
+
+        return mapToDto(savedCategory, CategoryResponse.class);
     }
 
     public CategoryResponse update(Long id, CategoryUpdateRequest request) {
         Category category = findById(id, Category.class);
         category.setName(request.name());
 
-        return mapToDto(save(category), CategoryResponse.class);
+        Category savedCategory = save(category);
+        cacheService.put(CATEGORY_CACHE_KEY_PREFIX + savedCategory.getId(), savedCategory);
+
+        return mapToDto(savedCategory, CategoryResponse.class);
+    }
+
+    @Override
+    public void deleteById(Long id) {
+        super.deleteById(id);
+        cacheService.remove(CATEGORY_CACHE_KEY_PREFIX + id);
     }
 
     @Override
