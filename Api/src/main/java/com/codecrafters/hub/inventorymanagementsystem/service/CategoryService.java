@@ -21,6 +21,7 @@ public class CategoryService extends BaseCrudService<Category, Long> {
     private final CategoryRepository categoryRepository;
     private final ProductRepository productRepository;
     private final CacheService cacheService;
+    private final ObjectMapper objectMapper;
 
     public CategoryService(CategoryRepository categoryRepository,
                            ProductRepository productRepository,
@@ -30,6 +31,7 @@ public class CategoryService extends BaseCrudService<Category, Long> {
         this.categoryRepository = categoryRepository;
         this.productRepository = productRepository;
         this.cacheService = cacheService;
+        this.objectMapper = objectMapper;
     }
 
     public BasePaginatedResponse<ProductProjection> getProductsByCategoryId(Long id, Pageable pageable) {
@@ -69,6 +71,20 @@ public class CategoryService extends BaseCrudService<Category, Long> {
         cacheService.put(CATEGORY_CACHE_KEY_PREFIX + savedCategory.getId(), savedCategory);
 
         return mapToDto(savedCategory, CategoryResponse.class);
+    }
+
+    @Override
+    public <R> R findById(Long id, Class<R> type) {
+        var categoryFromCache = cacheService.get(CATEGORY_CACHE_KEY_PREFIX + id, Category.class);
+
+        if(categoryFromCache.isPresent()){
+            return objectMapper.convertValue(categoryFromCache.get(), type);
+        }
+
+        var categoryFromDb = super.findById(id, Category.class);
+        cacheService.put(CATEGORY_CACHE_KEY_PREFIX + id, categoryFromDb);
+
+        return objectMapper.convertValue(categoryFromDb, type);
     }
 
     @Override
