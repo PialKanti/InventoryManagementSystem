@@ -1,6 +1,7 @@
 package com.codecrafters.hub.inventorymanagementsystem.model.entity;
 
 import com.codecrafters.hub.inventorymanagementsystem.model.entity.common.NonAuditableEntity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -10,7 +11,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Entity
 @NamedEntityGraph(name = "User.roles", attributeNodes = @NamedAttributeNode("roles"))
@@ -34,10 +34,11 @@ public class User extends NonAuditableEntity implements UserDetails {
     private List<Role> roles;
 
     @Override
+    @JsonIgnore
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return roles.stream()
                 .map(role -> new SimpleGrantedAuthority("ROLE_" + role.getKey()))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override

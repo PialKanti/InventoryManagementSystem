@@ -25,26 +25,40 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static com.codecrafters.hub.inventorymanagementsystem.constant.RedisHashKey.USER_CACHE_KEY_PREFIX;
+
 @Service
 @Slf4j
 public class UserService extends BaseCrudService<User, Long> implements UserDetailsService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
+    private final CacheService cacheService;
 
     public UserService(UserRepository userRepository,
                        RoleRepository roleRepository,
                        PasswordEncoder passwordEncoder,
-                       ObjectMapper objectMapper) {
+                       ObjectMapper objectMapper,
+                       CacheService cacheService) {
         super(userRepository, objectMapper);
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
+        this.cacheService = cacheService;
     }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return findByUsername(username, User.class);
+        var userFromCache = cacheService.get(USER_CACHE_KEY_PREFIX + username, User.class);
+
+        if(userFromCache.isPresent()){
+            return userFromCache.get();
+        }
+
+        User userFromDb = findByUsername(username, User.class);
+        cacheService.put(USER_CACHE_KEY_PREFIX + username, userFromDb);
+
+        return userFromDb;
     }
 
     public <T> T findByUsername(String username, Class<T> type) {
@@ -54,7 +68,11 @@ public class UserService extends BaseCrudService<User, Long> implements UserDeta
 
     public UserResponse create(RegistrationRequest request) {
         User user = mapToEntity(request);
-        return mapToDto(save(user), UserResponse.class);
+
+        User savedUser = save(user);
+        storeInCache(savedUser);
+
+        return mapToDto(savedUser, UserResponse.class);
     }
 
     public UserResponse update(String username, UserUpdateRequest request) throws EntityNotFoundException {
@@ -63,7 +81,10 @@ public class UserService extends BaseCrudService<User, Long> implements UserDeta
         user.setLastName(request.lastName());
         user.setRoles(extractRoleEntities(request.roles()));
 
-        return mapToDto(save(user), UserResponse.class);
+        User savedUser = save(user);
+        storeInCache(savedUser);
+
+        return mapToDto(savedUser, UserResponse.class);
     }
 
     public void updatePassword(String username, ChangePasswordRequest request) throws PasswordMismatchException {
@@ -74,7 +95,9 @@ public class UserService extends BaseCrudService<User, Long> implements UserDeta
         }
 
         user.setPassword(passwordEncoder.encode(request.newPassword()));
-        save(user);
+
+        User savedUser = save(user);
+        storeInCache(savedUser);
     }
 
     @Transactional
@@ -84,6 +107,15 @@ public class UserService extends BaseCrudService<User, Long> implements UserDeta
         }
 
         userRepository.deleteByUsername(username);
+        removeFromCache(username);
+    }
+
+    private void storeInCache(User user) {
+        cacheService.put(USER_CACHE_KEY_PREFIX + user.getUsername(), user);
+    }
+
+    private void removeFromCache(String username) {
+        cacheService.remove(USER_CACHE_KEY_PREFIX + username);
     }
 
     private List<Role> extractRoleEntities(List<UserRole> enumRoles) {
