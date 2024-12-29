@@ -87,7 +87,7 @@ public class UserService extends BaseCrudService<User, Long> implements UserDeta
         return mapToDto(savedUser, UserResponse.class);
     }
 
-    public void updatePassword(String username, ChangePasswordRequest request) throws PasswordMismatchException {
+    public void updatePassword(String username, ChangePasswordRequest request) {
         User user = findByUsername(username, User.class);
 
         if (!passwordEncoder.matches(request.oldPassword(), user.getPassword())) {

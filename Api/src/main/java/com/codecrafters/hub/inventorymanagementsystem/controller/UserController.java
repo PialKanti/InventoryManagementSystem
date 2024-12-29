@@ -5,11 +5,11 @@ import com.codecrafters.hub.inventorymanagementsystem.model.dto.request.users.Us
 import com.codecrafters.hub.inventorymanagementsystem.model.dto.response.BasePaginatedResponse;
 import com.codecrafters.hub.inventorymanagementsystem.model.dto.response.users.UserResponse;
 import com.codecrafters.hub.inventorymanagementsystem.model.projection.UserProjection;
-import com.codecrafters.hub.inventorymanagementsystem.exception.PasswordMismatchException;
 import com.codecrafters.hub.inventorymanagementsystem.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -90,7 +90,8 @@ public class UserController {
             ),
             parameters = @Parameter(name = "username", description = "Username of the user whose password is being updated", required = true)
     )
-    public ResponseEntity<Map<String, String>> updatePassword(@PathVariable String username, @RequestBody ChangePasswordRequest request) throws PasswordMismatchException {
+    public ResponseEntity<Map<String, String>> updatePassword(@PathVariable String username,
+                                                              @Valid @RequestBody ChangePasswordRequest request) {
         userService.updatePassword(username, request);
         return ResponseEntity.noContent().build();
     }
