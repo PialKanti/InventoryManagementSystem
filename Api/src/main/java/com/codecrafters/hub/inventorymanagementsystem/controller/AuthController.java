@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -34,7 +35,7 @@ public class AuthController {
                     required = true
             )
     )
-    public ResponseEntity<UserResponse> register(@RequestBody RegistrationRequest request) {
+    public ResponseEntity<UserResponse> register(@Valid @RequestBody RegistrationRequest request) {
         return ResponseEntity.ok(service.register(request));
     }
 
@@ -47,7 +48,7 @@ public class AuthController {
                     required = true
             )
     )
-    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request) {
+    public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest request) {
         return ResponseEntity.ok(service.login(request));
     }
 

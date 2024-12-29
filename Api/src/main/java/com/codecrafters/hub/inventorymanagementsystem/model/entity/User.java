@@ -20,10 +20,11 @@ import java.util.List;
 @SuperBuilder
 @NoArgsConstructor
 public class User extends NonAuditableEntity implements UserDetails {
-    @Column(nullable = false)
+    @Column(nullable = false,length = 35)
     private String firstName;
+    @Column(length = 35)
     private String lastName;
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false, unique = true, length = 10)
     private String username;
     @Column(nullable = false, unique = true)
     private String email;
