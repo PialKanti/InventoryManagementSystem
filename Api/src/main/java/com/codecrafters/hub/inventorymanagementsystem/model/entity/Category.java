@@ -15,7 +15,7 @@ import java.util.List;
 @SuperBuilder
 @NoArgsConstructor
 public class Category extends AuditableEntity {
-    @Column(nullable = false)
+    @Column(nullable = false, length = 50)
     private String name;
     @OneToMany(mappedBy = "category")
     @JsonIgnore

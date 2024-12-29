@@ -10,6 +10,7 @@ import com.codecrafters.hub.inventorymanagementsystem.service.CategoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -65,7 +66,7 @@ public class CategoryController {
                     required = true
             )
     )
-    public ResponseEntity<EntityResponse> create(@RequestBody CategoryCreateRequest request) {
+    public ResponseEntity<EntityResponse> create(@Valid @RequestBody CategoryCreateRequest request) {
         var entityResponse = service.create(request);
         String uriString = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
@@ -85,7 +86,7 @@ public class CategoryController {
             ),
             parameters = @Parameter(name = "id", description = "ID of the category to update", required = true)
     )
-    public ResponseEntity<EntityResponse> update(@PathVariable(name = "id") Long id, @RequestBody CategoryUpdateRequest request) {
+    public ResponseEntity<EntityResponse> update(@PathVariable(name = "id") Long id, @Valid @RequestBody CategoryUpdateRequest request) {
         return ResponseEntity.ok(service.update(id, request));
     }
 
