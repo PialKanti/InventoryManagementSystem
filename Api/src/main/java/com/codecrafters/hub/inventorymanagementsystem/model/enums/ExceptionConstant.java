@@ -10,6 +10,7 @@ public enum ExceptionConstant {
     USER_NOT_FOUND("User not found"),
     UNAUTHENTICATED_USER_EXCEPTION("Authentication is required to access this resource"),
     INVALID_OLD_PASSWORD("Invalid old password"),
+    METHOD_ARGUMENT_NOT_VALID("One or more fields do not match the validation parameters"),
     BAD_CREDENTIALS_EXCEPTION("Username or password is incorrect"),
     USER_ROLE_NOT_FOUND("User role not found"),
     CATEGORY_NOT_FOUND("Category not found"),
