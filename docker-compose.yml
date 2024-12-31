@@ -39,7 +39,7 @@ services:
     image: 'mysql:8.2.0'
     container_name: mysql_db_c
     ports:
-      - 3306:3306
+      - "3306:3306"
     networks:
       - backend_net
     environment:
@@ -47,12 +47,19 @@ services:
       MYSQL_USER: pial
       MYSQL_PASSWORD: Pial@2023
       MYSQL_ROOT_PASSWORD: Pial@2023
+
+  rabbitmq:
+    image: rabbitmq:4.0.5-management-alpine
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
   
   api:
     build: ./Api
     container_name: inventory_api
     ports:
-      - 8080:8080
+      - "8080:8080"
     networks:
       - backend_net
       - elastic
@@ -60,6 +67,7 @@ services:
       - elasticsearch
       - mysqldb
       - redis
+      - rabbitmq
     environment:
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: Pial@2023
@@ -69,7 +77,7 @@ services:
     build: ./ClientApp/online-shopping-app
     container_name: inventory_frontend
     ports:
-      - 3000:3000
+      - "3000:3000"
     depends_on:
       - api
 
