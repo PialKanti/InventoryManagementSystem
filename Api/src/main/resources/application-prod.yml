@@ -13,6 +13,11 @@ spring:
       port: 6379
       password: Pial@2023
 
+  # RabbitMQ
+  rabbitmq:
+    host: rabbitmq
+    port: 5672
+
 # Elasticsearch
 app:
   elasticsearch:

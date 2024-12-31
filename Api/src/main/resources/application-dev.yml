@@ -12,6 +12,11 @@ spring:
       host: localhost
       port: 6379
 
+  # RabbitMQ
+  rabbitmq:
+    host: localhost
+    port: 5672
+
 # Elasticsearch
 app:
   elasticsearch:
