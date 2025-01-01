@@ -1,47 +1,42 @@
 package com.codecrafters.hub.inventorymanagementsystem.model.entity.listener;
 
-import com.codecrafters.hub.inventorymanagementsystem.constant.JmsDestination;
+import com.codecrafters.hub.inventorymanagementsystem.constant.RabbitQueueName;
+import com.codecrafters.hub.inventorymanagementsystem.elasticsearch.documents.ProductDocument;
 import com.codecrafters.hub.inventorymanagementsystem.model.entity.Product;
+import com.codecrafters.hub.inventorymanagementsystem.service.rabbitmq.producer.RabbitMQProducer;
 import jakarta.persistence.PostPersist;
 import jakarta.persistence.PostRemove;
 import jakarta.persistence.PostUpdate;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.jms.JmsException;
-import org.springframework.jms.core.JmsTemplate;
 
 @RequiredArgsConstructor
 @Slf4j
 public class ElasticSearchIndexingListener {
-    private final JmsTemplate jmsTemplate;
+    private final RabbitMQProducer rabbitMQProducer;
 
     @PostPersist
     private void trackPostPersist(Product product) {
-        sendToMessageQueue(product, JmsDestination.ELASTICSEARCH_PRODUCT_CREATE);
+        sendToMessageQueue(product, RabbitQueueName.PRODUCT_CREATE_QUEUE);
     }
 
     @PostUpdate
     private void trackPostUpdate(Product product) {
-        sendToMessageQueue(product, JmsDestination.ELASTICSEARCH_PRODUCT_UPDATE);
+        sendToMessageQueue(product, RabbitQueueName.PRODUCT_UPDATE_QUEUE);
     }
 
     @PostRemove
     private void trackPostRemove(Product product) {
-        sendToMessageQueue(product, JmsDestination.ELASTICSEARCH_PRODUCT_DELETE);
+        sendToMessageQueue(product, RabbitQueueName.PRODUCT_DELETE_QUEUE);
     }
 
     private void sendToMessageQueue(Product product, String destination) {
         var entityToBeIndexed = convertToDocumentEntity(product);
-
-        try {
-            jmsTemplate.convertAndSend(destination, entityToBeIndexed);
-        } catch (JmsException e) {
-            log.error("Error thrown while sending message to Jms message queue[Destination = {}]. Message: {}", destination, e.getMessage());
-        }
+        rabbitMQProducer.send(destination, entityToBeIndexed);
     }
 
-    private com.codecrafters.hub.inventorymanagementsystem.elasticsearch.documents.Product convertToDocumentEntity(Product product) {
-        return com.codecrafters.hub.inventorymanagementsystem.elasticsearch.documents.Product.builder()
+    private ProductDocument convertToDocumentEntity(Product product) {
+        return ProductDocument.builder()
                 .id(product.getId())
                 .title(product.getTitle())
                 .description(product.getDescription())

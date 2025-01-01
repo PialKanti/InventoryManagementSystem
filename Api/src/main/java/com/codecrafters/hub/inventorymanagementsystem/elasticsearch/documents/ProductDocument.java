@@ -17,7 +17,7 @@ import java.io.Serializable;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Product implements Serializable{
+public class ProductDocument implements Serializable{
     @Id
     private long id;
     @Field(type = FieldType.Text)

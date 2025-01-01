@@ -4,7 +4,7 @@ import co.elastic.clients.elasticsearch.core.*;
 import com.codecrafters.hub.inventorymanagementsystem.model.dto.response.BasePaginatedResponse;
 import com.codecrafters.hub.inventorymanagementsystem.elasticsearch.constants.Indexes;
 import com.codecrafters.hub.inventorymanagementsystem.elasticsearch.dtos.request.ProductSearchRequest;
-import com.codecrafters.hub.inventorymanagementsystem.elasticsearch.documents.Product;
+import com.codecrafters.hub.inventorymanagementsystem.elasticsearch.documents.ProductDocument;
 import com.codecrafters.hub.inventorymanagementsystem.elasticsearch.repositories.ElasticsearchProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -17,9 +17,9 @@ import java.io.IOException;
 public class ElasticsearchProductService {
     private final ElasticsearchProductRepository repository;
 
-    public IndexResponse create(Product product) {
+    public IndexResponse create(ProductDocument product) {
         try {
-            IndexRequest<Product> indexRequest = IndexRequest.of(builder -> builder
+            IndexRequest<ProductDocument> indexRequest = IndexRequest.of(builder -> builder
                     .index(Indexes.INDEX_PRODUCT)
                     .id(String.valueOf(product.getId()))
                     .document(product));
@@ -29,9 +29,9 @@ public class ElasticsearchProductService {
         }
     }
 
-    public UpdateResponse<Product> update(Product product) {
+    public UpdateResponse<ProductDocument> update(ProductDocument product) {
         try {
-            UpdateRequest<Product, Product> updateRequest = UpdateRequest.of(builder -> builder
+            UpdateRequest<ProductDocument, ProductDocument> updateRequest = UpdateRequest.of(builder -> builder
                     .index(Indexes.INDEX_PRODUCT)
                     .id(String.valueOf(product.getId()))
                     .doc(product));
@@ -41,7 +41,7 @@ public class ElasticsearchProductService {
         }
     }
 
-    public DeleteResponse delete(Product product) {
+    public DeleteResponse delete(ProductDocument product) {
         try {
             DeleteRequest deleteRequest = DeleteRequest.of(builder -> builder
                     .index(Indexes.INDEX_PRODUCT)
@@ -52,7 +52,7 @@ public class ElasticsearchProductService {
         }
     }
 
-    public BasePaginatedResponse<Product> search(ProductSearchRequest searchCriteria, Pageable pageable) {
+    public BasePaginatedResponse<ProductDocument> search(ProductSearchRequest searchCriteria, Pageable pageable) {
         return repository.search(searchCriteria, pageable);
     }
 }

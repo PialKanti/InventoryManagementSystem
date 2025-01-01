@@ -6,7 +6,7 @@ import com.codecrafters.hub.inventorymanagementsystem.model.dto.request.products
 import com.codecrafters.hub.inventorymanagementsystem.model.dto.response.BasePaginatedResponse;
 import com.codecrafters.hub.inventorymanagementsystem.model.dto.response.EntityResponse;
 import com.codecrafters.hub.inventorymanagementsystem.model.dto.response.products.RatingResponse;
-import com.codecrafters.hub.inventorymanagementsystem.elasticsearch.documents.Product;
+import com.codecrafters.hub.inventorymanagementsystem.elasticsearch.documents.ProductDocument;
 import com.codecrafters.hub.inventorymanagementsystem.elasticsearch.dtos.request.ProductSearchRequest;
 import com.codecrafters.hub.inventorymanagementsystem.elasticsearch.services.ElasticsearchProductService;
 import com.codecrafters.hub.inventorymanagementsystem.model.projection.ProductProjection;
@@ -67,9 +67,9 @@ public class ProductController {
                     @Parameter(name = "pageSize", description = "Number of products per page (default is 5)")
             }
     )
-    public ResponseEntity<BasePaginatedResponse<Product>> search(@RequestParam(name = "page", defaultValue = "0", required = false) int page,
-                                                                 @RequestParam(name = "pageSize", defaultValue = "5", required = false) int pageSize,
-                                                                 @ModelAttribute ProductSearchRequest request) {
+    public ResponseEntity<BasePaginatedResponse<ProductDocument>> search(@RequestParam(name = "page", defaultValue = "0", required = false) int page,
+                                                                         @RequestParam(name = "pageSize", defaultValue = "5", required = false) int pageSize,
+                                                                         @ModelAttribute ProductSearchRequest request) {
         Pageable pageable = PageRequest.of(page, pageSize);
         return ResponseEntity.ok(esService.search(request, pageable));
     }

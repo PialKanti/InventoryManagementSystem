@@ -4,7 +4,7 @@ import co.elastic.clients.elasticsearch.ElasticsearchClient;
 import co.elastic.clients.elasticsearch.core.*;
 import com.codecrafters.hub.inventorymanagementsystem.model.dto.response.BasePaginatedResponse;
 import com.codecrafters.hub.inventorymanagementsystem.elasticsearch.dtos.request.ProductSearchRequest;
-import com.codecrafters.hub.inventorymanagementsystem.elasticsearch.documents.Product;
+import com.codecrafters.hub.inventorymanagementsystem.elasticsearch.documents.ProductDocument;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
@@ -24,19 +24,19 @@ public class ElasticsearchProductRepository {
     private final ElasticsearchClient client;
     private final ElasticsearchOperations searchOperations;
 
-    public IndexResponse add(IndexRequest<Product> request) throws IOException {
+    public IndexResponse add(IndexRequest<ProductDocument> request) throws IOException {
         return client.index(request);
     }
 
-    public UpdateResponse<Product> update(UpdateRequest<Product, Product> request) throws IOException {
-        return client.update(request, Product.class);
+    public UpdateResponse<ProductDocument> update(UpdateRequest<ProductDocument, ProductDocument> request) throws IOException {
+        return client.update(request, ProductDocument.class);
     }
 
     public DeleteResponse delete(DeleteRequest request) throws IOException {
         return client.delete(request);
     }
 
-    public BasePaginatedResponse<Product> search(ProductSearchRequest searchRequest, Pageable pageable) {
+    public BasePaginatedResponse<ProductDocument> search(ProductSearchRequest searchRequest, Pageable pageable) {
         Criteria criteria = new Criteria();
 
         if(searchRequest.getTitle() != null){
@@ -52,13 +52,13 @@ public class ElasticsearchProductRepository {
         Query query = new CriteriaQuery(criteria);
         query.setPageable(pageable);
 
-        SearchHits<Product> searchHits = searchOperations.search(query, Product.class);
-        List<Product> products = searchHits.getSearchHits().stream().map(SearchHit::getContent).toList();
+        SearchHits<ProductDocument> searchHits = searchOperations.search(query, ProductDocument.class);
+        List<ProductDocument> products = searchHits.getSearchHits().stream().map(SearchHit::getContent).toList();
 
         long totalItems = searchHits.getTotalHits();
         int totalPages = (int) Math.ceil((double) totalItems / pageable.getPageSize());
 
-        return BasePaginatedResponse.<Product>builder()
+        return BasePaginatedResponse.<ProductDocument>builder()
                 .page(pageable.getPageNumber())
                 .pageSize(pageable.getPageSize())
                 .totalItems(totalItems)
