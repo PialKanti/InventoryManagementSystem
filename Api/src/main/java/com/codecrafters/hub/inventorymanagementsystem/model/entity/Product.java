@@ -1,14 +1,14 @@
 package com.codecrafters.hub.inventorymanagementsystem.model.entity;
 
 import com.codecrafters.hub.inventorymanagementsystem.model.entity.common.AuditableEntity;
-import com.codecrafters.hub.inventorymanagementsystem.model.entity.listener.ElasticSearchIndexingListener;
+import com.codecrafters.hub.inventorymanagementsystem.model.entity.listener.ProductEntityListener;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import java.util.List;
 
-@EntityListeners(ElasticSearchIndexingListener.class)
+@EntityListeners(ProductEntityListener.class)
 @Entity
 @Table(name = "products")
 @Getter
