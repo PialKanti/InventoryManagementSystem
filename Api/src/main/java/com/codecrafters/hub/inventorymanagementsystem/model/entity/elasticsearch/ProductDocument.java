@@ -1,6 +1,6 @@
-package com.codecrafters.hub.inventorymanagementsystem.elasticsearch.documents;
+package com.codecrafters.hub.inventorymanagementsystem.model.entity.elasticsearch;
 
-import com.codecrafters.hub.inventorymanagementsystem.elasticsearch.constants.Indexes;
+import com.codecrafters.hub.inventorymanagementsystem.constant.ElasticsearchIndexes;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,7 +12,7 @@ import org.springframework.data.elasticsearch.annotations.FieldType;
 
 import java.io.Serializable;
 
-@Document(indexName = Indexes.INDEX_PRODUCT)
+@Document(indexName = ElasticsearchIndexes.INDEX_PRODUCT)
 @Data
 @Builder
 @AllArgsConstructor

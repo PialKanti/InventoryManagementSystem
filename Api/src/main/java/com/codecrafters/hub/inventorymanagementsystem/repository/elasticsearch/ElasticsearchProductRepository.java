@@ -1,10 +1,10 @@
-package com.codecrafters.hub.inventorymanagementsystem.elasticsearch.repositories;
+package com.codecrafters.hub.inventorymanagementsystem.repository.elasticsearch;
 
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
 import co.elastic.clients.elasticsearch.core.*;
 import com.codecrafters.hub.inventorymanagementsystem.model.dto.response.BasePaginatedResponse;
-import com.codecrafters.hub.inventorymanagementsystem.elasticsearch.dtos.request.ProductSearchRequest;
-import com.codecrafters.hub.inventorymanagementsystem.elasticsearch.documents.ProductDocument;
+import com.codecrafters.hub.inventorymanagementsystem.model.dto.request.products.ProductSearchRequest;
+import com.codecrafters.hub.inventorymanagementsystem.model.entity.elasticsearch.ProductDocument;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;

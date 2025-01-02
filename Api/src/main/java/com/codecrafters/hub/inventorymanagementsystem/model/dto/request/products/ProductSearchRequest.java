@@ -1,4 +1,4 @@
-package com.codecrafters.hub.inventorymanagementsystem.elasticsearch.dtos.request;
+package com.codecrafters.hub.inventorymanagementsystem.model.dto.request.products;
 
 import lombok.Data;
 

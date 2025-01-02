@@ -1,7 +1,7 @@
 package com.codecrafters.hub.inventorymanagementsystem.service.rabbitmq.consumer;
 
-import com.codecrafters.hub.inventorymanagementsystem.elasticsearch.documents.ProductDocument;
-import com.codecrafters.hub.inventorymanagementsystem.elasticsearch.services.ElasticsearchProductService;
+import com.codecrafters.hub.inventorymanagementsystem.model.entity.elasticsearch.ProductDocument;
+import com.codecrafters.hub.inventorymanagementsystem.service.elasticsearch.ElasticsearchProductService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.RabbitHandler;

@@ -6,9 +6,9 @@ import com.codecrafters.hub.inventorymanagementsystem.model.dto.request.products
 import com.codecrafters.hub.inventorymanagementsystem.model.dto.response.BasePaginatedResponse;
 import com.codecrafters.hub.inventorymanagementsystem.model.dto.response.EntityResponse;
 import com.codecrafters.hub.inventorymanagementsystem.model.dto.response.products.RatingResponse;
-import com.codecrafters.hub.inventorymanagementsystem.elasticsearch.documents.ProductDocument;
-import com.codecrafters.hub.inventorymanagementsystem.elasticsearch.dtos.request.ProductSearchRequest;
-import com.codecrafters.hub.inventorymanagementsystem.elasticsearch.services.ElasticsearchProductService;
+import com.codecrafters.hub.inventorymanagementsystem.model.entity.elasticsearch.ProductDocument;
+import com.codecrafters.hub.inventorymanagementsystem.model.dto.request.products.ProductSearchRequest;
+import com.codecrafters.hub.inventorymanagementsystem.service.elasticsearch.ElasticsearchProductService;
 import com.codecrafters.hub.inventorymanagementsystem.model.projection.ProductProjection;
 import com.codecrafters.hub.inventorymanagementsystem.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;

@@ -1,4 +1,4 @@
-package com.codecrafters.hub.inventorymanagementsystem.elasticsearch.configs;
+package com.codecrafters.hub.inventorymanagementsystem.config.elasticsearch;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
@@ -7,7 +7,7 @@ import org.springframework.data.elasticsearch.client.elc.ElasticsearchConfigurat
 
 @Configuration
 @RequiredArgsConstructor
-public class ESConfig extends ElasticsearchConfiguration {
+public class EsConfig extends ElasticsearchConfiguration {
     private final EsProperties esProperties;
 
     @Override

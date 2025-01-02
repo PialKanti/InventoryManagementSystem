@@ -1,4 +1,4 @@
-package com.codecrafters.hub.inventorymanagementsystem.elasticsearch.configs;
+package com.codecrafters.hub.inventorymanagementsystem.config.elasticsearch;
 
 import lombok.Getter;
 import lombok.Setter;

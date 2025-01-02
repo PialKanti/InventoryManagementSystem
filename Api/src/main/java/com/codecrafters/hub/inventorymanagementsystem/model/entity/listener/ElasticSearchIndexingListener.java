@@ -1,7 +1,7 @@
 package com.codecrafters.hub.inventorymanagementsystem.model.entity.listener;
 
 import com.codecrafters.hub.inventorymanagementsystem.constant.RabbitQueueName;
-import com.codecrafters.hub.inventorymanagementsystem.elasticsearch.documents.ProductDocument;
+import com.codecrafters.hub.inventorymanagementsystem.model.entity.elasticsearch.ProductDocument;
 import com.codecrafters.hub.inventorymanagementsystem.model.entity.Product;
 import com.codecrafters.hub.inventorymanagementsystem.service.rabbitmq.producer.RabbitMQProducer;
 import jakarta.persistence.PostPersist;

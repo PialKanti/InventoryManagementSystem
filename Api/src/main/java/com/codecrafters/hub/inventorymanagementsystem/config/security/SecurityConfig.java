@@ -1,4 +1,4 @@
-package com.codecrafters.hub.inventorymanagementsystem.config;
+package com.codecrafters.hub.inventorymanagementsystem.config.security;
 
 import com.codecrafters.hub.inventorymanagementsystem.filter.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
